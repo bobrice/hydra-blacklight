@@ -36,3 +36,7 @@ gem 'jquery-rails'
 
 # To use debugger
 # gem 'debugger'
+
+gem 'blacklight'
+gem 'hydra-head', '6.0.0'
+gem 'jettywrapper'
