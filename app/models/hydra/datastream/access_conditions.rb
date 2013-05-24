@@ -4,7 +4,7 @@ require 'active_fedora'
 # this class will be renamed to Hydra::Datastream::ModsBasic in Hydra 5.0
 module Hydra
   module Datastream
-    class AccessConditions < ActiveFedora::NokogiriDatastream
+    class AccessConditions < ActiveFedora::OmDatastream
 	
 	  set_terminology do |t|
 	    t.root(:path=>"schema")

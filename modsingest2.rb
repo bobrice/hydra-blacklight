@@ -1,9 +1,25 @@
 require '/home/ermadmix/hy_projs/diggit-hydra/config/environment.rb'
 
+obj = ComplexParent.new
 file = File.new('mods_service_full.xml')
 ng_xml = Nokogiri::XML::Document.parse(IO.read(file))
-obj = ComplexParent.new
 obj.descMetadata.ng_xml = ng_xml
+
+file = File.new('/home/ermadmix/access_conditions.xml')
+ng_xml = Nokogiri::XML::Document.parse(IO.read(file))
+obj.accessMetadata.ng_xml = ng_xml
+
+file = File.new('/home/ermadmix/rights.xml')
+ng_xml = Nokogiri::XML::Document.parse(IO.read(file))
+obj.rightsMetadata.ng_xml = ng_xml
+
+obj.oid = "1234"
+obj.cid = "2345"
+obj.projid = "3456"
+obj.zindex = "4567"
+obj.parentoid = "5678"
+obj.ztotal = "6789"
+obj.oidpointer = "7890"
 
 #tiffile = File.new('/home/ermadmix/libshare/ladybird/project25/publish/BAG/10592589/data/4005429a.tif')
 #jpgfile = File.new('/home/ermadmix/libshare/ladybird/project25/publish/DL/10592589/4005429a.jpg')
