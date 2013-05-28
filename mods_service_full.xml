@@ -18,7 +18,7 @@
     <place>New York :</place><!--FDID77x-->
     <publisher>Cambridge University Press,</publisher><!--FDID78x-->
     <dateCreated keyDate="yes">c2010.</dateCreated><!--FDID79x-->
-	<dateCreated keyDate="yes" encoding="iso8601">KEYDATE_iso8601</dateCreated>
+	<dateCreated keyDate="yes" encoding="iso8601">1995-12-31T23:59:59Z</dateCreated>
 	<edition>ORIGININFO_EDITION</edition><!--FDID76ax-->
 	<dateOther>DATE_OTHER</dateOther>
   </originInfo>

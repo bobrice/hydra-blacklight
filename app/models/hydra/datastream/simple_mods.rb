@@ -148,8 +148,9 @@ module Hydra
 		solr_doc['accession_number_ssim'] = mods.accession_number
 		solr_doc['box_number_ssm'] = mods.related_item.part.detail_box.caption_box 
 		solr_doc['caption_folder_ssm'] = mods.related_item.part.detail_folder.caption_folder
-		solr_doc['source_creator_tsim'] = [mods.related_item_host.r_i_h_name.r_i_h_namePart,mods.name.namePart].flatten
-		solr_doc['source_creator_sim'] = [mods.related_item_host.r_i_h_name.r_i_h_namePart,mods.name.namePart].flatten
+		solr_doc['source_creator_tsim'] = mods.related_item_host.r_i_h_name.r_i_h_namePart#
+		solr_doc['creator_tsim'] = mods.name.namePart
+		solr_doc['creator_sim'] = [mods.related_item_host.r_i_h_name.r_i_h_namePart,mods.name.namePart].flatten
 		solr_doc['source_title_tsim'] = [mods.related_item_host.r_i_h_title_info.r_i_h_title].flatten
 		solr_doc['source_created_tsim'] = [mods.related_item_host.r_i_h_originInfo.r_i_h_place,mods.related_item_host.r_i_h_originInfo.r_i_h_publisher,mods.related_item_host.r_i_h_originInfo.r_i_h_dateIssued].flatten
 		solr_doc['source_edition_tsim'] = mods.related_item_host.r_i_h_originInfo.r_i_h_edition
@@ -158,8 +159,9 @@ module Hydra
 		solr_doc['variant_titles_tsim'] = mods.title_info.alt_title
 		solr_doc['caption_ssim'] = mods.display_label
 		solr_doc['edition_ssim'] = mods.origin_info.o_i_edition
-		solr_doc['publishedCreated_ssim'] = [mods.origin_info.o_i_place,mods.origin_info.o_i_publisher,mods.origin_info.o_i_dateCreated,mods.origin_info.o_i_dateCreatedIso].flatten
-		solr_doc['date_sim'] = [mods.origin_info.o_i_dateCreated,mods.origin_info.o_i_dateCreatedIso,mods.origin_info.o_i_dateOther].flatten
+		solr_doc['publishedCreated_ssim'] = [mods.origin_info.o_i_place,mods.origin_info.o_i_publisher,mods.origin_info.o_i_dateCreated].flatten
+		solr_doc['date_sim'] = [mods.origin_info.o_i_dateCreated,mods.origin_info.o_i_dateOther].flatten
+		solr_doc['date_dtsim'] = mods.origin_info.o_i_dateCreatedIso
 		solr_doc['date_depicted_ssim'] = mods.subject.keyDate
 		solr_doc['physical_description_ssim'] = mods.physicalDescription.p_s_note
 		solr_doc['materials_ssim'] = mods.physicalDescription.p_s_form
@@ -167,8 +169,15 @@ module Hydra
 		solr_doc['language_of_cataloging_ssm'] = mods.record_info.language_of_cataloging
 		solr_doc['notes_tsim'] = mods.plain_note
 		solr_doc['abstract_tsim'] = mods.abstract
-		solr_doc['subject_tsim'] = [mods.subject.keyDate,mods.subject.s_name.s_namePart,mods.subject.topic,mods.subject.s_geographic,mods.subject.s_geographic_code,mods.s_divinity,mods.s_event.topic].flatten
 		solr_doc['subject_sim'] = [mods.subject.keyDate,mods.subject.s_name.s_namePart,mods.subject.topic,mods.subject.s_geographic,mods.s_divinity].flatten
+		solr_doc['subject_name_tsim'] = mods.subject.s_name.s_namePart
+		solr_doc['subject_name_sim'] = mods.subject.s_name.s_namePart
+		solr_doc['subject_topic_tsim'] = mods.subject.topic
+		solr_doc['subject_topic_sim'] = mods.subject.topic
+		solr_doc['subject_geographic_tsim'] = mods.subject.s_geographic
+		solr_doc['subject_geographic_sim'] = mods.subject.s_geographic
+		solr_doc['subject_geographic_code_ssim'] = mods.subject.s_geographic_code
+		solr_doc['local_subject_tsim'] = mods.s_divinity
 		solr_doc['period_style_tsim'] = mods.s_style.topic
 		solr_doc['culture_tsim'] = mods.s_culture.topic
 		solr_doc['scale_ssim'] = mods.subject.s_cartographics.s_scale
@@ -176,7 +185,7 @@ module Hydra
 		solr_doc['coordinates_ssim'] = mods.subject.s_cartographics.s_coordinates
 		solr_doc['genre_ssim'] = mods.genre
 		solr_doc['format_ssim'] = mods.type_of_resource
-		solr_doc['yale_collection_ssim'] = mods.location.phys_loc_yale
+		solr_doc['yale_collection_tsim'] = mods.location.phys_loc_yale
 		solr_doc['musuem_repository_ssim'] = mods.location.phys_loc_origin
 		solr_doc['rights_ssm'] = mods.access_condition
 		solr_doc['orbis_record_ssm'] = mods.related_item.r_i_orbis
@@ -195,6 +204,7 @@ module Hydra
 		solr_doc['other_dates_ssim'] = mods.origin_info.o_i_dateOther
 		solr_doc['tribe_tsim'] = mods.s_tribe.topic
 		solr_doc['tribe_sim'] = mods.s_tribe.topic
+		solr_doc['event_tsim'] = mods.s_event.topic
 		solr_doc['event_sim'] = mods.s_event.topic
         solr_doc
       end	  
