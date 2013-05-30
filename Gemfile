@@ -20,6 +20,9 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
 end
 
+#ERJ 5/30/13
+gem 'tiny_tds'
+
 gem 'jquery-rails'
 
 # To use ActiveModel has_secure_password
