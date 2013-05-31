@@ -10,7 +10,7 @@ namespace :yulhy do
   end
   desc "test db connection"
   task :test_db do
-    lbconf = YAML.load_file ('config/ladybird_test.yml')
+    lbconf = YAML.load_file ('config/ladybird_pamoja_test.yml')
         lbuser = lbconf.fetch("username").strip
         lbpw = lbconf.fetch("password").strip
 		#lbpw = "QPl478(^%"

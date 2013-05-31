@@ -4,19 +4,22 @@
 
 #todo 3/12/13 - compound to complex bug, create simple and child models, fill in Active fedora
 require Rails.root.join('config/environment.rb')
-namespace :yulhy2 do
+namespace :yulhy3 do
   desc "ingest from ladybird"
   task :ingest do
     puts "Running ladybird ingest"
     puts Time.now
 	puts "requirement: root of share must be 'ladybird'"
 
-	lbconf = YAML.load_file ('config/ladybird.yml')
+	lbconf = YAML.load_file ('config/ladybird_pamoja_test.yml')
 	lbuser = lbconf.fetch("username").strip
 	lbpw = lbconf.fetch("password").strip
 	lbhost = lbconf.fetch("host").strip
 	lbdb = lbconf.fetch("database").strip
-	puts "using db:"+lbdb
+	puts "user:"+lbuser
+	puts "pw:"+lbpw
+	puts "lbhost:"+lbhost
+	puts "db:"+lbdb
 	@@client = TinyTds::Client.new(:username => lbuser,:password => lbpw,:host => lbhost,:database => lbdb)
 	@@client2 = TinyTds::Client.new(:username => lbuser,:password => lbpw,:host => lbhost,:database => lbdb)
 	@@client3 = TinyTds::Client.new(:username => lbuser,:password => lbpw,:host => lbhost,:database => lbdb)
@@ -93,7 +96,7 @@ namespace :yulhy2 do
           processerror(i,msg)
         end		  
       end
-	  if @cnt > 1000
+	  if @cnt > 100
 	    @@client.close
 	    @@client2.close
 		@@client3.close
@@ -133,7 +136,8 @@ namespace :yulhy2 do
 	  dsid = datastream["dsid"].strip
 	  ingestMethod = datastream["ingestMethod"].strip
 	  required = datastream["required"].strip
-	  ds = @@client2.execute(%Q/select type,pathHTTP,pathUNC,md5,controlGroup,mimeType,dsid from dbo.hydra_publish_path where hpid=#{i["hpid"]} and dsid='#{dsid}'/)
+	  #puts %Q/select type,pathHTTP,pathUNC,md5,controlGroup,mimeType,dsid,OIDpointer from dbo.hydra_publish_path where hpid=#{i["hpid"]} and dsid='#{dsid}'/#diagnose
+	  ds = @@client2.execute(%Q/select type,pathHTTP,pathUNC,md5,controlGroup,mimeType,dsid,OIDpointer from dbo.hydra_publish_path where hpid=#{i["hpid"]} and dsid='#{dsid}'/)
 	  if required == 'y'
 	    if ds.affected_rows == 0
 		  runningErrorStr.concat(" missing required datastream #{dsid}")
@@ -148,13 +152,26 @@ namespace :yulhy2 do
         controlGroup = ds1["controlGroup"].strip
         mimeType = ds1["mimeType"].strip
         dsid1 = ds1["dsid"].strip
+		if ds1["OIDpointer"].nil?
+          oidPointer = ""
+        else		  
+		  oidPointer = ds1["OIDpointer"].strip
+		end	
 	    if ingestMethod == 'pullHTTP'
 		  file = @tempdir + 'temp.xml'
             open(file, 'wb') do |f|
               f << open(pathHTTP).read
             end
           ff = File.new(file)
-          obj.add_file_datastream(ff,:controlGroup=>controlGroup,:mimeType=>mimeType,:dsid=>dsid1)
+          #obj.add_file_datastream(ff,:controlGroup=>controlGroup,:mimeType=>mimeType,:dsid=>dsid1)
+		  ng_xml = Nokogiri::XML::Document.parse(IO.read(ff))
+		  if dsid1 == 'descMetadata' 
+		    obj.descMetadata.ng_xml = ng_xml
+		  elsif dsid1 == 'accessMetadata' 
+		    obj.accessMetadata.ng_xml = ng_xml
+		  elsif dsid1 == 'rightsMetadata' 
+		    obj.rightsMetadata.ng_xml = ng_xml
+		  end	
           File.delete(file)
 		elsif ingestMethod == 'filepath'
 		  realpath = @mountroot + pathUNC[pathUNC.rindex('ladybird'),pathUNC.length].gsub(/\\/,'/')
@@ -173,7 +190,9 @@ namespace :yulhy2 do
             return
           end
 		  file = File.new(realpath)
-          obj.add_file_datastream(file,:dsid=>dsid,:mimeType=>mimeType, :controlGroup=>controlGroup,:checksumType=>'MD5') 
+          obj.add_file_datastream(file,:dsid=>dsid,:mimeType=>mimeType, :controlGroup=>controlGroup,:checksumType=>'MD5')
+        elsif ingestMethod == 'pointer'
+          obj.oidpointer = oidPointer		
 		end
 	  end
 	end  
@@ -186,12 +205,12 @@ namespace :yulhy2 do
 	  return
 	end
 	begin
-    obj.oid = i["oid"]
-	obj.cid = i["cid"]
-	obj.projid = i["pid"]
-	obj.zindex = i["zindex"]
-	obj.parentoid = i["_oid"]
-	collection_pid = get_coll_pid(i["cid"],i["pid"])
+    obj.oid = i["oid"].to_s
+	obj.cid = i["cid"].to_s
+	obj.projid = i["pid"].to_s
+	obj.zindex = i["zindex"].to_s
+	obj.parentoid = i["_oid"].to_s
+	collection_pid = get_collection_pid(i["cid"],i["pid"])
 	if collection_pid.size==0
 	  processmsg(i,"collection pid not found")
 	  return
@@ -201,7 +220,7 @@ namespace :yulhy2 do
 	if contentModel == "complexParent"
 	  result = @@client.execute(%Q/select max(zindex) as total from dbo.hydra_publish where _oid = #{i["oid"]}/)
 	  result.each do |i|
-	    obj.ztotal =  i["total"]
+	    obj.ztotal =  i["total"].to_s
 	  end
 	end  
 	  obj.save
@@ -307,7 +326,15 @@ namespace :yulhy2 do
               f << open(pathHTTP).read
             end
           ff = File.new(file)
-          obj.add_file_datastream(ff,:controlGroup=>controlGroup,:mimeType=>mimeType,:dsid=>dsid1)
+          #obj.add_file_datastream(ff,:controlGroup=>controlGroup,:mimeType=>mimeType,:dsid=>dsid1)
+		  ng_xml = Nokogiri::XML::Document.parse(IO.read(ff))
+		  if dsid1 == 'descMetadata' 
+		    obj.descMetadata.ng_xml = ng_xml
+		  elsif dsid1 == 'accessMetadata' 
+		    obj.accessMetadata.ng_xml = ng_xml
+		  elsif dsid1 == 'rightsMetadata' 
+		    obj.rightsMetadata.ng_xml = ng_xml
+		  end
           File.delete(file)
 		elsif ingestMethod == 'filepath'
 		  realpath = @mountroot + pathUNC[pathUNC.rindex('ladybird'),pathUNC.length].gsub(/\\/,'/')
@@ -339,16 +366,16 @@ namespace :yulhy2 do
 	  return
 	end
 	begin
-    obj.oid = i["oid"]
-	obj.cid = i["cid"]
-	obj.projid = i["pid"]
-	obj.zindex = i["zindex"]
-	obj.parentoid = i["_oid"]
+    obj.oid = i["oid"].to_s
+	obj.cid = i["cid"].to_s
+	obj.projid = i["pid"].to_s
+	obj.zindex = i["zindex"].to_s
+	obj.parentoid = i["_oid"].to_s
 	pid_uri = "info:fedora/#{ppid}"
 	obj.add_relationship(:is_member_of,pid_uri)
 	result = @@client.execute(%Q/select max(zindex) as total from dbo.hydra_publish where _oid = #{i["oid"]}/)
 	result.each do |i|
-	  obj.ztotal =  i["total"]
+	  obj.ztotal =  i["total"].to_s
 	end
 	obj.save
 	rescue Exception => msg
@@ -364,8 +391,8 @@ namespace :yulhy2 do
 	#process_children(i,obj.pid)#ERJ process a child's child here
   end
   
-  def get_coll_pid(cid,pid) 
-    query = "cid_i:"+cid.to_s+" && projid_i:"+pid.to_s+" && active_fedora_model_s:Collection"
+  def get_collection_pid(cid,pid) 
+    query = "cid_isi:"+cid.to_s+" && projid_isi:"+pid.to_s+" && active_fedora_model_ssim:Collection"
 	#puts "Q:"+query
     blacklight_solr = RSolr.connect(@blacklight_solr_config)
 	#puts "B:"+blacklight_solr.inspect
