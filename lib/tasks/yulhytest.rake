@@ -28,10 +28,17 @@ namespace :yulhy do
     if @@client.active? == false
       abort("TASK ABORTED: client1 could not connect to db")
     end
-        sqlstmt = %Q/select contentModel from dbo.hydra_content_model/
+	    resultArray = Array.new
+        sqlstmt = %Q/select contentModel,date from dbo.hydra_content_model/
         result = @@client.execute(sqlstmt)
         result.each do |i|
+            #puts "CM:"+ i["contentModel"]
+			#puts "D:"+ i["date"].to_s
+			resultArray.push(i)
+        end
+		resultArray.each do |i|
             puts "CM:"+ i["contentModel"]
+			puts "D:"+ i["date"].to_s
         end
   end
 
