@@ -1,0 +1,125 @@
+<mods xmlns:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-4.xsd" xmlns:xsi="http://wwww.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/mods/v3" version="3.4">
+  <classification>QE882.C15 C365 2010 (LC)</classification><!--FDID58x-->
+  <classification>QE882.C15 C365 2010</classification><!--FDID58x-->
+  <name>
+    <namePart>Goswami, Anjali</namePart><!--FDID69x-->
+  </name>
+  <name>  
+	<namePart>Friscia, Anthony</namePart><!--FDID69x-->
+  </name>
+  <titleInfo>
+    <title>Carnivoran evolution : new views on phylogeny, form, and function / edited by Anjali Goswami and Anthony Friscia.</title><!--FDID70x-->
+  </titleInfo>
+  <titleInfo>
+    <title type="alternative">Cambridge studies in morphology and molecules</title><!--FDID71x-->
+  </titleInfo>
+  <originInfo>
+    <place>Cambridge  ;</place><!--FDID77x-->
+    <place>New York :</place><!--FDID77x-->
+    <publisher>Cambridge University Press,</publisher><!--FDID78x-->
+    <dateCreated keyDate="yes">c2010.</dateCreated><!--FDID79x-->
+	<dateCreated keyDate="yes" encoding="iso8601">1995-12-31T23:59:59Z</dateCreated>
+	<edition>ORIGININFO_EDITION</edition><!--FDID76ax-->
+	<dateOther>DATE_OTHER</dateOther>
+  </originInfo>
+  <subject>
+    <topic>Carnivora--Evolution</topic><!--FDID90x-->
+    <topic>Carnivora--Morphology</topic><!--FDID90x-->
+    <topic>Carnivora--Phylogeny</topic><!--FDID90x-->
+  </subject>
+  <subject>
+    <temporal keyDate="yes">SUBJECT_TEMPORAL</temporal><!--FDID80a FDID81ax-->
+	<name>
+	  <namePart>SUBJECT_NAME_PART</namePart><!--FDID88ax-->
+	</name>
+	<geographic>SUBJECT_GEOGRAPHIC</geographic><!--FDID91ax-->
+	<geographicCode>SUBJECT_GEOGRAPHIC_CODE</geographicCode><!--FDID92ax-->
+	<cartographics>
+	  <scale>SUBJECT_CARTOGRAPHICS_SCALE</scale><!--FDID95ax-->
+	  <projection>SUBJECT_CARTOGRAPHICS_PROJECTION</projection><!--FDID96ax-->
+	  <coordinates>SUBJECT_CARTOGRAPHICS_COORDINATES</coordinates><!--FDID97ax-->
+	</cartographics>
+  </subject>
+  <subject displayLabel="Style">
+    <topic>SUBJECT_STYLE</topic><!--FDID93ax-->
+  </subject>
+  <subject displayLabel="Culture">
+    <topic>SUBJECT_CULTURE</topic><!--FDID94ax-->
+  </subject>
+  <subject displayLabel="Tribe">
+    <topic>SUBJECT_TRIBE</topic>
+  </subject>
+  <subject displayLabel="Event">
+    <topic>SUBJECT_EVENT</topic>
+  </subject>
+  <subject displayLabel="Divinity Subject">DIVINITY_SUBJECT</subject><!--FDID274a-->
+  <physicalDescription>
+    <note>xiii, 492 p. : ill. (some col.) ; 26  cm.</note><!--FDID82x-->
+	<form type="material">MATERIAL</form><!--FDID83ax-->
+  </physicalDescription>
+  <location>
+    <physicalLocation displayLabel="Yale Collection"> GEOLOGY</physicalLocation><!--FDID100x-->
+	<physicalLocation displayLabel="Collection of Origin">LOC_PHYSICAL_LOC</physicalLocation><!--FDID101ax-->
+  </location>
+  <relatedItem>
+    <identifier displayLabel="Link to Orbis record">9668987</identifier><!--FDID104-->
+  </relatedItem>
+  <relatedItem>
+    <url>http://assets.cambridge.org/97805215/15290/cover/9780521515290.jpg</url><!--FDID107x-->
+  </relatedItem>
+  <relatedItem>
+    <part>
+	  <detail type="box">
+	    <caption>BOX_CAPTION</caption><!--FDID60ax-->
+	  </detail>
+	  <detail type="folder">
+	    <caption>FOLDER_CAPTION</caption><!--FDID61ax-->
+	  </detail>	  
+	</part>
+	<identifier displayLabel="Orbis barcode">ORBIS_BARCODE</identifier><!--FDID105ax-->
+	<identifier displayLabel="Link to Finding Aid">FINDING_AID_LINK</identifier><!--FDID106ax-->
+  </relatedItem>
+  <relatedItem type="host">
+    <name>
+	  <namePart>HOST_CREATOR</namePart><!--FDID62ax-->
+	</name>
+	<titleInfo>
+	  <title>HOST_TITLE</title><!--FDID63ax-->
+	</titleInfo>
+	<originInfo>
+	  <place>HOST_PLACE_OF_CREATION</place><!--FDID64ax-->
+      <publisher>HOST_PUBLISHER</publisher><!--FDID65ax-->
+	  <dateIssued>HOST_DATE</dateIssued><!--FDID66ax-->
+	  <edition>HOST_EDITION</edition><!--FDID67ax-->
+	</originInfo> 
+    <note>HOST_NOTE</note><!--FDID68ax-->	
+  </relatedItem>
+  <relatedItem type="series">
+    <titleInfo>
+	  <title>RELATED_ITEM_SERIES_TITLEINFO_TITLE</title>
+	</titleInfo>
+  </relatedItem>	
+  <note displayLabel="Job Number">\\jake.library.yale.edu\ladybird\project25\import\simple</note><!--FDID152x-->
+  <note displayLabel="caption">NOTE_CAPTION></note><!--FDID74ax-->
+  <note displayLabel="Course Info">NOTE_COURSE_INFO</note><!--FDID108ax-->
+  <note displayLabel="Related Exhibit or Resource">NOTE_RELATED_EXHIBIT</note><!--FDID109ax-->
+  <note displayLabel="Citation">NOTE_CITATION</note><!--FDID156ax-->
+  <note displayLabel="Digital">NOTE_DIGITAL</note><!--FDID181ax-->
+  <note>JUST A NOTE</note><!--FDID86ax-->
+  <identifier type="isbn">9780521515290 (hardback)</identifier><!--FDID178x-->
+  <identifier type="isbn">9780521735865 (pbk.)</identifier><!--FDID178x-->
+  <identifier type="issn">ISSN_NUMBER</identifier><!--FDID179ax-->
+  <!--<identifier type="Accession number">AN_ACCESSION_NUMBER</identifier>--><!--FDID59a-->
+  <identifier displayLabel="Accession number">AN_ACCESSION_NUMBER</identifier>
+  <language>
+    <languageTerm type="code" authority="iso639-2b">LANGUAGE</languageTerm><!--FDID84ax-->
+  </language>
+  <recordInfo>
+    <languageOfCataloging>LANGUAGE_OF_CATALOGING</languageOfCataloging><!--FDID85ax-->
+  </recordInfo>
+  <abstract>ABSTRACT</abstract><!--FDID87ax-->
+  <genre>GENRE</genre><!--FDID98ax-->
+  <typeOfResource>TYPE_OF_RESOURCE</typeOfResource><!--FDID99ax-->  
+  <accessCondition type="useAndReproduction">ACCESS_CONDITION</accessCondition><!--FDID102-103ax-->
+  <accessCondition type="restrictionsOnAccess">ACCESS_RESTRICTIONS</accessCondition><!--FDID180ax-->
+</mods>
