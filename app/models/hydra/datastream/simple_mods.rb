@@ -163,6 +163,7 @@ module Hydra
 		solr_doc['date_sim'] = [mods.origin_info.o_i_dateCreated,mods.origin_info.o_i_dateOther].flatten
 		solr_doc['date_dtsim'] = mods.origin_info.o_i_dateCreatedIso
 		solr_doc['date_depicted_ssim'] = mods.subject.keyDate
+                solr_doc['date_depicted_sim'] = mods.subject.keyDate
 		solr_doc['physical_description_ssim'] = mods.physicalDescription.p_s_note
 		solr_doc['materials_ssim'] = mods.physicalDescription.p_s_form
 		solr_doc['language_ssim'] =	mods.language.language_term
@@ -185,6 +186,7 @@ module Hydra
 		solr_doc['coordinates_ssim'] = mods.subject.s_cartographics.s_coordinates
 		solr_doc['genre_ssim'] = mods.genre
 		solr_doc['format_ssim'] = mods.type_of_resource
+                solr_doc['format_sim'] = mods.type_of_resource
 		solr_doc['yale_collection_tsim'] = mods.location.phys_loc_yale
 		solr_doc['musuem_repository_ssim'] = mods.location.phys_loc_origin
 		solr_doc['rights_ssm'] = mods.access_condition
