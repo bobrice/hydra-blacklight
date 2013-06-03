@@ -22,7 +22,7 @@ class CatalogController < ApplicationController
     # solr field configuration for search results/index views
     # KLS - 'has_model_ssim' should be format??
     config.index.show_link = 'title_tsim'
-    config.index.record_tsim_type = 'has_model_tsim'
+    config.index.record_tsim_type = 'has_model_ssim'
 
     # solr field configuration for document/show views
     # KLS - 'has_model_ssim'??
@@ -49,7 +49,7 @@ class CatalogController < ApplicationController
     #
     # :show may be set to false if you don't want the facet to be drawn in the 
     # facet bar
-    config.add_facet_field solr_name('format', :stored_searchable, type: :string), :label => 'Format'
+    config.add_facet_field solr_name('format', :facetable), :label => 'Format'
     config.add_facet_field solr_name('creator', :facetable), :label => 'Creator'  
     config.add_facet_field solr_name('date', :facetable), :label =>'Date'
     config.add_facet_field solr_name('language', :facetable), :label => 'Language', :limit => true 
