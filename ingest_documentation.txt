@@ -1,0 +1,33 @@
+hydra ingest notes (ERJ 6/4/13)
+
+1) check for eligible oids 
+select a.hpid,a.oid,a.cid,a.pid,b.contentModel,a._oid 
+from dbo.hydra_publish a,
+dbo.hydra_content_model b 
+where a.dateHydraStart is null 
+and a.dateReady 
+is not null and a._oid=0 
+and a.hcmid is not null
+and a.hcmid=b.hcmid 
+order by a.dateReady
+
+from this query get list of hpids for later use, most of the time this will be 'hpid > "somenumber"'
+
+check data in tables, make sure looks OK
+  select * from dbo.hydra_publish with hpid > "somenumber"
+  select * from dbo.hydra_publish_path with hpid > "somenumber"
+
+2)make sure all Collection objects have been made
+  rake yulhy:add_all_collections
+
+3) run the actual ingest pointing output to a .txt file: 
+  rake yulhy4:ingest > output.txt
+
+4) check output file and sderr for successful ingests, failures, and possible errors
+
+5) check database using hpids from step 1 and report
+select a.hpid, b.contentmodel,a.pid,a.oid,a._oid,a.zindex,a.hydraID
+from dbo.hydra_publish a,dbo.hydra_content_model b 
+where a.hcmid=b.hcmid and a.hpid > <somenumber>
+
+6) debug if necessary (the hard part)
