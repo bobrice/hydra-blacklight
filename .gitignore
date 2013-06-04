@@ -17,3 +17,5 @@
 .gitignore.orig
 public/index.html.orig
 
+#Ignore configuration files
+.rvmrc
