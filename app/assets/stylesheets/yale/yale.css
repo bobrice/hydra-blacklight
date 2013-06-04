@@ -1,6 +1,79 @@
+.navbar .new_brand {
+padding-top:20px;
+font-family: 'YaleDesign-SmallCap';
+font-weight: bold;
+font-size: 17px;
+text-transform:uppercase;
+color: #708FB8;
+margin-left:0px;
+}
+
+.navbar .new_brand_yale {
+color: #0F4D92;
+font-family: 'YaleDesign';
+font-weight: bold;
+font-size: 26px;
+}
+
+.navbar .span3 {
+padding-top: 8px;
+}
+
+@font-face {
+    font-family: 'YaleDesign';
+    src: url('fonts/yaledesign-medium-webfont.eot');
+    src: url('fonts/yaledesign-medium-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/yaledesign-medium-webfont.woff') format('woff'),
+         url('fonts/yaledesign-medium-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'YaleDesign';
+    src: url('fonts/yaledesign-bold-webfont.eot');
+    src: url('fonts/yaledesign-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/yaledesign-bold-webfont.woff') format('woff'),
+         url('fonts/yaledesign-bold-webfont.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'YaleDesign';
+    src: url('fonts/yaledesign-italic-webfont.eot');
+    src: url('fonts/yaledesign-italic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/yaledesign-italic-webfont.woff') format('woff'),
+         url('fonts/yaledesign-italic-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'YaleDesign';
+    src: url('fonts/yaledesign-bolditalic-webfont.eot');
+    src: url('fonts/yaledesign-bolditalic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/yaledesign-bolditalic-webfont.woff') format('woff'),
+         url('fonts/yaledesign-bolditalic-webfont.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'YaleDesign-SmallCap';
+    src: url('fonts/yaledessmacap-webfont.eot');
+    src: url('fonts/yaledessmacap-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/yaledessmacap-webfont.woff') format('woff'),
+         url('fonts/yaledessmacap-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 .navbar .brand {
-width: 235px;
-margin-top:10px;
+/* background: none; */
+font-family: 'YaleDesign-SmallCap';
+color: #00346A;
+margin-left:0px;
 }
 
 html,
@@ -24,8 +97,33 @@ height: 60px;
 }
 
 #footer {
-text-align:center;
+/* background-color: #F9F9F9; */
+/* background-image: linear-gradient(to bottom, white, #F2F2F2); */
+/* background-repeat: repeat-x; */
+/* border-top-width: 1px; */
 padding-top:10px;
+margin-left: 30px;
+text-align: center;
+}
+
+#footer a{
+/* color: #D9E9F2; */
+}
+
+#footer #footer-line2 {
+padding-top: 15px;
+line-height: 19.5px;
+}
+
+.YaleLogo {
+font-family: 'YaleDesign',Georgia, 'Times New Roman', Times;
+font-size: 29px;
+line-height: 30px;
+/* margin-left: -140px; */
+}
+
+.YaleLogo a {
+color: #00346A;
 }
 
 @media (max-width: 767px) {
