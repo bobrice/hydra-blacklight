@@ -7,7 +7,7 @@ require Rails.root.join('config/environment.rb')
 namespace :yulhy do
   desc "refresh hydra_publish and hydra_publish_error tables for testing"
   task :hydra_publish_refresh do
-	lbconf = YAML.load_file ('config/ladybird_test.yml')
+	lbconf = YAML.load_file ('config/ladybird_pamoja_test.yml')
 	lbuser = lbconf.fetch("username").strip
 	lbpw = lbconf.fetch("password").strip
 	lbhost = lbconf.fetch("host").strip
