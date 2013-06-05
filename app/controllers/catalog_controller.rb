@@ -71,15 +71,37 @@ class CatalogController < ApplicationController
 
     # solr fields to be displayed in the show (single result) view
     #   The ordering of the field names is the order of the display 
-    config.add_show_field solr_name('title', :stored_searchable, type: :string), :label => 'Title:'
     config.add_show_field 'oid_isi', :label => 'OID:' 
     config.add_show_field 'id', :label => 'PID:'
+    config.add_show_field 'variant_titles_tsim', :label => 'Variant Titles:'
     config.add_show_field 'creator_tsim', :label => 'Creator:'
-    config.add_show_field 'publishedCreated_ssim', :label => 'Published/Created:' 
-    config.add_show_field 'call_number_ssim', :label => 'Call number:'
-    config.add_show_field 'accession_number_ssim', :label => 'Accession number:'
+    config.add_show_field 'publishedCreated_ssim', :label => 'Published/Created:'
+    config.add_show_field 'date_depicted_ssim', :label => 'Date Depicted:'
+    config.add_show_field 'edition_ssim', :label => 'Edition:'
+    config.add_show_field 'physical_description_ssim', :label => 'Physical Description:'
+    config.add_show_field 'materials_ssim', :label => 'Materials:'
+    config.add_show_field 'notes_tsim', :label => 'Notes:'
+    config.add_show_field 'abstract_tsim', :label => 'Abstract:' 
+    config.add_show_field 'subject_name_tsim', :label => 'Subjects:'
+    config.add_show_field 'subject_topic_tsim', :label => 'Subjects:'
+    config.add_show_field 'subject_geographic_tsim', :label => 'Subjects:'
+    config.add_show_field 'call_number_ssim', :label => 'Call Number:'
+    config.add_show_field 'accession_number_ssim', :label => 'Accession Number:'
+    config.add_show_field 'box_number_ssm', :label => 'Box number:'
+    config.add_show_field 'caption_folder_ssm', :label => 'Folder Name:'
+    config.add_show_field 'caption_ssim', :label => 'Caption:'
+    config.add_show_field 'source_creator_tsim', :label => 'Source Creator:'
+    config.add_show_field 'source_title_tsim', :label => 'Source Title:'
+    config.add_show_field 'source_created_tsim', :label => 'Source Created:'
+    config.add_show_field 'source_edition_tsim', :label => 'Source Edition:'
+    config.add_show_field 'source_note_tsim', :label => 'Source Note:'
     config.add_show_field 'format_ssim', :label => 'Format:' 
     config.add_show_field 'language_ssim', :label => 'Language:'
+    config.add_show_field 'period_style_tsim', :label => 'Period/Style:'
+    config.add_show_field 'culture_tsim', :label => 'Culture:'
+    config.add_show_field 'scale_ssim', :label => 'Scale:'
+    config.add_show_field 'projection_ssim', :label => 'Projection:'
+
 
 
 
