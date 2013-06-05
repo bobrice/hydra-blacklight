@@ -554,8 +554,8 @@ module Blacklight::SolrHelper
   
   # a solr query method to find the children objects of a given parent pid 
   def get_children_from_parent_pid(pid)
-        query = "is_member_of_s:\"info\:fedora\/" + pid + "\""
-        @solr_response = find(blacklight_config.qt,{:fq => query,:fl => "id", :sort =>"zindex_i asc", :rows => 1000});
+        query = "is_member_of_ssim:\"info\:fedora\/" + pid + "\""
+        @solr_response = find(blacklight_config.qt,{:fq => query,:fl => "id", :sort =>"zindex_isi asc", :rows => 1000});
 	if !(@solr_response.response.empty?)
 		json_response = @solr_response.response
                 @numFound = json_response['numFound']

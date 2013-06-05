@@ -10,6 +10,6 @@
   <% end -%>
 <% if @docs != nil then end%> 
 
-<%= if document[:active_fedora_model_s].to_s.eql? '["ComplexParent"]' then render :partial => 'show_children', :locals => {:document => document} end %>
+<%= if document[:active_fedora_model_ssim].to_s.eql? '["ComplexParent"]' then render :partial => 'show_children', :locals => {:document => document} end %>
 
 </dl>

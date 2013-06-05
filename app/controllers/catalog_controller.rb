@@ -16,8 +16,16 @@ class CatalogController < ApplicationController
   configure_blacklight do |config|
     config.default_solr_params = { 
       :qt => 'search',
-      :rows => 10 
+      :rows => 10,
+      :fq => 'active_fedora_model_ssim:ComplexParent || active_fedora_model_ssim:Simple'
     }
+
+
+   #  config.default_solr_params = {
+   #   :qt => 'search',
+   #   :rows => 10,
+   # }
+
 
     # solr field configuration for search results/index views
     # KLS - 'has_model_ssim' should be format??
