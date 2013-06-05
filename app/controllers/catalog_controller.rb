@@ -28,12 +28,10 @@ class CatalogController < ApplicationController
 
 
     # solr field configuration for search results/index views
-    # KLS - 'has_model_ssim' should be format??
     config.index.show_link = 'title_tsim'
     config.index.record_tsim_type = 'has_model_ssim'
 
     # solr field configuration for document/show views
-    # KLS - 'has_model_ssim'??
     config.show.html_title = 'title_tsim'
     config.show.heading = 'title_tsim'
     config.show.display_type = 'has_model_ssim'
@@ -75,22 +73,21 @@ class CatalogController < ApplicationController
 
     # solr fields to be displayed in the index (search results) view
     #   The ordering of the field names is the order of the display 
-    config.add_index_field solr_name('title', :stored_searchable, type: :string), :label => 'Title:' 
-    config.add_index_field solr_name('creator', :stored_searchable, type: :string), :label => 'Creator:' 
-    config.add_index_field solr_name('publishedCreated', :stored_searchable, type: :string), :label => 'Published/Created:'
+    config.add_index_field 'creator_tsim', :label => 'Creator:' 
+    config.add_index_field 'publishedCreated_ssim', :label => 'Published/Created:'
     config.add_index_field solr_name('format', :symbol), :label => 'Format:'
 
     # solr fields to be displayed in the show (single result) view
     #   The ordering of the field names is the order of the display 
     config.add_show_field solr_name('title', :stored_searchable, type: :string), :label => 'Title:'
-    config.add_show_field solr_name('oid', :stored_searchable, type: :string), :label => 'OID:' 
-    config.add_show_field solr_name('pid', :stored_searchable, type: :string), :label => 'PID:'
-    config.add_show_field solr_name('creator', :stored_searchable, type: :string), :label => 'Creator:'
-    config.add_show_field solr_name('publishedCreated', :stored_searchable, type: :string), :label => 'Published/Created:' 
-    config.add_show_field solr_name('call_number', :stored_searchable, type: :string), :label => 'Call number:'
-    config.add_show_field solr_name('accession_number', :stored_searchable, type: :string), :label => 'Accession number:'
-    config.add_show_field solr_name('format', :symbol), :label => 'Format:' 
-    config.add_show_field solr_name('language', :stored_searchable, type: :string), :label => 'Language:'
+    config.add_show_field 'oid_isi', :label => 'OID:' 
+    config.add_show_field 'id', :label => 'PID:'
+    config.add_show_field 'creator_tsim', :label => 'Creator:'
+    config.add_show_field 'publishedCreated_ssim', :label => 'Published/Created:' 
+    config.add_show_field 'call_number_ssim', :label => 'Call number:'
+    config.add_show_field 'accession_number_ssim', :label => 'Accession number:'
+    config.add_show_field 'format_ssim', :label => 'Format:' 
+    config.add_show_field 'language_ssim', :label => 'Language:'
 
 
 
