@@ -48,12 +48,12 @@ class CatalogController < ApplicationController
     # :show may be set to false if you don't want the facet to be drawn in the 
     # facet bar
     config.add_facet_field solr_name('format', :facetable), :label => 'Format'
-    config.add_facet_field solr_name('creator', :facetable), :label => 'Creator'  
     config.add_facet_field solr_name('date', :facetable), :label =>'Date'
     config.add_facet_field solr_name('language', :facetable), :label => 'Language', :limit => true 
-    config.add_facet_field solr_name('subject_topic', :facetable), :label => 'Topic', :limit => 20 
-    config.add_facet_field solr_name('subject_geographic', :facetable), :label => 'Region' 
-    config.add_facet_field solr_name('date_depicted', :facetable), :label => 'Era'  
+    config.add_facet_field solr_name('creator', :facetable), :label => 'Creator'  
+    config.add_facet_field solr_name('subject', :facetable), :label => 'Subject', :limit => 20 
+    # config.add_facet_field solr_name('subject_geographic', :facetable), :label => 'Region' 
+    #config.add_facet_field solr_name('date_depicted', :facetable), :label => 'Era'  
 
     # Have BL send all facet field names to Solr, which has been the default
     # previously. Simply remove these lines if you'd rather use Solr request
@@ -85,6 +85,8 @@ class CatalogController < ApplicationController
     config.add_show_field 'subject_name_tsim', :label => 'Subjects:'
     config.add_show_field 'subject_topic_tsim', :label => 'Subjects:'
     config.add_show_field 'subject_geographic_tsim', :label => 'Subjects:'
+    config.add_show_field 'local_subject_tsim', :label => 'Subjects:'
+    config.add_show_field 'event_tsim', :label => 'Subjects:'
     config.add_show_field 'call_number_ssim', :label => 'Call Number:'
     config.add_show_field 'accession_number_ssim', :label => 'Accession Number:'
     config.add_show_field 'box_number_ssm', :label => 'Box number:'
@@ -95,15 +97,30 @@ class CatalogController < ApplicationController
     config.add_show_field 'source_created_tsim', :label => 'Source Created:'
     config.add_show_field 'source_edition_tsim', :label => 'Source Edition:'
     config.add_show_field 'source_note_tsim', :label => 'Source Note:'
-    config.add_show_field 'format_ssim', :label => 'Format:' 
     config.add_show_field 'language_ssim', :label => 'Language:'
     config.add_show_field 'period_style_tsim', :label => 'Period/Style:'
     config.add_show_field 'culture_tsim', :label => 'Culture:'
     config.add_show_field 'scale_ssim', :label => 'Scale:'
     config.add_show_field 'projection_ssim', :label => 'Projection:'
-
-
-
+    config.add_show_field 'coordinates_ssim', :label => 'Coordinates:'
+    config.add_show_field 'genre_ssim', :label => 'Genre:'
+    config.add_show_field 'format_ssim', :label => 'Format:'
+    config.add_show_field 'yale_collection_tsim', :label => 'Yale Collection:'
+    config.add_show_field 'musuem_repository_ssim', :label => 'Museum/Repository:'
+    config.add_show_field 'rights_ssm', :label => 'Rights:'
+    config.add_show_field 'orbis_record_ssm', :label => 'Orbis Record:'
+    config.add_show_field 'orbis_barcode_ssim', :label => 'Orbis Barcode:'
+    config.add_show_field 'orbis_finding_aid_ssm', :label => 'Finding Aid:'
+    config.add_show_field 'related_links_ssm', :label => 'Related Links:'
+    config.add_show_field 'related_exhibit_tsim', :label => 'Related Exhibit or Resource:'
+    config.add_show_field 'note_citation_tsim', :label => 'Citation:'
+    config.add_show_field 'series_tsim', :label => 'Series:'
+    config.add_show_field 'isbn_ssim', :label => 'ISBN:'
+    config.add_show_field 'issn_ssim', :label => 'ISSN:'
+    config.add_show_field 'access_restrictions_tsim', :label => 'Access Restrictions:'
+    config.add_show_field 'digital_ssim', :label => 'Digital:'
+    config.add_show_field 'other_dates_ssim', :label => 'Other Dates:'
+    config.add_show_field 'tribe_tsim', :label => 'Tribe:'
 
     # "fielded" search configuration. Used by pulldown among other places.
     # For supported keys in hash, see rdoc for Blacklight::SearchFields
@@ -168,10 +185,10 @@ class CatalogController < ApplicationController
     # label in pulldown is followed by the name of the SOLR field to sort by and
     # whether the sort is ascending or descending (it must be asc or desc
     # except in the relevancy case).
-    config.add_sort_field 'score desc, pub_date_dtsi desc, title_tesi asc', :label => 'relevance'
-    config.add_sort_field 'pub_date_dtsi desc, title_tesi asc', :label => 'year'
-    config.add_sort_field 'author_tesi asc, title_tesi asc', :label => 'author'
-    config.add_sort_field 'title_tesi asc, pub_date_dtsi desc', :label => 'title'
+    #config.add_sort_field 'score desc, date_dtsim desc, title_tsim asc', :label => 'relevance'
+    #config.add_sort_field 'date_dtsim desc, title_tsim asc', :label => 'year'
+    #config.add_sort_field 'title_tsim asc, date_dtsim desc', :label => 'title'
+    #config.add_sort_field 'creator_tsim asc, title_tsim asc', :label => 'author'
 
     # If there are more than this many search results, no spelling ("did you 
     # mean") suggestion is offered.
