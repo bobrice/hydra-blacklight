@@ -161,7 +161,7 @@ module Hydra
 		solr_doc['edition_ssim'] = mods.origin_info.o_i_edition
 		solr_doc['publishedCreated_ssim'] = [mods.origin_info.o_i_place,mods.origin_info.o_i_publisher,mods.origin_info.o_i_dateCreated].flatten
 		solr_doc['date_sim'] = [mods.origin_info.o_i_dateCreated,mods.origin_info.o_i_dateOther].flatten
-		solr_doc['date_dtsim'] = mods.origin_info.o_i_dateCreatedIso
+		solr_doc['date_dtsi'] = mods.origin_info.o_i_dateCreatedIso
 		solr_doc['date_depicted_ssim'] = mods.subject.keyDate
                 solr_doc['date_depicted_sim'] = mods.subject.keyDate
 		solr_doc['physical_description_ssim'] = mods.physicalDescription.p_s_note
