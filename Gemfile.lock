@@ -182,6 +182,11 @@ GEM
       mime-types (>= 1.16)
     rsolr (1.0.9)
       builder (>= 2.1.2)
+    rubycas-client (2.3.9)
+      activesupport
+    rubycas-client-rails (0.1.0)
+      rails (>= 3.0.0)
+      rubycas-client (>= 2.2.0)
     rubydora (1.6.1)
       activemodel
       activesupport
@@ -242,6 +247,7 @@ DEPENDENCIES
   jettywrapper
   jquery-rails
   rails (= 3.2.13)
+  rubycas-client-rails
   sass-rails (~> 3.2.3)
   sqlite3
   therubyracer
