@@ -53,7 +53,7 @@ module Blacklight::Catalog
       #      @url1 = @url.gsub("solr", "fedora/objects/")
       #  end
       #  @url2 = "/datastreams/jpg/content"
-      @url1 = "http://imageserver.library.yale.edu/libserver3.yale.edu:8983/"
+      @url1 = "http://imageserver.library.yale.edu/libserver7.yale.edu:8983/"
       @url2 = "/"+@netid+"/"+@session+"/227/111/132/130/500.jpg"
       end
 
@@ -63,7 +63,10 @@ module Blacklight::Catalog
     def show
       @response, @document = get_solr_response_for_doc_id    
 
+      @bookreader = "http://libserver5.yale.edu:3000/bookreader/BookReaderDemo/index.html?oid="
       @docs1 = Array.new
+      @oidpointer_array = Array.new
+      @pid_array = Array.new
       @netid = "0"
       @session = "0"
       #Blacklight.solr_config returns the hash value of {"url":"http://libserver7.yale.edu:8983/solr"}
@@ -76,19 +79,44 @@ module Blacklight::Catalog
       #                @url1 = @url.gsub("solr", "fedora/objects/")
       #       end
       #       @url2 = "/datastreams/jpg/content"
-      @url1 = "http://imageserver.library.yale.edu/libserver3.yale.edu:8983/"
+      #
+      @url1 = "http://imageserver.library.yale.edu/libserver7.yale.edu:8983/"
       @url2 = "/"+@netid+"/"+@session+"/227/111/132/130/500.jpg"
       end
 
         @docs = get_children_from_parent_pid(pid)
         if @docs != nil
-                @docs.each do |i|
-                        @h1 = Hash[*i.flatten]
-                        @h1.each do |key,value|
-                                @docs1.push value
-                        end
+           @docs.each do |i|
+               @h1 = Hash[*i.flatten]
+                  @h1.each do |key,value|
+                      @docs1.push value
+                  end
                 end
-        end
+           end
+
+           @oidpointer = get_oidpointer(pid)
+           # This is the value of oidpointer when nothing is returned 
+           if !(@oidpointer.to_s.eql? '[{}]')
+               @oidpointer.each do |i|
+                   i.each do |key, value|
+                      @oidpointer_array.push value
+                   end
+                   #render :json => @oidpointer_array[0]
+               end
+             
+               @child_pid = get_child_pid(@oidpointer_array[0])
+               #[{"id":"changeme:162"}]
+               if @child_pid != nil
+                  #render :json => @child_pid
+                  @child_pid.each do |j|
+                      j.each do |key1, value1|
+                         @pid_array.push value1
+                      end
+                  end
+               end
+               #render :json => @pid_array[0]
+           end
+
 
       respond_to do |format|
         format.html {setup_next_and_previous_documents}

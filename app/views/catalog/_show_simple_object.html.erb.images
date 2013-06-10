@@ -1,8 +1,0 @@
-      <% # header bar for doc items in index view -%>
-      <div class="showSimple">
-
-        <% # main title container for doc partial view -%>
-
-             <%= link_to image_tag(@url1 + document[:id].to_s  + @url2 , :height => '256', :width => '256'), @url1 + document[:id].to_s  + @url2 %>
-      </div>
-

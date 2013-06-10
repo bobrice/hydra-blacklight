@@ -555,7 +555,7 @@ module Blacklight::SolrHelper
   # a solr query method to find the children objects of a given parent pid 
   def get_children_from_parent_pid(pid)
         query = "is_member_of_ssim:\"info\:fedora\/" + pid + "\""
-        @solr_response = find(blacklight_config.qt,{:fq => query,:fl => "id", :sort =>"zindex_isi asc", :rows => 1000});
+        @solr_response = find(blacklight_config.qt,{:fq => query,:fl => "id", :sort =>"zindex_isi asc", :rows => 1000000});
 	if !(@solr_response.response.empty?)
 		json_response = @solr_response.response
                 @numFound = json_response['numFound']
@@ -565,6 +565,32 @@ module Blacklight::SolrHelper
 	end
   end 
   
+  def get_oidpointer(pid)
+        query = "id:\"" + pid + "\""
+        @solr_response = find(blacklight_config.qt,{:fq => query,:fl => "oidpointer_isi", :rows => 10});
+        if !(@solr_response.response.empty?)
+                json_response = @solr_response.response
+                @numFound = json_response['numFound']
+                if @numFound > 0
+                        @docs = json_response['docs']
+                end
+        end
+  end
+
+  def get_child_pid(oidpointer)
+        query = "oid_isi:" + oidpointer.to_s
+        @solr_response = find(blacklight_config.qt,{:fq => query,:fl => "id", :rows => 10});
+        if !(@solr_response.response.empty?)
+                json_response = @solr_response.response
+                @numFound = json_response['numFound']
+                if @numFound > 0
+                        @docs = json_response['docs']
+                end
+        end
+  end
+
+
+
   
   # Look up facet limit for given facet_field. Will look at config, and
   # if config is 'true' will look up from Solr @response if available. If

@@ -82,6 +82,7 @@ class CatalogController < ApplicationController
     config.add_show_field solr_name('title', :stored_searchable, type: :string), :label => 'Title:'
     config.add_show_field 'oid_isi', :label => 'OID:' 
     config.add_show_field 'id', :label => 'PID:'
+    config.add_show_field 'oidpointer_isi', :label => 'oid pointer:'
     config.add_show_field 'creator_tsim', :label => 'Creator:'
     config.add_show_field 'publishedCreated_ssim', :label => 'Published/Created:' 
     config.add_show_field 'call_number_ssim', :label => 'Call number:'

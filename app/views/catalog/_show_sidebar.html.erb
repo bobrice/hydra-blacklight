@@ -4,7 +4,7 @@
 
 <% my_document = @document %>
 
-<%= if my_document[:active_fedora_model_ssim].to_s.eql? '["ComplexParent"]' then else render :partial => 'show_simple_object' , :locals => {:document => @document} end %>
+<%= if my_document[:active_fedora_model_ssim].to_s.eql? '["ComplexParent"]' then render :partial => 'show_complex_object', :locals => {:document => @document} else render :partial => 'show_simple_object' , :locals => {:document => @document} end %>
 
 <% unless @document.more_like_this.empty? %>
 <div class="well" id="sidebar-mlt">

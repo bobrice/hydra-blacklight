@@ -100,7 +100,7 @@ br.getPageURI = function(index, reduce, rotate) {
     console.log("pid:"+pid);
     //remove later
     //var url = "http://libserver3.yale.edu:8983/fedora/objects/"+pid+"/datastreams/jpg/content";
-    var url = "http://imageserver.library.yale.edu/libserver3.yale.edu:8983/"+pid+"/"+netid+"/"+session+"/227/111/132/130/500.jpg";
+    var url = "http://imageserver.library.yale.edu/libserver7.yale.edu:8983/"+pid+"/"+netid+"/"+session+"/227/111/132/130/500.jpg";
     return url;
 }
 
