@@ -6,6 +6,12 @@ DiggitHydra::Application.routes.draw do
 
   devise_for :users
 
+  match '/auth', :controller => 'access_conditions', :action => 'index'
+  match '/authtest', :controller => 'access_conditions', :action => 'test_access'
+  match '/testcas', :controller => 'access_conditions', :action => 'test_cas'
+  match '/logout', :controller => 'access_conditions', :action => 'logout'
+  match '/getnetid', :controller => 'access_conditions', :action => 'getnetid'
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

@@ -2,6 +2,7 @@
 #study cas authentication 
 require 'nokogiri'
 require 'open-uri'
+require 'securerandom'
 class AccessConditionsController < ApplicationController
 
   include Blacklight::Catalog
@@ -57,10 +58,22 @@ class AccessConditionsController < ApplicationController
 	return
   end
   def test_cas
-	render :text => "You're seeing this because you've passed CAS authentication"
+	#render :text => "You're seeing this because you've passed CAS authentication"
+        session["mediakey"] = SecureRandom.urlsafe_base64(10) if session["mediakey"] == nil
+        render :text => session.inspect
   end
   def logout
     CASClient::Frameworks::Rails::Filter.logout(self)
+  end
+  def getnetid
+    netid = ""
+    mediakey = params[:mediakey] || ""
+    if mediakey == session["mediakey"]
+      netid = session["cas_user"]
+    else
+      netid = "invalid media key"
+    end
+    render :text => netid
   end
 	#ERJ bug-times out in the rest client
   def test_access
