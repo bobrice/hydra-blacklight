@@ -220,15 +220,33 @@ namespace :yulhy4 do
 	dberror = "[#{linenum}] #{errormsg}"
     puts "error for oid: #{i["oid"]} errormsg: #{dberror}"
 	puts "ERROR:" + errormsg.backtrace.to_s
-	puts "STACK:" + errormsg.backtrace.to_s
-	ehid = @@client2.execute(%Q/insert into dbo.hydra_publish_error (hpid,date,oid,error) values (#{i["hpid"]},GETDATE(),#{i["oid"]},"#{dberror}")/)
-	ehid.insert
+	#puts "STACK:" + errormsg.backtrace.to_s
+	begin
+	  ehid = @@client2.execute(%Q/insert into dbo.hydra_publish_error (hpid,date,oid,error) values (#{i["hpid"]},GETDATE(),#{i["oid"]},'#{dberror}')/)
+	  ehid.insert
+	rescue Exception => msg
+	  unless ehid.nil? 
+		ehid.cancel
+	  end
+      puts "Error processing error:#{msg}"
+	  puts "Warning, error won't be saved in database"
+	  puts "ERROR:" + msg.backtrace.to_s
+	end  
   end
   #ERJ error routine for message driven errors (no exceptions) 
   def processmsg(i,errormsg)
     puts "error for oid: #{i["oid"]} errormsg: #{errormsg}"
-	ehid = @@client2.execute(%Q/insert into dbo.hydra_publish_error (hpid,date,oid,error) values (#{i["hpid"]},GETDATE(),#{i["oid"]},"#{errormsg}")/)
-	ehid.insert
+	begin
+	  ehid = @@client2.execute(%Q/insert into dbo.hydra_publish_error (hpid,date,oid,error) values (#{i["hpid"]},GETDATE(),#{i["oid"]},'#{errormsg}')/)
+	  ehid.insert
+	rescue Exception => msg
+	  unless ehid.nil? 
+		ehid.cancel
+	  end
+      puts "Error processing error:#{msg}"
+      puts "Warning, error won't be saved in database"
+	  puts "ERROR:" + msg.backtrace.to_s
+    end	  
   end
   
   def process_children(i,ppid)
