@@ -26,7 +26,6 @@ br.getOID = function() {
 }  
 // We load the images from archive.org -- you can modify this function to retrieve images
 // using a different URL structure
-// json response (data) for oid 10671912 is: {"numFound":1,"start":0,"docs":[{"ztotal_i":141}]}
     getZTotal = function(oid) {
       var solrq = "/pagination/numofpages?oid="+oid
       console.log("solrZTotalQ:"+solrq);
@@ -39,8 +38,8 @@ br.getOID = function() {
 	 url: solrq,
 	 success: function(data)
          {
-            console.log("SUCCESS:"+data.docs[0].ztotal_i);
-            result = data.docs[0].ztotal_i; 
+            console.log("SUCCESS:"+data.docs[0].ztotal_isi);
+            result = data.docs[0].ztotal_isi; 
          },
 	 error: function(xhr,ajaxOptions,thrownError) 
          { 
@@ -107,10 +106,8 @@ br.getPageURI = function(index, reduce, rotate) {
 // Return which side, left or right, that a given page should be displayed on
 br.getPageSide = function(index) {
     if (0 == (index & 0x1)) {
-        console.log ("R");
         return 'R';
     } else {
-        console.log ("L");
         return 'L';
     }
 }
@@ -166,6 +163,9 @@ br.bookUrl  = 'http://openlibrary.org';
 // Override the path used to find UI images
 br.imagesBaseURL = '../BookReader/images/';
 
+br.transTitle = 'Transcript';
+br.transUrl = 'http://www.yale.edu'
+
 br.getEmbedCode = function(frameWidth, frameHeight, viewParams) {
     return "Embed code not supported in bookreader demo.";
 }
@@ -178,3 +178,6 @@ br.init();
 $('#BRtoolbar').find('.read').hide();
 $('#textSrch').hide();
 $('#btnSrch').hide();
+
+//Make a condition here. If no transcript is available the hide
+//$('#BRtrans').hide();

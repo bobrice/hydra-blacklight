@@ -3400,11 +3400,13 @@ BookReader.prototype.initEmbedNavbar = function() {
         +         '<button class="BRicon book_left"></button>'
         +         '<button class="BRicon book_right"></button>'
         +   "</span>"
-        +   "<span><a class='logo' href='" + this.logoURL + "' 'target='_blank' ></a></span>"
+       // +   "<span><a class='logo' href='" + this.logoURL + "' 'target='_blank' ></a></span>"
         +   "<span id='BRembedreturn'><a href='" + thisLink + "' target='_blank' ></a></span>"
+        +   "<span id='BRembedtrans'><a href='" + this.transUrl + "' target='_blank' ></a></span>"
         + '</div>'
     );
     $('#BRembedreturn a').text(this.bookTitle);
+    //$('#BRembedtrans a').text(this.transTitle);
 }
 
 BookReader.prototype.updateNavPageNum = function(index) {
@@ -3629,17 +3631,19 @@ BookReader.prototype.initToolbar = function(mode, ui) {
     $("#BookReader").append(
           "<div id='BRtoolbar'>"
         +   "<span id='BRtoolbarbuttons'>"
-        +     "<form action='javascript:br.search($(\"#textSrch\").val());' id='booksearch'><input type='search' id='textSrch' name='textSrch' val='' placeholder='Search inside'/><button type='submit' id='btnSrch' name='btnSrch'>GO</button></form>"
+        //+     "<form action='javascript:br.search($(\"#textSrch\").val());' id='booksearch'><input type='search' id='textSrch' name='textSrch' val='' placeholder='Search inside'/><button type='submit' id='btnSrch' name='btnSrch'>GO</button></form>"
+        //+     "<span id='BRtrans'><a></a></span>"
         +     "<button class='BRicon play'></button>"
         +     "<button class='BRicon pause'></button>"
         +     "<button class='BRicon info'></button>"
         +     "<button class='BRicon share'></button>"
-        +     "<button class='BRicon transcript'></button>"
-        +     readIcon
+        //+     readIcon
         //+     "<button class='BRicon full'></button>"
         +   "</span>"
-        +   "<span><a class='logo' href='" + this.logoURL + "'></a></span>"
+       // +   "<span><a class='logo' href='" + this.logoURL + "'></a></span>"
+       +     "<span id='BRtrans'><a></a></span>"
         +   "<span id='BRreturn'><a></a></span>"
+        //+   "<span id='BRtrans'><a></a></span>"
         +   "<div id='BRnavCntlTop' class='BRnabrbuvCntl'></div>"
         + "</div>"
         /*
@@ -3663,6 +3667,8 @@ BookReader.prototype.initToolbar = function(mode, ui) {
     }
 
     $('#BRreturn a').attr('href', this.bookUrl).text(this.bookTitle);
+    $('#BRtrans a').attr('href', this.transUrl).text(this.transTitle);
+    //$('#BRreturn a').attr('href', this.transUrl).text(this.transTitle);
 
     $('#BRtoolbar .BRnavCntl').addClass('BRup');
     $('#BRtoolbar .pause').hide();    
@@ -3670,7 +3676,7 @@ BookReader.prototype.initToolbar = function(mode, ui) {
     this.updateToolbarZoom(this.reduce); // Pretty format
         
     if (ui == "embed" || ui == "touch") {
-        $("#BookReader a.logo").attr("target","_blank");
+    //    $("#BookReader a.logo").attr("target","_blank");
     }
 
     // $$$ turn this into a member variable
@@ -3697,10 +3703,10 @@ BookReader.prototype.initToolbar = function(mode, ui) {
     var self = this;
     jToolbar.find('.share').colorbox({inline: true, opacity: "0.5", href: "#BRshare", onLoad: function() { self.autoStop(); self.ttsStop(); } });
     jToolbar.find('.info').colorbox({inline: true, opacity: "0.5", href: "#BRinfo", onLoad: function() { self.autoStop(); self.ttsStop(); } });
-    jToolbar.find('.transcript').colorbox({inline: true, opacity: "0.5", href: "#BRtrans", onLoad: function() { self.autoStop(); self.ttsStop(); } });
+    //jToolbar.find('.transcript').colorbox({inline: true, opacity: "0.5", href: "#BRtrans", onLoad: function() { self.autoStop(); self.ttsStop(); } });
 
-    $('<div style="display: none;"></div>').append(this.blankShareDiv()).append(this.blankInfoDiv()).append(this.blanktransDiv()).appendTo($('body'));
-    //$('<div style="display: none;"></div>').append(this.blankShareDiv()).append(this.blankInfoDiv()).appendTo($('body'));
+    //$('<div style="display: none;"></div>').append(this.blankShareDiv()).append(this.blankInfoDiv()).append(this.blanktransDiv()).appendTo($('body'));
+    $('<div style="display: none;"></div>').append(this.blankShareDiv()).append(this.blankInfoDiv()).appendTo($('body'));
 
 
     $('#BRinfo .BRfloatTitle a').attr( {'href': this.bookUrl} ).text(this.bookTitle).addClass('title');
@@ -3747,7 +3753,7 @@ BookReader.prototype.blankShareDiv = function() {
     );
 }
 
-BookReader.prototype.blanktransDiv = function() {
+/*BookReader.prototype.blanktransDiv = function() {
     return $([
         '<div class="BRfloat" id="BRtrans">',
             '<div class="BRfloatHead">',
@@ -3756,7 +3762,7 @@ BookReader.prototype.blanktransDiv = function() {
             '</div>',
         '</div>'].join('\n')
     );
-}
+}*/
 
 // switchToolbarMode
 //______________________________________________________________________________
@@ -5218,8 +5224,8 @@ BookReader.prototype.initUIStrings = function()
     // the toolbar and nav bar easier
         
     // Setup tooltips -- later we could load these from a file for i18n
-    var titles = { '.logo': 'Go to Yale University home page', // $$$ update after getting OL record
-                   '.zoom_in': 'Zoom in',
+    //var titles = { '.logo': 'Go to Yale University home page', // $$$ update after getting OL record
+    var titles = { '.zoom_in': 'Zoom in',
                    '.zoom_out': 'Zoom out',
                    '.onepg': 'One-page view',
                    '.twopg': 'Two-page view',
@@ -5231,7 +5237,6 @@ BookReader.prototype.initUIStrings = function()
                    '.read': 'Read this book aloud',
                    '.share': 'Share this book',
                    '.info': 'About this book',
-                   '.transcript': 'Available Transcript',
                    '.full': 'Show fullscreen',
                    '.book_left': 'Previous page',
                    '.book_right': 'Next Page',
@@ -5244,6 +5249,7 @@ BookReader.prototype.initUIStrings = function()
                    '.book_top': 'First page',
                    '.book_bottom': 'Last page'
                   };
+
     if ('rl' == this.pageProgression) {
         titles['.book_leftmost'] = 'Last page';
         titles['.book_rightmost'] = 'First page';
