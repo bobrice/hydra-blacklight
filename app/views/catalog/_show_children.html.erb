@@ -2,13 +2,17 @@
       <div class="documentHeader clearfix">
 
         <% # main title container for doc partial view -%>
+        <% pagenum = 1 %>
 	<% if @docs1 != nil && @docs1.length < 10 then @docs1.each do |value|    %>
 
-		<%= link_to image_tag(@url1 + value.to_s  + @url2 , :height => '100', :width => '75'), @url1 + value.to_s  + @url2 %>
+      <%= link_to image_tag(@url1 + value.to_s  + @url2 , :height => '100', :width => '75'), @bookreader + document[:oid_isi].to_s + "#page/" + pagenum.to_s + "/mode/1up" %>
+      <% pagenum = pagenum +1 %>
 
 	<% end end %>
 
-        <%= link_to "Show Page View", "http://libserver5.yale.edu:3000/bookreader/BookReaderDemo/index.html?oid=" + document[:oid_i].to_s %>
+  <li class="btn">
+        <%= link_to "Show Entire Book", @bookreader + document[:oid_isi].to_s %>
+  </li>
 
       </div>
 

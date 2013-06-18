@@ -1,0 +1,31 @@
+CAS configuration:
+
+Gemfile
+  gem "rubycas-client-rails"
+
+bundle install
+
+application.rb
+  config.rubycas.cas_base_url = 'https://secure.its.yale.edu/cas/login'
+
+environment.rb
+  CASClient::Frameworks::Rails::Filter.configure(
+	:cas_base_url => "https://secure.its.yale.edu/cas/",
+	:username_session_key => :cas_user,
+	:extra_attributes_session_key => :cas_extra_attributes
+  )
+
+routes.rb
+  match '/testcas', :controller => 'access_conditions', :action => 'test_cas'
+  match '/logout', :controller => 'access_conditions', :action => 'logout'
+
+access_conditions_controller.rb
+  before_filter CASClient::Frameworks::Rails::Filter , :only => :test_cas
+  ...
+  def test_cas
+	render :text => "You're seeing this because you've passed CAS authentication"
+  end
+  def logout
+    CASClient::Frameworks::Rails::Filter.logout(self)
+  end
+

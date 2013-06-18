@@ -1,6 +1,17 @@
 DiggitHydra::Application.routes.draw do
   root :to => "catalog#index"
 
+
+  match '/pagination', :controller => 'pagination', :action => 'index'
+  match '/pagination/numofpages', :controller => 'pagination', :action => 'numofpages'
+
+  match '/auth', :controller => 'access_conditions', :action => 'index'
+  match '/authtest', :controller => 'access_conditions', :action => 'test_access'
+  match '/testcas', :controller => 'access_conditions', :action => 'test_cas'
+  match '/logout', :controller => 'access_conditions', :action => 'logout'
+  match '/getnetid', :controller => 'access_conditions', :action => 'getnetid'
+
+
   Blacklight.add_routes(self)
   HydraHead.add_routes(self)
 

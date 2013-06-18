@@ -16,8 +16,16 @@ class CatalogController < ApplicationController
   configure_blacklight do |config|
     config.default_solr_params = { 
       :qt => 'search',
-      :rows => 10 
+      :rows => 10,
+      :fq => 'active_fedora_model_ssim:ComplexParent || active_fedora_model_ssim:Simple'
     }
+
+
+   #  config.default_solr_params = {
+   #   :qt => 'search',
+   #   :rows => 10,
+   # }
+
 
     # solr field configuration for search results/index views
     config.index.show_link = 'title_tsim'
@@ -73,6 +81,7 @@ class CatalogController < ApplicationController
     #   The ordering of the field names is the order of the display 
     config.add_show_field 'oid_isi', :label => 'OID:' 
     config.add_show_field 'id', :label => 'PID:'
+    config.add_show_field 'oidpointer_isi', :label => 'oid pointer:'
     config.add_show_field 'variant_titles_tsim', :label => 'Variant Titles:'
     config.add_show_field 'creator_tsim', :label => 'Creator:'
     config.add_show_field 'publishedCreated_ssim', :label => 'Published/Created:'

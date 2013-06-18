@@ -9,7 +9,7 @@ class PaginationController < ApplicationController
       render :text => "missing parameters"
       return
     end  
-    query = "parentoid_i:"+oid+" && zindex_i:"+zi
+    query = "parentoid_isi:"+oid+" && zindex_isi:"+zi
     @solr_response = find(blacklight_config.qt,{:fq => query,:fl => "id"});
     render :json => @solr_response.response
     return
@@ -21,8 +21,8 @@ class PaginationController < ApplicationController
       render :text => "missing parameter"
       return
     end
-    query = "oid_i:"+oid
-    @solr_response = find(blacklight_config.qt,{:fq => query,:fl =>"ztotal_i"});
+    query = "oid_isi:"+oid
+    @solr_response = find(blacklight_config.qt,{:fq => query,:fl =>"ztotal_isi"});
     render :json => @solr_response.response
     return
   end
