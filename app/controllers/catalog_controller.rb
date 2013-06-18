@@ -49,7 +49,7 @@ class CatalogController < ApplicationController
     # facet bar
     config.add_facet_field solr_name('format', :facetable), :label => 'Format'
     config.add_facet_field solr_name('date', :facetable), :label =>'Date'
-    config.add_facet_field solr_name('language', :facetable), :label => 'Language', :limit => true 
+    config.add_facet_field solr_name('language', :facetable), :label => 'Language', :limit => 10 
     config.add_facet_field solr_name('creator', :facetable), :label => 'Creator'  
     config.add_facet_field solr_name('subject', :facetable), :label => 'Subject', :limit => 20 
     # config.add_facet_field solr_name('subject_geographic', :facetable), :label => 'Region' 
