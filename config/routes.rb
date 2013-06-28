@@ -4,12 +4,16 @@ DiggitHydra::Application.routes.draw do
 
   match '/pagination', :controller => 'pagination', :action => 'index'
   match '/pagination/numofpages', :controller => 'pagination', :action => 'numofpages'
+  match '/pagination/turndirection', :controller =>'pagination', :action => 'turndirection'
+  match '/pagination/transcript', :controller => 'pagination', :action => 'transcript'
 
   match '/auth', :controller => 'access_conditions', :action => 'index'
   match '/authtest', :controller => 'access_conditions', :action => 'test_access'
   match '/testcas', :controller => 'access_conditions', :action => 'test_cas'
   match '/logout', :controller => 'access_conditions', :action => 'logout'
   match '/getnetid', :controller => 'access_conditions', :action => 'getnetid'
+
+  match '/catalog/email', :controller => "catalog", :action => 'email'
 
 
   Blacklight.add_routes(self)

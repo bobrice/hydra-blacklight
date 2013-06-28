@@ -63,7 +63,8 @@ module Blacklight::Catalog
     def show
       @response, @document = get_solr_response_for_doc_id    
 
-      @bookreader = "http://libserver5.yale.edu:3000/bookreader/BookReaderDemo/index.html?oid="
+      #@bookreader = "http://libserver5.yale.edu:3000/bookreader/BookReaderDemo/index.html?oid="
+      @bookreader = "/bookreader/BookReaderDemo/index.html?oid="
       @docs1 = Array.new
       @oidpointer_array = Array.new
       @pid_array = Array.new

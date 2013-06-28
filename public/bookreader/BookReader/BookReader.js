@@ -80,7 +80,8 @@ function BookReader() {
     this.lastDisplayableIndex2up = null;
 
     //Variable to determine RTL or LTR
-    this.pageProgression = this.setPageProgression();
+    this.parentoid = this.getOIDturn();
+    //this.pageProgression = this.setPageProgression();
     
     // Should be overriden (before init) by custom implmentations.
     this.logoURL = 'http://www.yale.edu/';
@@ -3258,6 +3259,7 @@ BookReader.prototype.gutterOffsetForIndex = function(pindex) {
     return offset;
 }
 
+
 // leafEdgeWidth
 //______________________________________________________________________________
 // Returns the width of the leaf edge div for the page with index given
@@ -3632,7 +3634,6 @@ BookReader.prototype.initToolbar = function(mode, ui) {
           "<div id='BRtoolbar'>"
         +   "<span id='BRtoolbarbuttons'>"
         //+     "<form action='javascript:br.search($(\"#textSrch\").val());' id='booksearch'><input type='search' id='textSrch' name='textSrch' val='' placeholder='Search inside'/><button type='submit' id='btnSrch' name='btnSrch'>GO</button></form>"
-        //+     "<span id='BRtrans'><a></a></span>"
         +     "<button class='BRicon play'></button>"
         +     "<button class='BRicon pause'></button>"
         +     "<button class='BRicon info'></button>"
@@ -3641,9 +3642,11 @@ BookReader.prototype.initToolbar = function(mode, ui) {
         //+     "<button class='BRicon full'></button>"
         +   "</span>"
        // +   "<span><a class='logo' href='" + this.logoURL + "'></a></span>"
-       +     "<span id='BRtrans'><a></a></span>"
+        +   "<button id='RTL' name='right_to_left' onclick='br.setrtl()'>Right to Left</button>"
+        +   "<button id='LTR' name='left_to_right' onclick='br.setltr()'>Left to Right</button>"
+        +   "<button id='TRAN' name='transcript' onclick='br.gettran()'>Transcript</button>"
+        +   "<span id='BRtrans'><a></a></span>"
         +   "<span id='BRreturn'><a></a></span>"
-        //+   "<span id='BRtrans'><a></a></span>"
         +   "<div id='BRnavCntlTop' class='BRnabrbuvCntl'></div>"
         + "</div>"
         /*
@@ -3668,7 +3671,9 @@ BookReader.prototype.initToolbar = function(mode, ui) {
 
     $('#BRreturn a').attr('href', this.bookUrl).text(this.bookTitle);
     $('#BRtrans a').attr('href', this.transUrl).text(this.transTitle);
-    //$('#BRreturn a').attr('href', this.transUrl).text(this.transTitle);
+    //$('#BRRTL a').attr('href', this.transUrl).text(this.turnRTL);
+    //$('#BRRTL a').attr(attribute, this.setPageProgression(rl)).text(this.turnRTL);
+    //$('#BRLTR a').attr('href', this.transUrl).text(this.turnLTR);
 
     $('#BRtoolbar .BRnavCntl').addClass('BRup');
     $('#BRtoolbar .pause').hide();    
@@ -3703,9 +3708,7 @@ BookReader.prototype.initToolbar = function(mode, ui) {
     var self = this;
     jToolbar.find('.share').colorbox({inline: true, opacity: "0.5", href: "#BRshare", onLoad: function() { self.autoStop(); self.ttsStop(); } });
     jToolbar.find('.info').colorbox({inline: true, opacity: "0.5", href: "#BRinfo", onLoad: function() { self.autoStop(); self.ttsStop(); } });
-    //jToolbar.find('.transcript').colorbox({inline: true, opacity: "0.5", href: "#BRtrans", onLoad: function() { self.autoStop(); self.ttsStop(); } });
-
-    //$('<div style="display: none;"></div>').append(this.blankShareDiv()).append(this.blankInfoDiv()).append(this.blanktransDiv()).appendTo($('body'));
+   
     $('<div style="display: none;"></div>').append(this.blankShareDiv()).append(this.blankInfoDiv()).appendTo($('body'));
 
 
@@ -3752,17 +3755,6 @@ BookReader.prototype.blankShareDiv = function() {
         '</div>'].join('\n')
     );
 }
-
-/*BookReader.prototype.blanktransDiv = function() {
-    return $([
-        '<div class="BRfloat" id="BRtrans">',
-            '<div class="BRfloatHead">',
-                'Transcript',
-                '<a class="floatShut" href="javascript:;" onclick="$.fn.colorbox.close();"><span class="shift">Close</span></a>',
-            '</div>',
-        '</div>'].join('\n')
-    );
-}*/
 
 // switchToolbarMode
 //______________________________________________________________________________
@@ -4649,6 +4641,18 @@ BookReader.prototype._getPageURI = function(index, reduce, rotate) {
     }
     
     //This launches the code for BookReaderJSSimple.js
+    //Call to function that returns whether or not to show the transcript link
+    //$('#BRtrans').hide();
+
+
+    if (this.gettran() == false)//Or check a variable that will be set in gettran()
+    {
+        //document.getElementById("TRAN").disabled=true;
+        //or
+        document.getElementById("TRAN").style.visibility = 'hidden';
+        //or
+        $('#BRtrans').hide();
+    }
     return this.getPageURI(index, reduce, rotate);
 }
 
@@ -5210,12 +5214,44 @@ BookReader.prototype.buildInfoDiv = function(jInfoDiv)
     jInfoDiv.find('.BRfloatTitle a').attr({'href': this.bookUrl, 'alt': this.bookTitle}).text(this.bookTitle);
 }
 
-BookReader.prototype.setPageProgression = function() 
+BookReader.prototype.setPageProgression = function(turndirection) 
 {
     console.log("In setPageProgression");
     //return lr for LTR and rl for RTL
     //return 'rl';
+    //parentoid = getOIDturn();
+    /*var solrq = "/pagination/turndirection?oid="+this.parentoid
+    console.log("SOLRQ:"+solrq);
+    //var turndirection = "LTR";
+    $.ajax(
+    {
+        async: false,
+        type: 'GET',
+        dataType: 'json',
+        url: solrq,
+        success: function(data) 
+        { 
+           console.log("SUCCESS:"+ data); 
+           turndirection = data;
+        },
+        error: function(xhr,ajaxOptions,thrownError) 
+        { 
+           alert(xhr.status+"-"+thrownError)
+        }
+     }
+     );*/
+      console.log("AJAX: turndirection is: "+turndirection);
+      this.pageProgression = turndirection;
 }
+
+BookReader.prototype.getOIDturn = function() {
+    if (window.location.search.length==0) {
+    return "";
+    }
+    var oid_param = window.location.search.substr(1);
+    var oid_split = oid_param.split("=");
+    return oid_split[1];
+} 
 
 // Can be overriden
 BookReader.prototype.initUIStrings = function()

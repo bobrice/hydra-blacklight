@@ -1,7 +1,7 @@
 <% # header bar for doc items in index view -%>
 <div class="showComplex">
     <% # main title container for doc partial view -%>
-        <%= link_to image_tag(@url1 + @pid_array[0].to_s  + @url2 , :height => '256', :width => '256'), @url1 + @pid_array[0].to_s  + @url2 %>
+    <%= if (!(@pid_array[0].to_s.eql? '')) then link_to image_tag(@url1 + @pid_array[0].to_s  + @url2 , :height => '256', :width => '256'), @url1 + @pid_array[0].to_s  + @url2 end%>
     <li class="btn">
         <%= link_to(:'Download PDF', "#") %>
         <% #replace the "#" with a route to the PDF. Maybe the CAS route for CAS authentication (must be in quotes) or another url (must be without quotes). TBD -%>
