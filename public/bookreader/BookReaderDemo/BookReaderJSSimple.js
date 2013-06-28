@@ -103,6 +103,38 @@ br.getPageURI = function(index, reduce, rotate) {
     return url;
 }
 
+br.gettran = function() {
+//return true of false based on results from solr query
+    console.log("In gettran");
+    //return lr for LTR and rl for RTL
+    //return 'rl';
+    //parentoid = getOIDturn();
+    var solrq = "/pagination/transcript?oid="+this.parentoid
+    console.log("SOLRQ:"+solrq);
+    var transcript = "false";
+    $.ajax(
+    {
+        async: false,
+        type: 'GET',
+        dataType: 'json',
+        url: solrq,
+        success: function(data) 
+        { 
+           console.log("SUCCESS:"+ data); 
+           transcript = data;
+        },
+        error: function(xhr,ajaxOptions,thrownError) 
+        { 
+           alert(xhr.status+"-"+thrownError)
+        }
+     }
+     );
+      console.log("AJAX: transcript is: "+transcript);
+     return transcript;;
+  //OR, maybe set a variable. Then check the value of that variable to determine if 
+  //button should be displayed
+}
+
 // Return which side, left or right, that a given page should be displayed on
 br.getPageSide = function(index) {
     if (0 == (index & 0x1)) {
@@ -150,6 +182,19 @@ br.getPageNum = function(index) {
     return index+1;
 }
 
+br.setrtl = function() {
+    turndir = 'rl'
+    console.log("in set rtl with turndir=" + turndir);
+    this.setPageProgression(turndir);
+}
+
+br.setltr = function()
+{
+    turndir = 'lr'
+    console.log("in set ltr with turndir=" + turndir);
+    this.setPageProgression(turndir);
+}
+
 // Total number of leafs
 //br.numLeafs = 15;
 //br.numLeafs = getZTotal(10590519);
@@ -164,7 +209,10 @@ br.bookUrl  = 'http://openlibrary.org';
 br.imagesBaseURL = '../BookReader/images/';
 
 br.transTitle = 'Transcript';
-br.transUrl = 'http://www.yale.edu'
+//br.pageturnTitle = "Right to Left Turning";
+br.turnRTL = "Right to Left Turning";
+br.turnLTR = "Left to Right Turning"
+br.transUrl = 'http://www.yale.edu';
 
 br.getEmbedCode = function(frameWidth, frameHeight, viewParams) {
     return "Embed code not supported in bookreader demo.";

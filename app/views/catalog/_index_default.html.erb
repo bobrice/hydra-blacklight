@@ -8,7 +8,8 @@
     <% end -%>
   <% end -%>
 <span class="yale_thumbnail">
-<%= if document[:active_fedora_model_ssim].to_s.eql? '["ComplexParent"]' then else image_tag @url1 +  document[:id].to_s + @url2, :height => '100', :width => '100' end %>
+<% document[:id].to_s %>
+<%= if (!(@url1.nil?) && !(document[:id].to_s.eql? '')) then (if document[:active_fedora_model_ssim].to_s.eql? '["ComplexParent"]' then else image_tag @url1 +  document[:id].to_s + @url2, :height => '100', :width => '100' end) end %>
 </span>
 
 </dl>
