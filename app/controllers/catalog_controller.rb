@@ -57,11 +57,12 @@ class CatalogController < ApplicationController
     # facet bar
     config.add_facet_field solr_name('format', :facetable), :label => 'Format'
     config.add_facet_field solr_name('date', :facetable), :label =>'Date'
-    config.add_facet_field solr_name('language', :facetable), :label => 'Language', :limit => true 
+    config.add_facet_field solr_name('language', :facetable), :label => 'Language', :limit => 10 
     config.add_facet_field solr_name('creator', :facetable), :label => 'Creator'  
     config.add_facet_field solr_name('subject', :facetable), :label => 'Subject', :limit => 20 
     # config.add_facet_field solr_name('subject_geographic', :facetable), :label => 'Region' 
     #config.add_facet_field solr_name('date_depicted', :facetable), :label => 'Era'  
+    config.add_facet_field solr_name('digital_collection', :facetable), :label => 'Digital Collection', :limit => 20 
 
     # Have BL send all facet field names to Solr, which has been the default
     # previously. Simply remove these lines if you'd rather use Solr request
@@ -130,6 +131,7 @@ class CatalogController < ApplicationController
     config.add_show_field 'digital_ssim', :label => 'Digital:'
     config.add_show_field 'other_dates_ssim', :label => 'Other Dates:'
     config.add_show_field 'tribe_tsim', :label => 'Tribe:'
+    config.add_show_field 'digital_collection_ssim', :label => 'Digital Collection:'
 
     # "fielded" search configuration. Used by pulldown among other places.
     # For supported keys in hash, see rdoc for Blacklight::SearchFields

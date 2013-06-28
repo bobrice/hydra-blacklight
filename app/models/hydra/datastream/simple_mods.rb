@@ -86,6 +86,7 @@ module Hydra
 		t.location(:path=>"location") {
 		  t.phys_loc_yale(:path=>"physicalLocation",:attributes=>{:displayLabel=>"Yale Collection"})
 		  t.phys_loc_origin(:path=>"physicalLocation",:attributes=>{:displayLabel=>"Collection of Origin"})
+		  t.digital_collection(:path=>"physicalLocation",:attributes=>{:displayLabel=>"Digital Collection"})
 		}  
 		t.access_condition(:path=>"accessCondition",:attributes=>{:type=>"useAndReproduction"})
 		#
@@ -190,6 +191,8 @@ module Hydra
                 solr_doc['format_sim'] = mods.type_of_resource
 		solr_doc['yale_collection_tsim'] = mods.location.phys_loc_yale
 		solr_doc['musuem_repository_ssim'] = mods.location.phys_loc_origin
+		solr_doc['digital_collection_ssim'] = mods.location.digital_collection#
+		solr_doc['digital_collection_sim'] = mods.location.digital_collection#
 		solr_doc['rights_ssm'] = mods.access_condition
 		solr_doc['orbis_record_ssm'] = mods.related_item.r_i_orbis
 		solr_doc['orbis_barcode_ssim'] = mods.related_item.r_i_orbis_barcode
