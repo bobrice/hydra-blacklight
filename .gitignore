@@ -7,6 +7,10 @@
 # Ignore bundler and ks config
 /.bundle
 /.ks
+*.ks
+
+# Ignore all .swp files.
+ *.swp
 
 # Ignore the default SQLite database.
 /db/*.sqlite3
