@@ -83,6 +83,8 @@ br.getPageURI = function(index, reduce, rotate) {
     // reduce and rotate are ignored in this simple implementation, but we
     // could e.g. look at reduce and load images from a different directory
     // or pass the information to an image server
+
+
     var netid = "0";
     var session = "0";
     console.log("index:"+index);
@@ -99,7 +101,7 @@ br.getPageURI = function(index, reduce, rotate) {
     console.log("pid:"+pid);
     //remove later
     //var url = "http://libserver3.yale.edu:8983/fedora/objects/"+pid+"/datastreams/jpg/content";
-    var url = "http://imageserver.library.yale.edu/libserver7.yale.edu:8983/"+pid+"/"+netid+"/"+session+"/227/111/132/130/500.jpg";
+    var url = "http://imageserver.library.yale.edu/libserver7.yale.edu:8082/"+pid+"/"+netid+"/"+session+"/227/111/132/130/500.jpg";
     return url;
 }
 
