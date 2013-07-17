@@ -39,6 +39,7 @@ ingest routine:
   YAML.load_file ('config/ladybird_pamoja_test.yml')
 3) check mount is there:  
   mountroot = "/home/ermadmix/libshare/"
+  check df on server to ingest to (dev,test (libserver7),prod (diego)  
 4) check for eligible oids 
 select a.hpid,a.oid,a.cid,a.pid,b.contentModel,a._oid 
 from dbo.hydra_publish a,
