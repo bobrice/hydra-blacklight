@@ -1,5 +1,5 @@
 require '/home/ermadmix/hy_projs/diggit-hydra/config/environment.rb'
-
+begin
 obj = ComplexParent.new
 #file = File.new('mods_service_full.xml')
 file = File.new('/home/ermadmix/10681633_metadata.xml')
@@ -13,7 +13,7 @@ obj.accessMetadata.ng_xml = ng_xml
 file = File.new('/home/ermadmix/rights.xml')
 ng_xml = Nokogiri::XML::Document.parse(IO.read(file))
 obj.rightsMetadata.ng_xml = ng_xml
-#obj.add_relationship(:is_member_of,"info:fedora/changeme:74")
+#obj.add_relationship(:is_member_off,"info:fedora/fakepid:74")
 #obj.save
 #puts obj.pid
 obj.oid = "1234"
@@ -46,4 +46,15 @@ obj.oidpointer = "7890"
 #obj.add_datastream(ds)
 
 obj.save
+obj.add_relationship(:is_member_off,"info:fedora/fakepid:74")
+obj.save
 puts obj.pid
+rescue Exception => msg
+  puts "Test processing error:#{msg}"
+  if obj.pid=="__DO_NOT_USE__"
+    puts "Exception, but pid not saved"
+  else
+    puts "Exception occured while processing #{obj.pid} Delete PID."
+    obj.delete
+  end
+end
