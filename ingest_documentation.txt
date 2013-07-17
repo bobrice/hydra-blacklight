@@ -28,7 +28,18 @@ select hpid,hcmid,date,cid,pid,oid,_oid,zindex,_boid,_bindex,[action],dateready 
 
 -------------
 ingest routine:
-1) check for eligible oids 
+
+1) check that hydra configs are set properly
+  config/solr.yml
+  config/fedorr.yml
+2) check that lib/tasks/yulhy4.rake is set properly
+  for prod db:
+  YAML.load_file(config/ladybird.yml)
+  for testdb:
+  YAML.load_file ('config/ladybird_pamoja_test.yml')
+3) check mount is there:  
+  mountroot = "/home/ermadmix/libshare/"
+4) check for eligible oids 
 select a.hpid,a.oid,a.cid,a.pid,b.contentModel,a._oid 
 from dbo.hydra_publish a,
 dbo.hydra_content_model b 
@@ -46,25 +57,25 @@ check data in tables, make sure looks OK
   select * from dbo.hydra_publish with hpid > "somenumber"
   select * from dbo.hydra_publish_path with hpid > "somenumber"
 
-2)make sure all Collection objects have been made
+5)make sure all Collection objects have been made
   rake yulhy:add_all_collections
   or for test instance
   RAILS_ENV=test rake yulhy:add_all_collections
   
 
-3) run the actual ingest pointing output to a .txt file: 
+6) run the actual ingest pointing output to a .txt file: 
   rake yulhy4:ingest > output.txt
   or for test instance
   RAILS_ENV=test rake yulhy4:ingest > output.txt
 
-4) check output file and sderr for successful ingests, failures, and possible errors
+7) check output file and sderr for successful ingests, failures, and possible errors
 
-5) check database using hpids from step 1 and report
+8) check database using hpids from step 1 and report
 select a.hpid, b.contentmodel,a.pid,a.oid,a._oid,a.zindex,a.hydraID
 from dbo.hydra_publish a,dbo.hydra_content_model b 
 where a.hcmid=b.hcmid and a.hpid > <somenumber>
 
-6) debug if necessary (the hard part)
+9) debug if necessary (the hard part)
 a) check the rake output ('output.txt' from step 3)
 b) if an exception occurs, check what it is, but most likely it will be an illegible stack trace
 c) look for the pid before an error
@@ -97,7 +108,7 @@ f) do same as (d) and (e) with catalina.out of solr (if necessary)
 
 
 
-7) delete any garbage objects
+10) delete any garbage objects
   rake yulhy:delete_fedora[namespace,start,end]
   
   ie for changeme:1 to changeme:5
