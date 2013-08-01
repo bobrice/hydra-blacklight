@@ -65,7 +65,7 @@ namespace :yulhy4 do
           processerror(i,msg)
         end		  
       end
-	  if @cnt > 100
+	  if @cnt > 10000
 	    @@client.close
 	    @@client2.close
 	    puts Time.now
@@ -200,8 +200,15 @@ namespace :yulhy4 do
 	    obj.ztotal =  i["total"].to_s
 	  end
 	end  
+	  #obj.add_relationship(:is_member_off,"info:fedora/fakepid:74") #to test error
 	  obj.save
 	rescue Exception => msg
+	  if obj.persisted? == false
+        puts "Exception, but pid not saved"
+      else
+        puts "Exception occured while processing #{obj.pid} Delete PID."
+        obj.delete
+      end
 	  unless result.nil? 
 		result.cancel
 	  end
@@ -385,8 +392,15 @@ namespace :yulhy4 do
 	resultArr.each do |i|
 	  obj.ztotal =  i["total"].to_s
 	end
+	#obj.add_relationship(:is_member_off,"info:fedora/fakepid:74") #to test error
 	obj.save
 	rescue Exception => msg
+	  if obj.persisted? == false
+        puts "Exception, but pid not saved"
+      else
+        puts "Exception occured while processing #{obj.pid} Delete PID."
+        obj.delete
+      end
 	  unless result.nil? 
 		result.cancel
 	  end
@@ -404,8 +418,8 @@ namespace :yulhy4 do
 	#puts "Q:"+query
     blacklight_solr = RSolr.connect(@blacklight_solr_config)
 	#puts "B:"+blacklight_solr.inspect
-    response = blacklight_solr.get("select",:params=> {:fq => query,:fl =>"id"})
-	#puts "R:"+response
+    response = blacklight_solr.get("select",:params=> {:q => query,:fl =>"id"})
+	#puts "R:"+response.inspect
 	puts "No Collection found for cid:"+cid.to_s+" pid:"+pid.to_s if response["response"]["numFound"] == 0 
     id = response["response"]["docs"][0]["id"]
     id

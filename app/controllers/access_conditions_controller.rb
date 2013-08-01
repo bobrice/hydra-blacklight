@@ -61,6 +61,7 @@ class AccessConditionsController < ApplicationController
 	#render :text => "You're seeing this because you've passed CAS authentication"
         session["mediakey"] = SecureRandom.urlsafe_base64(10) if session["mediakey"] == nil
         render :text => session.inspect
+        #render :text => session["mediakey"]
   end
   def logout
     CASClient::Frameworks::Rails::Filter.logout(self)

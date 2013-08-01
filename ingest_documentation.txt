@@ -1,6 +1,46 @@
-hydra ingest notes (ERJ 6/4/13)
+hydra ingest notes (ERJ 6/4/13) (revised 7/17/13)
 
-1) check for eligible oids 
+--------------
+Publish routine for a project:
+1) remove from hydra_publish, hydra_publish_path anything that will be republished
+  delete from hydra_publish_path where hpid in (select hpid from hydra_publish where pid = 27)
+  delete from hydra_publish where pid = 27
+2) insert into hydra and check progress using date
+  insert into hydra (oid) select oid from object where pid = 27
+  select * from hydra where date >= '2013-06-20 00:00:00.000'
+3) check hydra_publish and hydra_publish path for 1
+4) copy some to pamoja_hydra (only for seeding the pamoja_hydra db, ignore if just using prod pamoja 
+-- populates the _publish table by OID list
+insert into pamoja_hydra.dbo.hydra_publish (hpid,hcmid,date,cid,pid,oid,_oid,zindex,_boid,_bindex,[action],dateready)
+select hpid,hcmid,date,cid,pid,oid,_oid,zindex,_boid,_bindex,[action],dateready from pamoja.dbo.hydra_publish where hpid not in (select hpid from pamoja_hydra.dbo.hydra_publish) and (oid in (0,0) or _oid in (0,0))
+
+-- populates the _path table by OID list
+insert into pamoja_hydra.dbo.hydra_publish_path (hppid,hpid,type,pathhttp,pathunc,md5,sha256,controlgroup,mimetype,dsid,ingestmethod,altids,dslabel,versionable,dsstate,logmessage,oidpointer)
+select a.hppid,a.hpid,a.type,a.pathhttp,a.pathunc,a.md5,a.sha256,a.controlgroup,a.mimetype,a.dsid,a.ingestmethod,a.altids,a.dslabel,a.versionable,a.dsstate,a.logmessage,a.oidpointer from pamoja.dbo.hydra_publish_path a
+inner join pamoja.dbo.hydra_publish b on a.hpid = b.hpid
+where a.hppid not in (select hppid from pamoja_hydra.dbo.hydra_publish_path) and (b.oid in (0,0) or b._oid in (0,0))
+
+Alternatively, you can populate by project, in this example for PID 2. 
+
+-- populates the _publish table by PID
+insert into pamoja_hydra.dbo.hydra_publish (hpid,hcmid,date,cid,pid,oid,_oid,zindex,_boid,_bindex,[action],dateready)
+select hpid,hcmid,date,cid,pid,oid,_oid,zindex,_boid,_bindex,[action],dateready from pamoja.dbo.hydra_publish where hpid not in (select hpid from pamoja_hydra.dbo.hydra_publish) and pid = 2
+
+-------------
+ingest routine:
+
+1) check that hydra configs are set properly
+  config/solr.yml
+  config/fedorr.yml
+2) check that lib/tasks/yulhy4.rake is set properly
+  for prod db:
+  YAML.load_file(config/ladybird.yml)
+  for testdb:
+  YAML.load_file ('config/ladybird_pamoja_test.yml')
+3) check mount is there:  
+  mountroot = "/home/ermadmix/libshare/"
+  check df on server to ingest to (dev,test (libserver7),prod (diego)  
+4) check for eligible oids 
 select a.hpid,a.oid,a.cid,a.pid,b.contentModel,a._oid 
 from dbo.hydra_publish a,
 dbo.hydra_content_model b 
@@ -12,22 +52,69 @@ and a.hcmid=b.hcmid
 order by a.dateReady
 
 from this query get list of hpids for later use, most of the time this will be 'hpid > "somenumber"'
+or remove the a._oid=0 from above to get not just ComplexParent and Simple
 
 check data in tables, make sure looks OK
   select * from dbo.hydra_publish with hpid > "somenumber"
   select * from dbo.hydra_publish_path with hpid > "somenumber"
 
-2)make sure all Collection objects have been made
+5)make sure all Collection objects have been made
   rake yulhy:add_all_collections
+  or for test instance
+  RAILS_ENV=test rake yulhy:add_all_collections
+  
 
-3) run the actual ingest pointing output to a .txt file: 
+6) run the actual ingest pointing output to a .txt file: 
   rake yulhy4:ingest > output.txt
+  or for test instance
+  RAILS_ENV=test rake yulhy4:ingest > output.txt
 
-4) check output file and sderr for successful ingests, failures, and possible errors
+7) check output file and sderr for successful ingests, failures, and possible errors
 
-5) check database using hpids from step 1 and report
+8) check database using hpids from step 1 and report
 select a.hpid, b.contentmodel,a.pid,a.oid,a._oid,a.zindex,a.hydraID
 from dbo.hydra_publish a,dbo.hydra_content_model b 
 where a.hcmid=b.hcmid and a.hpid > <somenumber>
 
-6) debug if necessary (the hard part)
+9) debug if necessary (the hard part)
+a) check the rake output ('output.txt' from step 3)
+b) if an exception occurs, check what it is, but most likely it will be an illegible stack trace
+c) look for the pid before an error
+  ex: in yulhy6d.out libserver7t:713
+d) cross reference with fedora.logs
+
+[ermadmix@libserver7 logs]$ pwd
+/usr/local/fedora/server/logs
+[ermadmix@libserver7 logs]$ ls -la
+total 114216
+drwxrwxrwx+ 2 fedora fedora     4096 Jul  3 14:42 .
+drwxrwxrwx+ 4 fedora fedora       42 Jul  2 10:23 ..
+-rw-rw-rw-. 1 fedora fedora 11938904 Jul 17 14:10 fedora.log
+-rw-rw-rw-. 1 fedora fedora 20998765 Jul  3 14:42 fedora.log.1
+-rw-rw-rw-. 1 fedora fedora 20974982 Jul  3 12:51 fedora.log.2
+-rw-rw-rw-. 1 fedora fedora 20994435 Jul  3 12:13 fedora.log.3
+-rw-rw-rw-. 1 fedora fedora 21015846 Jul  3 11:44 fedora.log.4
+-rw-rw-r--. 1 fedora fedora 20996434 Jul  3 11:18 fedora.log.5
+[ermadmix@libserver7 logs]$ grep "libserver7t:713" .
+[ermadmix@libserver7 logs]$ grep -n "libserver7t:713" ./*
+
+use line number to find exception of next pid (libserver7t:714):
+[ermadmix@libserver7 logs]$ more +64888 fedora.log.5
+
+e) do same as (d) with catalina.out of fedora (if necessary)
+  usr/local/fedora/tomcat/logs
+  
+f) do same as (d) and (e) with catalina.out of solr (if necessary)
+  /usr/local/solr_tomcat/logs
+
+
+
+10) delete any garbage objects
+  rake yulhy:delete_fedora[namespace,start,end]
+  
+  ie for changeme:1 to changeme:5
+  rake yulhy:delete_fedora[changeme,1,5]
+  
+  or for test instance for libserver7t:1 to libserver7t:5
+  RAILS_ENV=test rake yulhy:delete_fedora[libserver7t,1,5]
+

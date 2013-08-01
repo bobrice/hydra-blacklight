@@ -1,20 +1,23 @@
-      <% # header bar for doc items in index view -%>
-      <div class="documentHeader clearfix">
+<% # header bar for doc items in index view -%>
+<div class="documentHeader clearfix">
+<% # main title container for doc partial view -%>
+<% pagenum = 1 %>
 
-        <% # main title container for doc partial view -%>
-        <% pagenum = 1 %>
-	<% if @docs1 != nil && @docs1.length < 10 then @docs1.each do |value|    %>
-            <%= link_to image_tag(@url1 + value.to_s  + @url2 , :height => '100', :width => '75'), @bookreader + document[:oid_isi].to_s + "#page/" + pagenum.to_s + "/mode/1up" %>
-            <% pagenum = pagenum +1 %>
+<% if @docs1 != nil && @docs1.length < 10 then @docs1.each do |value|    %>
 
-	<% end end %>
+  <%= link_to image_tag(@url1 + value.to_s  + @url2 , :height => '100', :width => '75'), @bookreader + document[:oid_isi].to_s + "#page/" + pagenum.to_s + "/mode/1up" %>
+
+  <% pagenum = pagenum +1 %>
+
+<% end end %>
+
 <% if document[:oid_isi].to_s.length > 5 then %>
   <li class="btn">
-        <%= link_to "Show Entire Book", @bookreader + document[:oid_isi].to_s %>
+    <%= link_to "Show Entire Book", @bookreader + document[:oid_isi].to_s %>
   </li>
 <% end %>
 
-      </div>
+</div>
 
 
 

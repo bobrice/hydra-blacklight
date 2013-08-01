@@ -53,7 +53,7 @@ module Blacklight::Catalog
       #      @url1 = @url.gsub("solr", "fedora/objects/")
       #  end
       #  @url2 = "/datastreams/jpg/content"
-      @url1 = "http://imageserver.library.yale.edu/libserver7.yale.edu:8983/"
+      @url1 = "http://imageserver.library.yale.edu/libserver7.yale.edu:8082/"
       @url2 = "/"+@netid+"/"+@session+"/227/111/132/130/500.jpg"
       end
 
@@ -81,7 +81,7 @@ module Blacklight::Catalog
       #       end
       #       @url2 = "/datastreams/jpg/content"
       #
-      @url1 = "http://imageserver.library.yale.edu/libserver7.yale.edu:8983/"
+      @url1 = "http://imageserver.library.yale.edu/libserver7.yale.edu:8082/"
       @url2 = "/"+@netid+"/"+@session+"/227/111/132/130/500.jpg"
       end
 
@@ -97,6 +97,7 @@ module Blacklight::Catalog
 
            @oidpointer = get_oidpointer(pid)
            # This is the value of oidpointer when nothing is returned 
+           #render :json => pid 
            if !(@oidpointer.to_s.eql? '[{}]')
                @oidpointer.each do |i|
                    i.each do |key, value|
