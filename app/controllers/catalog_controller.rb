@@ -1,7 +1,9 @@
 # -*- encoding : utf-8 -*-
 require 'blacklight/catalog'
 
-class CatalogController < ApplicationController  
+class CatalogController < ApplicationController
+  include BlacklightGoogleAnalytics::ControllerExtraHead
+  
 
   include Blacklight::Catalog
   include Hydra::Controller::ControllerBehavior
@@ -76,7 +78,8 @@ class CatalogController < ApplicationController
     #   The ordering of the field names is the order of the display 
     config.add_index_field 'creator_tsim', :label => 'Creator:' 
     config.add_index_field 'publishedCreated_ssim', :label => 'Published/Created:'
-    config.add_index_field solr_name('format', :symbol), :label => 'Format:'
+    config.add_index_field 'id', :label => 'PID:'
+    # config.add_index_field solr_name('format', :symbol), :label => 'Format:'
 
     # solr fields to be displayed in the show (single result) view
     #   The ordering of the field names is the order of the display 
