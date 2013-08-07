@@ -8,7 +8,7 @@ test: &TEST
   url: http://libserver7.yale.edu:8082/fedora
 production:
   user: fedoraAdmin
-  password: fedoraAdmin
-  url: http://your.production.server:8080/fedora
+  password: hydra%man!
+  url: http://diego.library.yale.edu:8082/fedora
 cucumber:
   <<: *TEST

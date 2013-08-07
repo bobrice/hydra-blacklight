@@ -1,5 +1,6 @@
 require "active-fedora"
 class ComplexParent < ActiveFedora::Base
+#class ComplexParent < AbstractYaleObject
   #ERJ, below for reference 
   #include ::ActiveFedora::DatastreamCollections
   #include ::ActiveFedora::Relationships
