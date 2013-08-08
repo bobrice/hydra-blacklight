@@ -27,6 +27,49 @@ class PaginationController < ApplicationController
     return
   end
 
+  def gettitle
+    @docs1 = Array.new
+    oid = params[:oid]
+    if oid==nil
+      render :text => "missing parameter"
+      return
+    end
+    query = "oid_isi:"+oid
+    @solr_response = find(blacklight_config.qt,{:fq => query,:fl =>"title_tsim"});
+ 
+    json_response = @solr_response.response
+    @numFound = json_response['numFound']
+    if @numFound > 0
+      @docs = json_response['docs']
+    end
+
+    if @docs != nil
+        @docs.each do |i|
+          @h1 = Hash[*i.flatten]
+          @h1.each do |key,value|
+            @docs1.push value
+          end
+        end
+      end
+    render :json => @docs1[0]
+    #render :json => @solr_response.response
+    #render :json => @solr_response.class
+    #solr_response.docs.empty?
+    return
+  end
+
+  def getparentpid
+    oid = params[:oid]
+    if oid==nil
+      render :text => "missing parameter"
+      return
+    end
+    query = "oid_isi:"+oid
+    @solr_response = find(blacklight_config.qt,{:fq => query,:fl =>"id"});
+    render :json => @solr_response.response
+    return
+  end
+
   def turndirection
     oid = params[:oid]
     if oid==nil

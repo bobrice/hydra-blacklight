@@ -18,7 +18,7 @@ br.getPageHeight = function(index) {
 
 br.getOID = function() {
     if (window.location.search.length==0) {
-	return "";
+  return "";
     }
     var oid_param = window.location.search.substr(1);
     var oid_split = oid_param.split("=");
@@ -34,14 +34,14 @@ br.getOID = function() {
       {
          async: false,
          type: 'GET',
-	 dataType: 'json',
-	 url: solrq,
-	 success: function(data)
+   dataType: 'json',
+   url: solrq,
+   success: function(data)
          {
             console.log("SUCCESS:"+data.docs[0].ztotal_isi);
             result = data.docs[0].ztotal_isi; 
          },
-	 error: function(xhr,ajaxOptions,thrownError) 
+   error: function(xhr,ajaxOptions,thrownError) 
          { 
             alert(xhr.status+"-"+thrownError)
          }
@@ -68,7 +68,14 @@ br.getOID = function() {
          success: function(data) 
          { 
             console.log("SUCCESS:"+data.docs[0].id + " numFound: " + data.numFound); 
-            result = data.docs[0].id;
+            if (data.numFound > 1)
+            {
+              result = data.docs[1].id;
+            }
+            else
+            {
+              result = data.docs[0].id;
+            }
          },
          error: function(xhr,ajaxOptions,thrownError) 
          { 
@@ -103,6 +110,78 @@ br.getPageURI = function(index, reduce, rotate) {
     //var url = "http://libserver3.yale.edu:8983/fedora/objects/"+pid+"/datastreams/jpg/content";
     var url = "http://imageserver.library.yale.edu/libserver7.yale.edu:8082/"+pid+"/"+netid+"/"+session+"/227/111/132/130/500.jpg";
     return url;
+}
+
+br.gettitle = function() {
+//return true of false based on results from solr query
+    console.log("In gettitle");
+    //return lr for LTR and rl for RTL
+    //return 'rl';
+    //parentoid = getOIDturn();
+    var solrq = "/pagination/title?oid="+this.parentoid
+    console.log("SOLRQ:"+solrq);
+    var title = "false";
+    $.ajax(
+    {
+        async: false,
+        type: 'GET',
+        dataType: 'json',
+        url: solrq,
+        success: function(data) 
+        { 
+           console.log("SUCCESS:"+ data); 
+           title = data;
+        },
+        error: function(xhr,ajaxOptions,thrownError) 
+        { 
+           alert(xhr.status+"-"+thrownError)
+        }
+     }
+     );
+      console.log("AJAX: title is: "+title);
+     return title.toString();
+  //OR, maybe set a variable. Then check the value of that variable to determine if 
+  //button should be displayed
+}
+
+br.getparentpid = function() {
+//return true of false based on results from solr query
+    console.log("In getparentpid");
+    //return lr for LTR and rl for RTL
+    //return 'rl';
+    //parentoid = getOIDturn();
+    var solrq = "/pagination/getparentpid?oid="+this.parentoid
+    console.log("SOLRQ:"+solrq);
+    var title = "false";
+    $.ajax(
+    {
+        async: false,
+        type: 'GET',
+        dataType: 'json',
+        url: solrq,
+        success: function(data) 
+        { 
+           console.log("SUCCESS:"+ data.docs[0].id + " numFound: " + data.numFound); 
+
+           if (data.numFound > 1)
+            {
+              result = data.docs[1].id;
+            }
+            else
+            {
+              result = data.docs[0].id;
+            }
+        },
+        error: function(xhr,ajaxOptions,thrownError) 
+        { 
+           alert(xhr.status+"-"+thrownError)
+        }
+     }
+     );
+      console.log("AJAX: parent pid is: "+result);
+     return result;
+  //OR, maybe set a variable. Then check the value of that variable to determine if 
+  //button should be displayed
 }
 
 br.gettran = function() {
@@ -203,9 +282,12 @@ br.setltr = function()
 br.numLeafs = getZTotal(br.getOID());
 
 // Book title and the URL used for the book title link
-br.bookTitle= 'Yale Universitys BookReader Application';
+//br.bookTitle= 'Yale Universitys BookReader Application';
+br.bookTitle = br.gettitle();
 // Will need the link to the metadata title of the object
-br.bookUrl  = 'http://openlibrary.org';
+//@bookreader = "/bookreader/BookReaderDemo/index.html?oid="
+//br.bookUrl  = 'http://openlibrary.org';
+br.bookUrl = '/catalog/' + br.getparentpid().toString();
 
 // Override the path used to find UI images
 br.imagesBaseURL = '../BookReader/images/';

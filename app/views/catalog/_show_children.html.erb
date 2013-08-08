@@ -5,7 +5,9 @@
 
 <% if @docs1 != nil && @docs1.length < 10 then @docs1.each do |value|    %>
 
-  <%= link_to image_tag(@url1 + value.to_s  + @url2 , :height => '100', :width => '75'), @bookreader + document[:oid_isi].to_s + "#page/" + pagenum.to_s + "/mode/1up" %>
+  <!-- <%= link_to image_tag(@url1 + value.to_s  + @url2 , :height => '100', :width => '75'), @bookreader + document[:oid_isi].to_s + "#page/" + pagenum.to_s + "/mode/1up" %>-->
+
+  <%= link_to image_tag(@url1 + value.to_s  + @url2 , :height => '100', :width => '75'), @url1 + value.to_s  + @urlzoom , :height => '200', :width => '150' %>
 
   <% pagenum = pagenum +1 %>
 
@@ -18,7 +20,3 @@
 <% end %>
 
 </div>
-
-
-
-

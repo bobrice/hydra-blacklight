@@ -6,6 +6,8 @@ DiggitHydra::Application.routes.draw do
   match '/pagination/numofpages', :controller => 'pagination', :action => 'numofpages'
   match '/pagination/turndirection', :controller =>'pagination', :action => 'turndirection'
   match '/pagination/transcript', :controller => 'pagination', :action => 'transcript'
+  match '/pagination/title', :controller => 'pagination', :action => 'gettitle'
+  match '/pagination/getparentpid', :controller => 'pagination', :action => 'getparentpid'
 
   match '/auth', :controller => 'access_conditions', :action => 'index'
   match '/authtest', :controller => 'access_conditions', :action => 'test_access'
