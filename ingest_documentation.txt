@@ -25,13 +25,14 @@ Alternatively, you can populate by project, in this example for PID 2.
 -- populates the _publish table by PID
 insert into pamoja_hydra.dbo.hydra_publish (hpid,hcmid,date,cid,pid,oid,_oid,zindex,_boid,_bindex,[action],dateready)
 select hpid,hcmid,date,cid,pid,oid,_oid,zindex,_boid,_bindex,[action],dateready from pamoja.dbo.hydra_publish where hpid not in (select hpid from pamoja_hydra.dbo.hydra_publish) and pid = 2
-
+5) reset a set of hydra_publish rows already ingested to test again:
+   update hydra_publish set hydraID='',dateHydraStart=null,dateHydraEnd=null where <add constraint here>
 -------------
 ingest routine:
 
 1) check that hydra configs are set properly
   config/solr.yml
-  config/fedorr.yml
+  config/fedora.yml
 2) check that lib/tasks/yulhy4.rake is set properly
   for prod db:
   YAML.load_file(config/ladybird.yml)
