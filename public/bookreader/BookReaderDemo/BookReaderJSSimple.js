@@ -68,14 +68,15 @@ br.getOID = function() {
          success: function(data) 
          { 
             console.log("SUCCESS:"+data.docs[0].id + " numFound: " + data.numFound); 
-            if (data.numFound > 1)
-            {
-              result = data.docs[1].id;
-            }
-            else
-            {
-              result = data.docs[0].id;
-            }
+            result = data.docs[(data.numFound - 1)].id;
+            //if (data.numFound > 1)
+            //{
+             // result = data.docs[1].id;
+            //}
+            //else
+            //{
+             // result = data.docs[0].id;
+            //}
          },
          error: function(xhr,ajaxOptions,thrownError) 
          { 
@@ -106,10 +107,39 @@ br.getPageURI = function(index, reduce, rotate) {
     index = index+1;
     pid = getPID(parentoid,index);
     console.log("pid:"+pid);
+    var url1 = br.getrailsenv();
     //remove later
     //var url = "http://libserver3.yale.edu:8983/fedora/objects/"+pid+"/datastreams/jpg/content";
-    var url = "http://imageserver.library.yale.edu/libserver7.yale.edu:8082/"+pid+"/"+netid+"/"+session+"/227/111/132/130/500.jpg";
+    var url = url1 +pid+"/"+netid+"/"+session+"/227/111/132/130/500.jpg";
     return url;
+}
+
+br.getrailsenv = function() {
+    //Return the correct URL based on the environment in Rails
+    console.log("In getRailsEnv");
+
+    var railsurl = "/pagination/getrailsenv?oid="+this.parentoid
+    console.log("RAILS URL:"+railsurl);
+    var railsenv = "production";
+    $.ajax(
+    {
+        async: false,
+        type: 'GET',
+        dataType: 'text',
+        url: railsurl,
+        success: function(data) 
+        { 
+           console.log("SUCCESS:"+ data); 
+           railsenv = data;
+        },
+        error: function(xhr,ajaxOptions,thrownError) 
+        { 
+           alert(xhr.status+"-"+thrownError)
+        }
+     }
+     );
+      console.log("AJAX: railsenv is: "+railsenv);
+     return railsenv.toString();
 }
 
 br.gettitle = function() {

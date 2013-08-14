@@ -136,6 +136,7 @@ class CatalogController < ApplicationController
     config.add_show_field 'other_dates_ssim', :label => 'Other Dates:'
     config.add_show_field 'tribe_tsim', :label => 'Tribe:'
     config.add_show_field 'digital_collection_ssim', :label => 'Digital Collection:'
+    config.add_show_field 'ztotal_isi', :label => 'Number of Pages:'
 
     # "fielded" search configuration. Used by pulldown among other places.
     # For supported keys in hash, see rdoc for Blacklight::SearchFields

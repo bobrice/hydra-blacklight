@@ -9,7 +9,8 @@
 
     <% if (!(@pid_array[0].to_s.eql? '')) then %>
        <li class="btn">
-         <%= if (!(@pid_array[0].to_s.eql? '')) then link_to(:'Download PDF', @url1 + @pid_array[0].to_s  + @url_pdf) end%>
+         <!--<%= if (!(@pid_array[0].to_s.eql? '')) then link_to(:'PDF', @url1 + @pid_array[0].to_s  + @url_pdf) end%>-->
+         <%= if (!(document[:id].to_s.eql? '')) then link_to(:'PDF', @url1 + document[:id].to_s + @url_pdf) end%>
          <% #replace the "#" with a route to the PDF. Maybe the CAS route for CAS authentication (must be in quotes) or another url (must be without quotes). TBD -%>
        </li> 
     <% end %>
