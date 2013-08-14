@@ -63,8 +63,6 @@ module DiggitHydra
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
     config.rubycas.cas_base_url = 'https://securedev.its.yale.edu/cas/login'
-    
-    #ERJ added 8/14/13 for rolling appender logs
-    #config.logger = Logger.new("#{RAILS_ROOT}/log/#{ENV['RAILS_ENV']}_ERJ.log",'daily')
+    ActionMailer::Base.default(from: "no-replay@example.org", subject: Proc.new {"Email was generated"})
   end
 end

@@ -70,6 +70,16 @@ class PaginationController < ApplicationController
     return
   end
 
+  def getrailsenv
+    if Rails.env.to_s == 'development' then
+      render :text => "http://imageserver.library.yale.edu/libserver7.yale.edu:8082/"
+    elsif Rails.env.to_s == 'test' then
+      render :text => "http://imageserver.library.yale.edu/libserver7.yale.edu:8082/"
+    else
+      render :text => "http://imageserver.library.yale.edu/diego.library.yale.edu:8082/"
+    end
+  end
+
   def turndirection
     oid = params[:oid]
     if oid==nil

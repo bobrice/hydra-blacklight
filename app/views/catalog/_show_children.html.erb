@@ -2,21 +2,26 @@
 <div class="documentHeader clearfix">
 <% # main title container for doc partial view -%>
 <% pagenum = 1 %>
+<% i = 0 %>
+<% maxval = 10 %>
 
-<% if @docs1 != nil && @docs1.length < 10 then @docs1.each do |value|    %>
 
-  <!-- <%= link_to image_tag(@url1 + value.to_s  + @url2 , :height => '100', :width => '75'), @bookreader + document[:oid_isi].to_s + "#page/" + pagenum.to_s + "/mode/1up" %>-->
+<% if @docs1 != nil then %>
 
-  <%= link_to image_tag(@url1 + value.to_s  + @url2 , :height => '100', :width => '75'), @url1 + value.to_s  + @urlzoom , :height => '200', :width => '150' %>
+    <% until (@docs1.length == maxval) || (i >= @docs1.length) %>
 
-  <% pagenum = pagenum +1 %>
+         <%= link_to image_tag(@url1 + @docs1[i].to_s  + @url2 , :height => '100', :width => '75'), @bookreader + document[:oid_isi].to_s + "#page/" + pagenum.to_s + "/mode/1up" %>
+
+         <% i = i + 1 %>
+
+         <% pagenum = pagenum + 1 %>
 
 <% end end %>
 
-<% if document[:oid_isi].to_s.length > 5 then %>
+<!-- <% if document[:oid_isi].to_s.length > 5 then %>
   <li class="btn">
     <%= link_to "Show Entire Book", @bookreader + document[:oid_isi].to_s %>
   </li>
-<% end %>
+<% end %> -->
 
 </div>
