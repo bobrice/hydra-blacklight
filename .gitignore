@@ -18,3 +18,8 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
+
+# Ignore all backup files.
+*.bak
+*.tomcat
+*.jetty
