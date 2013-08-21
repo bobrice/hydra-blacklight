@@ -79,9 +79,9 @@ class CatalogController < ApplicationController
     config.add_index_field 'creator_tsim', :label => 'Creator:' 
     config.add_index_field 'publishedCreated_ssim', :label => 'Published/Created:'
     config.add_index_field 'digital_collection_ssim', :label => 'Digital Collection:'
-    #config.add_index_field 'oidpointer_isi', :label => 'oidpointer_isi', :helper_method => :get_oid_pointer
+    config.add_index_field solr_name('format', :symbol), :label => 'Format:'
+    config.add_index_field 'oidpointer_isi', :label => 'oidpointer_isi', :helper_method => :get_oid_pointer
     #config.add_index_field 'id', :label => 'PID:'
-    # config.add_index_field solr_name('format', :symbol), :label => 'Format:'
 
     # solr fields to be displayed in the show (single result) view
     #   The ordering of the field names is the order of the display 
