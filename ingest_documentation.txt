@@ -25,13 +25,14 @@ Alternatively, you can populate by project, in this example for PID 2.
 -- populates the _publish table by PID
 insert into pamoja_hydra.dbo.hydra_publish (hpid,hcmid,date,cid,pid,oid,_oid,zindex,_boid,_bindex,[action],dateready)
 select hpid,hcmid,date,cid,pid,oid,_oid,zindex,_boid,_bindex,[action],dateready from pamoja.dbo.hydra_publish where hpid not in (select hpid from pamoja_hydra.dbo.hydra_publish) and pid = 2
-
+5) reset a set of hydra_publish rows to do a test reingest:
+   update hydra_publish set hydraID='',dateHydraStart=null,dateHydraEnd=null where <add constraint here>
 -------------
 ingest routine:
 
 1) check that hydra configs are set properly
   config/solr.yml
-  config/fedorr.yml
+  config/fedora.yml
 2) check that lib/tasks/yulhy4.rake is set properly
   for prod db:
   YAML.load_file(config/ladybird.yml)
@@ -65,11 +66,11 @@ check data in tables, make sure looks OK
   
 
 6) run the actual ingest pointing output to a .txt file: 
-  rake yulhy4:ingest > output.txt
+  rake yulhy5:ingest
   or for test instance
-  RAILS_ENV=test rake yulhy4:ingest > output.txt
+  RAILS_ENV=test rake yulhy5:ingest
 
-7) check output file and sderr for successful ingests, failures, and possible errors
+7) check logs (diggit-hydra/log/ingest.log) file and sderr for successful ingests, failures, and possible errors
 
 8) check database using hpids from step 1 and report
 select a.hpid, b.contentmodel,a.pid,a.oid,a._oid,a.zindex,a.hydraID

@@ -1,14 +1,14 @@
 development:
   user: fedoraAdmin
-  password: fedoraAdmin
-  url: http://libserver3.yale.edu:8983/fedora
+  password: hydra%man!
+  url: http://libserver7.yale.edu:8082/fedora
 test: &TEST  
   user: fedoraAdmin
   password: hydra%man!
   url: http://libserver7.yale.edu:8082/fedora
 production:
   user: fedoraAdmin
-  password: fedoraAdmin
+  password: hydra%man!
   url: http://diego.library.yale.edu:8082/fedora
 cucumber:
   <<: *TEST

@@ -4,12 +4,12 @@
   <% index_fields.each do |solr_fname, field| -%>
     <% if should_render_index_field? document, field %>
             <dt class="blacklight-<%= solr_fname.parameterize %>"><%= render_index_field_label :field => solr_fname %></dt>
-            <dd class="blacklight-<%= solr_fname.parameterize %>"><%= render_index_field_value :document => document, :field => solr_fname %></dd>
+            <dd class="blacklight-<%= solr_fname.parameterize %>"><%= render_index_field_value :document => document, :field => solr_fname%></dd>
     <% end -%>
   <% end -%>
 <span class="yale_thumbnail">
-<% document[:id].to_s %>
-<%= if (!(@url1.nil?) && !(document[:id].to_s.eql? '')) then (if document[:active_fedora_model_ssim].to_s.eql? '["ComplexParent"]' then else image_tag @url1 +  document[:id].to_s + @url2, :height => '100', :width => '100' end) end %>
+
+<%= if (!(@url1.nil?) && !(document[:id].to_s.eql? '')) then (if document[:active_fedora_model_ssim].to_s.eql? '["ComplexParent"]' then (if !(@oid_pointer.nil?) then image_tag @url1 + @pid + @url2 , :height => '100', :width => '100' end) else image_tag @url1 +  document[:id].to_s + @url2, :height => '100', :width => '100' end) end %>
 </span>
 
 </dl>

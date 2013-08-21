@@ -32,6 +32,8 @@ module Blacklight::Catalog
     # get search results from the solr index
     def index
       
+      @pidholder
+
       extra_head_content << view_context.auto_discovery_link_tag(:rss, url_for(params.merge(:format => 'rss')), :title => t('blacklight.search.rss_feed') )
       extra_head_content << view_context.auto_discovery_link_tag(:atom, url_for(params.merge(:format => 'atom')), :title => t('blacklight.search.atom_feed') )
       
@@ -44,80 +46,89 @@ module Blacklight::Catalog
         format.atom { render :layout => false }
       end
 
-      if !(@url)
-      @netid = "0"
-      @session = "0"
-      #  @blacklight_solr_config_hash = Blacklight.solr_config
-      #  @blacklight_solr_config_hash.each do |k, v|
-      #      @url = v.to_s
-      #      @url1 = @url.gsub("solr", "fedora/objects/")
-      #  end
-      #  @url2 = "/datastreams/jpg/content"
-      @url1 = "http://imageserver.library.yale.edu/libserver7.yale.edu:8082/"
-      @url2 = "/"+@netid+"/"+@session+"/227/111/132/130/500.jpg"
+      def testmethod
+        return true
+      end
+      #  Blacklight.solr_config returns the hash value of {"url":"http://libserver7.yale.edu:8983/solr"}
+      if !(@url1)
+        @netid = "0"
+        @session = "0"
+        if Rails.env.to_s == 'development' then
+          @url1 = "http://imageserver.library.yale.edu/libserver7.yale.edu:8082/"
+        elsif Rails.env.to_s == 'test' then
+          @url1 = "http://imageserver.library.yale.edu/libserver7.yale.edu:8082/"
+        else
+          @url1 = "http://imageserver.library.yale.edu/diego.library.yale.edu:8082/"
+        end
+        
+        @url2 = "/"+@netid+"/"+@session+"/227/111/132/130/500.jpg"
+        @urlzoom = "/"+@netid+"/"+@session+"/227/111/132/130/1000.jpg"
       end
 
+      #render :json => @pidholder
     end
     
     # get single document from the solr index
     def show
       @response, @document = get_solr_response_for_doc_id    
 
-      #@bookreader = "http://libserver5.yale.edu:3000/bookreader/BookReaderDemo/index.html?oid="
       @bookreader = "/bookreader/BookReaderDemo/index.html?oid="
       @docs1 = Array.new
       @oidpointer_array = Array.new
       @pid_array = Array.new
       @netid = "0"
       @session = "0"
-      #Blacklight.solr_config returns the hash value of {"url":"http://libserver7.yale.edu:8983/solr"}
+
       pid = params[:id]
       pid = pid.to_s
-      if !(@url)
-      #       @blacklight_solr_config_hash = Blacklight.solr_config
-      #       @blacklight_solr_config_hash.each do |k, v|
-      #                @url = v.to_s
-      #                @url1 = @url.gsub("solr", "fedora/objects/")
-      #       end
-      #       @url2 = "/datastreams/jpg/content"
-      #
-      @url1 = "http://imageserver.library.yale.edu/libserver7.yale.edu:8082/"
-      @url2 = "/"+@netid+"/"+@session+"/227/111/132/130/500.jpg"
+      if !(@url1)
+        
+        if Rails.env.to_s == 'development' then
+          @url1 = "http://imageserver.library.yale.edu/libserver7.yale.edu:8082/"
+        elsif Rails.env.to_s == 'test' then
+          @url1 = "http://imageserver.library.yale.edu/libserver7.yale.edu:8082/"
+        else
+          @url1 = "http://imageserver.library.yale.edu/diego.library.yale.edu:8082/"
+        end
+            
+        @url2 = "/"+@netid+"/"+@session+"/227/111/132/130/500.jpg"
+        @urlzoom = "/"+@netid+"/"+@session+"/227/111/132/130/1000.jpg"
+        @url_pdf = "/"+@netid+"/"+@session+"/227/111/132/130/500.pdf"
+        #render :json => params[:id]
       end
 
-        @docs = get_children_from_parent_pid(pid)
-        if @docs != nil
-           @docs.each do |i|
-               @h1 = Hash[*i.flatten]
-                  @h1.each do |key,value|
-                      @docs1.push value
-                  end
-                end
-           end
+      @docs = get_children_from_parent_pid(pid)
+      if @docs != nil
+        @docs.each do |i|
+          @h1 = Hash[*i.flatten]
+          @h1.each do |key,value|
+            @docs1.push value
+          end
+        end
+      end
 
-           @oidpointer = get_oidpointer(pid)
-           # This is the value of oidpointer when nothing is returned 
-           #render :json => pid 
-           if !(@oidpointer.to_s.eql? '[{}]')
-               @oidpointer.each do |i|
-                   i.each do |key, value|
-                      @oidpointer_array.push value
-                   end
-                   #render :json => @oidpointer_array[0]
-               end
+      @oidpointer = get_oidpointer(pid)
+      # This is the value of oidpointer when nothing is returned 
+      #render :json => pid 
+      if !(@oidpointer.to_s.eql? '[{}]')
+        @oidpointer.each do |i|
+          i.each do |key, value|
+            @oidpointer_array.push value
+          end
+        end
              
-               @child_pid = get_child_pid(@oidpointer_array[0])
-               #[{"id":"changeme:162"}]
-               if @child_pid != nil
-                  #render :json => @child_pid
-                  @child_pid.each do |j|
-                      j.each do |key1, value1|
-                         @pid_array.push value1
-                      end
-                  end
-               end
-               #render :json => @pid_array[0]
-           end
+        @child_pid = get_child_pid(@oidpointer_array[0])
+        #[{"id":"changeme:162"}]
+        if @child_pid != nil
+          #render :json => @child_pid
+          @child_pid.each do |j|
+            j.each do |key1, value1|
+              @pid_array.push value1
+            end
+          end
+        end
+        #render :json => @pid_array[0]
+      end
 
 
       respond_to do |format|
