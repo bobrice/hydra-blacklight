@@ -151,7 +151,12 @@ margin-top:20px;
 .complexObjects {
 }
 
+.blacklight-oidpointer_isi {
+display:none;
+}
+
 .yale_thumbnail {
 float: right;
-padding-right: 30px;
+margin-right: 70px;
+display: block;
 }
