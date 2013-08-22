@@ -1,7 +1,7 @@
 development:
   user: fedoraAdmin
-  password: hydra%man!
-  url: http://libserver7.yale.edu:8082/fedora
+  password: fedoraAdmin
+  url: http://libserver3.yale.edu:8983/fedora
 test: &TEST  
   user: fedoraAdmin
   password: hydra%man!
