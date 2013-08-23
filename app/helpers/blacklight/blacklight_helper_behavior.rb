@@ -351,7 +351,8 @@ module Blacklight::BlacklightHelperBehavior
   end
 
   def field_value_separator
-    '<br/>'
+    #'<br/>'
+     '; '
   end
 
   def document_index_view_type
