@@ -8,6 +8,8 @@
 /.bundle
 /.ks
 *.ks
+.rvmrc
+.gitignore
 
 # Ignore all .swp files.
  *.swp

@@ -58,6 +58,7 @@ module Hydra
 		  t.o_i_publisher(:path=>"publisher")
 		  t.o_i_dateCreated(:path=>"dateCreated",:attributes=>{:keyDate=>"yes",:encoding=>:none})
 		  t.o_i_dateCreatedIso(:path=>"dateCreated",:attributes=>{:keyDate=>"yes",:encoding=>"iso8601"})
+                  t.o_i_dateOtherType(:path=>"dateOther/@type")
 		  t.o_i_dateOther(:path=>"dateOther")
 		}
 		t.physicalDescription(:path=>"physicalDescription"){
@@ -81,7 +82,8 @@ module Hydra
 		t.note_digital(:path=>"note",:attributes=>{:displayLabel=>"Digital"})
 				
 		t.abstract(:path=>"abstract")
-		t.genre(:path=>"genre")
+                t.genre(:path=>"genre",:attributes=>{:authority=>:none,:displayLabel=>:none})
+                t.yale_genre(:path=>"genre",:attributes=>{:authority=>"yale",:displayLabel=>"Content Type"})
 		t.type_of_resource(:path=>"typeOfResource")
 		t.location(:path=>"location") {
 		  t.phys_loc_yale(:path=>"physicalLocation",:attributes=>{:displayLabel=>"Yale Collection"})
@@ -95,7 +97,8 @@ module Hydra
 		#
 		t.classification(:path=>"classification")
 		
-		t.name(:path=>"name") {
+		t.nameRole(:path=>"name/@displayLabel")
+                t.name(:path=>"name") {
 		  t.namePart(:path=>"namePart") 
 		  #below a test of using TerminologyBasedSolrizer, ERJ prefer to use extract to fine tune this in the model
 		  #t.namePart(:path=>"namePart",:index_as=>[:searchable,:displayable]) 
@@ -113,9 +116,11 @@ module Hydra
           t.topic(:path=>"topic")
 		  #
 		  t.keyDate(:path=>"temporal",:attributes=>{:keyDate=>"yes"})
+                  t.s_nameRole(:path=>"name/@displayLabel")
 		  t.s_name(:path=>"name") {
 		    t.s_namePart(:path=>"namePart")
 		  }
+                  t.s_geo_nameRole(:path=>"geographic/@displayLabel")
 		  t.s_geographic(:path=>"geographic")
 		  t.s_geographic_code(:path=>"geographicCode")  
 		  t.s_cartographics(:path=>"cartographics") {
@@ -141,77 +146,169 @@ module Hydra
 		t.display_label(:path=>"note",:attributes=>{:displayLabel=>"caption"})	
 	  end
 
+          def formatMapping(typeOfResource)
+            mapped = Array.new
+            typeOfResource.each { |r| 
+              mapped.push("Text") if r=="text"
+              mapped.push("Map") if r=="cartographic"
+              mapped.push("Notated Music") if r=="notated music"
+              mapped.push("Audio") if r=="sound recording"
+              mapped.push("Audio") if r=="sound recording-musical"
+              mapped.push("Audio") if r=="sound recording-nonmusical"
+              mapped.push("Image") if r=="still image"
+              mapped.push("Video") if r=="moving image"
+              mapped.push("Physical Object") if r=="three dimensional object"
+              mapped.push("Software") if r=="software, multimedia"
+              mapped.push("Mixed Material") if r=="mixed material"
+              mapped.push("Dataset") if r=="dataset"
+            }
+            mapped
+           end  
+
+
+           def appendAttr(elementVal,attrVal)
+             iter = 0
+             field = Array.new
+             elementVal.each { |element|
+               unless attrVal[iter].nil?
+                 if attrVal[iter] != "none"
+                   field.push(element + "[" + attrVal[iter] + "]")
+                 end
+                 iter += 1
+               end
+             }
+             field
+           end
+
+           def dontAppendAttr(elementVal,attrVal)
+             iter = 0 
+             field = Array.new
+             elementVal.each { |element|
+               unless attrVal[iter].nil?
+                 if attrVal[iter] != "none"
+                   field.push(element)
+                 end
+                 iter += 1
+               end           
+             }
+             field
+           end
+
+           def whenAttrNone(elementVal,attrVal)
+             iter = 0
+             field = Array.new
+             elementVal.each { |element|
+               unless attrVal[iter].nil?
+                 if attrVal[iter] == "none"
+                   field.push(element)
+                 end
+                 iter += 1
+               end
+             }
+             field
+           end
+
+           def unescapeChars(array)
+             unescaped = array.map { |s| s.gsub(/&amp;/,'&').gsub(/&lt;/,'<').gsub(/&gt;/,'>').gsub(/&apos;/,'\'').gsub(/&quot;/,'"') }
+             unescaped
+           end
+           def unescapeCharsStr(str)
+             unescaped = str.gsub(/&amp;/,'&').gsub(/&lt;/,'<').gsub(/&gt;/,'>').gsub(/&apos;/,'\'').gsub(/&quot;/,'"')
+             unescaped
+           end  
+
+
 	  def to_solr(solr_doc=Hash.new)
         super(solr_doc)
         #solr_doc['call_number_ssim'] = [classification,x].flatten 
-		#sim = facet not stored (only use of index/stored is text, not string
-		solr_doc['call_number_ssim'] = mods.classification
-		solr_doc['accession_number_ssim'] = mods.accession_number
-		solr_doc['box_number_ssm'] = mods.related_item.part.detail_box.caption_box 
-		solr_doc['caption_folder_ssm'] = mods.related_item.part.detail_folder.caption_folder
-		solr_doc['source_creator_tsim'] = mods.related_item_host.r_i_h_name.r_i_h_namePart#
-		solr_doc['creator_tsim'] = mods.name.namePart
-		solr_doc['creator_sim'] = [mods.related_item_host.r_i_h_name.r_i_h_namePart,mods.name.namePart].flatten
-		solr_doc['source_title_tsim'] = [mods.related_item_host.r_i_h_title_info.r_i_h_title].flatten
-		solr_doc['source_created_tsim'] = [mods.related_item_host.r_i_h_originInfo.r_i_h_place,mods.related_item_host.r_i_h_originInfo.r_i_h_publisher,mods.related_item_host.r_i_h_originInfo.r_i_h_dateIssued].flatten
-		solr_doc['source_edition_tsim'] = mods.related_item_host.r_i_h_originInfo.r_i_h_edition
-		solr_doc['source_note_tsim'] = mods.related_item_host.r_i_h_note
-		solr_doc['title_tsim'] = mods.title_info.main_title
-		solr_doc['variant_titles_tsim'] = mods.title_info.alt_title
-		solr_doc['caption_ssim'] = mods.display_label
-		solr_doc['edition_ssim'] = mods.origin_info.o_i_edition
-		solr_doc['publishedCreated_ssim'] = [mods.origin_info.o_i_place,mods.origin_info.o_i_publisher,mods.origin_info.o_i_dateCreated].flatten
-		solr_doc['date_sim'] = [mods.origin_info.o_i_dateCreated,mods.origin_info.o_i_dateOther].flatten
-		solr_doc['date_dtsi'] = mods.origin_info.o_i_dateCreatedIso
-		solr_doc['date_depicted_ssim'] = mods.subject.keyDate
-                solr_doc['date_depicted_sim'] = mods.subject.keyDate
-		solr_doc['physical_description_ssim'] = mods.physicalDescription.p_s_note
-		solr_doc['materials_ssim'] = mods.physicalDescription.p_s_form
-		solr_doc['language_ssim'] = mods.language.language_term
-                solr_doc['language_sim'] = mods.language.language_term
-		solr_doc['language_of_cataloging_ssm'] = mods.record_info.language_of_cataloging
-		solr_doc['notes_tsim'] = mods.plain_note
-		solr_doc['abstract_tsim'] = mods.abstract
-		solr_doc['subject_sim'] = [mods.subject.keyDate,mods.subject.s_name.s_namePart,mods.subject.topic,mods.subject.s_geographic,mods.s_divinity].flatten
-		solr_doc['subject_name_tsim'] = mods.subject.s_name.s_namePart
-		solr_doc['subject_name_sim'] = mods.subject.s_name.s_namePart
-		solr_doc['subject_topic_tsim'] = mods.subject.topic
-		solr_doc['subject_topic_sim'] = mods.subject.topic
-		solr_doc['subject_geographic_tsim'] = mods.subject.s_geographic
-		solr_doc['subject_geographic_sim'] = mods.subject.s_geographic
-		solr_doc['subject_geographic_code_ssim'] = mods.subject.s_geographic_code
-		solr_doc['local_subject_tsim'] = mods.s_divinity
-		solr_doc['period_style_tsim'] = mods.s_style.topic
-		solr_doc['culture_tsim'] = mods.s_culture.topic
-		solr_doc['scale_ssim'] = mods.subject.s_cartographics.s_scale
-		solr_doc['projection_ssim'] = mods.subject.s_cartographics.s_projection
-		solr_doc['coordinates_ssim'] = mods.subject.s_cartographics.s_coordinates
-		solr_doc['genre_ssim'] = mods.genre
-		solr_doc['format_ssim'] = mods.type_of_resource
-                solr_doc['format_sim'] = mods.type_of_resource
-		solr_doc['yale_collection_tsim'] = mods.location.phys_loc_yale
-		solr_doc['musuem_repository_ssim'] = mods.location.phys_loc_origin
-		solr_doc['digital_collection_ssim'] = mods.location.digital_collection#
-		solr_doc['digital_collection_sim'] = mods.location.digital_collection#
-		solr_doc['rights_ssm'] = mods.access_condition
-		solr_doc['orbis_record_ssm'] = mods.related_item.r_i_orbis
-		solr_doc['orbis_barcode_ssim'] = mods.related_item.r_i_orbis_barcode
-		solr_doc['orbis_finding_aid_ssm'] = mods.related_item.r_i_finding_aid
-		solr_doc['related_links_ssm'] = mods.related_item.r_i_url
-		solr_doc['course_info_tsim'] = mods.note_course_info
-		solr_doc['related_exhibit_tsim'] = mods.note_related
-		solr_doc['job_number_ssim'] = mods.note_job_number
-		solr_doc['note_citation_tsim'] = mods.note_citation
-		solr_doc['series_tsim'] = mods.related_item_series.r_i_s_titleInfo.r_i_s_title
-		solr_doc['isbn_ssim'] = mods.isbn
-		solr_doc['issn_ssim'] = mods.issn
-		solr_doc['access_restrictions_tsm'] = mods.access_condition_restrictions
-		solr_doc['digital_ssim'] = mods.note_digital
-		solr_doc['other_dates_ssim'] = mods.origin_info.o_i_dateOther
-		solr_doc['tribe_tsim'] = mods.s_tribe.topic
-		solr_doc['tribe_sim'] = mods.s_tribe.topic
-		solr_doc['event_tsim'] = mods.s_event.topic
-		solr_doc['event_sim'] = mods.s_event.topic
+		#sim = facet not stored (only use if index/stored is text, not string (unless blacklight is using descriptors, then sim is required)
+		solr_doc['call_number_ssim'] = unescapeChars(mods.classification)
+		solr_doc['accession_number_ssim'] = unescapeChars(mods.accession_number)
+		solr_doc['box_number_ssm'] = unescapeChars(mods.related_item.part.detail_box.caption_box) 
+		solr_doc['caption_folder_ssm'] = unescapeChars(mods.related_item.part.detail_folder.caption_folder)
+		solr_doc['source_creator_tsim'] = unescapeChars(mods.related_item_host.r_i_h_name.r_i_h_namePart)
+
+                solr_doc['creator_tsim'] = unescapeChars(whenAttrNone(mods.name.namePart,mods.nameRole))
+                solr_doc['creator_sim'] = unescapeChars([mods.related_item_host.r_i_h_name.r_i_h_namePart,whenAttrNone(mods.name.namePart,mods.nameRole)].flatten)
+                solr_doc['assoc_names_tsim'] = unescapeChars([appendAttr(mods.name.namePart,mods.nameRole),appendAttr(mods.subject.s_name.s_namePart,mods.subject.s_nameRole)].flatten)
+                solr_doc['assoc_names_sim'] = unescapeChars([appendAttr(mods.name.namePart,mods.nameRole),appendAttr(mods.subject.s_name.s_namePart,mods.subject.s_nameRole)].flatten)                 
+
+		solr_doc['source_title_tsim'] = unescapeChars([mods.related_item_host.r_i_h_title_info.r_i_h_title].flatten)
+		solr_doc['source_created_tsim'] = unescapeChars([mods.related_item_host.r_i_h_originInfo.r_i_h_place,mods.related_item_host.r_i_h_originInfo.r_i_h_publisher,mods.related_item_host.r_i_h_originInfo.r_i_h_dateIssued].flatten)
+		solr_doc['source_edition_tsim'] = unescapeChars(mods.related_item_host.r_i_h_originInfo.r_i_h_edition)
+		solr_doc['source_note_tsim'] = unescapeChars(mods.related_item_host.r_i_h_note)
+		solr_doc['title_tsim'] = unescapeChars(mods.title_info.main_title)
+		solr_doc['variant_titles_tsim'] = unescapeChars(mods.title_info.alt_title)
+		solr_doc['caption_ssim'] = unescapeChars(mods.display_label)
+		solr_doc['edition_ssim'] = unescapeChars(mods.origin_info.o_i_edition)
+		solr_doc['publishedCreated_ssim'] = unescapeChars([mods.origin_info.o_i_place,mods.origin_info.o_i_publisher,mods.origin_info.o_i_dateCreated].flatten)
+		
+                solr_doc['date_sim'] = unescapeChars([mods.origin_info.o_i_dateCreated,whenAttrNone(mods.origin_info.o_i_dateOther,mods.origin_info.o_i_dateOtherType)].flatten) 
+		
+                solr_doc['date_dtsi'] = unescapeChars(mods.origin_info.o_i_dateCreatedIso)
+		solr_doc['date_depicted_ssim'] = unescapeChars(mods.subject.keyDate)
+                solr_doc['date_depicted_sim'] = unescapeChars(mods.subject.keyDate)
+		solr_doc['physical_description_ssim'] = unescapeChars(mods.physicalDescription.p_s_note)
+		solr_doc['materials_ssim'] = unescapeChars(mods.physicalDescription.p_s_form)
+		solr_doc['language_ssim'] = unescapeChars(mods.language.language_term)
+                solr_doc['language_sim'] = unescapeChars(mods.language.language_term)
+		solr_doc['language_of_cataloging_ssm'] = unescapeChars(mods.record_info.language_of_cataloging)
+		solr_doc['notes_tsim'] = unescapeChars(mods.plain_note)
+		solr_doc['abstract_tsim'] = unescapeChars(mods.abstract)
+                solr_doc['subject_sim'] = unescapeChars([mods.subject.keyDate,whenAttrNone(mods.subject.s_name.s_namePart,mods.subject.s_nameRole),mods.subject.topic,whenAttrNone(mods.subject.s_geographic,mods.subject.s_geo_nameRole),mods.s_divinity].flatten)
+		
+                solr_doc['subject_name_tsim'] = unescapeChars(whenAttrNone(mods.subject.s_name.s_namePart,mods.subject.s_nameRole))
+		solr_doc['subject_name_sim'] = unescapeChars(whenAttrNone(mods.subject.s_name.s_namePart,mods.subject.s_nameRole)) 
+		
+                solr_doc['subject_topic_tsim'] = unescapeChars(mods.subject.topic)
+		solr_doc['subject_topic_sim'] = unescapeChars(mods.subject.topic)
+		
+                solr_doc['subject_geographic_tsim'] = unescapeChars(whenAttrNone(mods.subject.s_geographic,mods.subject.s_geo_nameRole))
+		solr_doc['subject_geographic_sim'] = unescapeChars(whenAttrNone(mods.subject.s_geographic,mods.subject.s_geo_nameRole))
+                solr_doc['subject_assoc_geo_tsim'] = unescapeChars(appendAttr(mods.subject.s_geographic,mods.subject.s_geo_nameRole))
+                solr_doc['subject_assoc_geo_sim'] = unescapeChars(appendAttr(mods.subject.s_geographic,mods.subject.s_geo_nameRole))
+		
+                solr_doc['subject_geographic_code_ssim'] = unescapeChars(mods.subject.s_geographic_code)
+		solr_doc['local_subject_tsim'] = unescapeChars(mods.s_divinity)
+		solr_doc['period_style_tsim'] = unescapeChars(mods.s_style.topic)
+		solr_doc['culture_tsim'] = unescapeChars(mods.s_culture.topic)
+		solr_doc['scale_ssim'] = unescapeChars(mods.subject.s_cartographics.s_scale)
+		solr_doc['projection_ssim'] = unescapeChars(mods.subject.s_cartographics.s_projection)
+		solr_doc['coordinates_ssim'] = unescapeChars(mods.subject.s_cartographics.s_coordinates)
+		solr_doc['genre_ssim'] = unescapeChars(mods.genre)
+		solr_doc['format_ssim'] = unescapeChars(formatMapping(mods.type_of_resource))
+                solr_doc['format_sim'] = unescapeChars(formatMapping(mods.type_of_resource))
+                solr_doc['format_mods_ssim'] = unescapeChars(mods.type_of_resource)
+                solr_doc['format_mods_sim'] = unescapeChars(mods.type_of_resource)  
+		solr_doc['yale_collection_tsim'] = unescapeChars(mods.location.phys_loc_yale)
+		solr_doc['musuem_repository_ssim'] = unescapeChars(mods.location.phys_loc_origin)
+		solr_doc['digital_collection_ssim'] = unescapeChars(mods.location.digital_collection)
+		solr_doc['digital_collection_sim'] = unescapeChars(mods.location.digital_collection)
+		solr_doc['rights_ssm'] = unescapeChars(mods.access_condition)
+		solr_doc['orbis_record_ssm'] = unescapeChars(mods.related_item.r_i_orbis)
+		solr_doc['orbis_barcode_ssim'] = unescapeChars(mods.related_item.r_i_orbis_barcode)
+		solr_doc['orbis_finding_aid_ssm'] = unescapeChars(mods.related_item.r_i_finding_aid)
+		solr_doc['related_links_ssm'] = unescapeChars(mods.related_item.r_i_url)
+		solr_doc['course_info_tsim'] = unescapeChars(mods.note_course_info)
+		solr_doc['related_exhibit_tsim'] = unescapeChars(mods.note_related)
+		solr_doc['job_number_ssim'] = unescapeChars(mods.note_job_number)
+		solr_doc['note_citation_tsim'] = unescapeChars(mods.note_citation)
+		solr_doc['series_tsim'] = unescapeChars(mods.related_item_series.r_i_s_titleInfo.r_i_s_title)
+		solr_doc['isbn_ssim'] = unescapeChars(mods.isbn)
+		solr_doc['issn_ssim'] = unescapeChars(mods.issn)
+		solr_doc['access_restrictions_tsm'] = unescapeChars(mods.access_condition_restrictions)
+		solr_doc['digital_ssim'] = unescapeChars(mods.note_digital)
+		solr_doc['other_dates_ssim'] = unescapeChars(appendAttr(mods.origin_info.o_i_dateOther,mods.origin_info.o_i_dateOtherType))
+                solr_doc['other_dates_sim'] = unescapeChars(appendAttr(mods.origin_info.o_i_dateOther,mods.origin_info.o_i_dateOtherType))
+		solr_doc['tribe_tsim'] = unescapeChars(mods.s_tribe.topic)
+		solr_doc['tribe_sim'] = unescapeChars(mods.s_tribe.topic)
+		solr_doc['event_tsim'] = unescapeChars(mods.s_event.topic)
+		solr_doc['event_sim'] = unescapeChars(mods.s_event.topic)
+                solr_doc['yale_genre_ssim'] = unescapeChars(mods.yale_genre)
+                solr_doc['yale_genre_sim'] = unescapeChars(mods.yale_genre)
+                
+                solr_doc['creator_sort_ssi'] = unescapeCharsStr(mods.name.namePart[0]) unless mods.name.namePart[0].nil?
+                solr_doc['title_sort_ssi'] = unescapeCharsStr(mods.title_info.main_title[0]) unless mods.title_info.main_title[0].nil?
         solr_doc
       end	  
     end

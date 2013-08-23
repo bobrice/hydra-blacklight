@@ -1,9 +1,13 @@
 require '/home/ermadmix/hy_projs/diggit-hydra/config/environment.rb'
 
 obj = ComplexParent.new
-file = File.new('mods_service_full.xml')
+#file = File.new('mods_service_full.xml')
 #file = File.new('/home/ermadmix/10681633_metadata.xml')
-#file = File.new('/home/ermadmix/mods.xml')
+f = 'temp.xml'
+open(f,'wb') do |f|
+  f << open('http://lbxml.library.yale.edu/10681640_metadata.xml').read
+end
+file = File.new(f)
 ng_xml = Nokogiri::XML::Document.parse(IO.read(file))
 obj.descMetadata.ng_xml = ng_xml
 
