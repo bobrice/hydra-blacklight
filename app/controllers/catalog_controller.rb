@@ -57,14 +57,15 @@ class CatalogController < ApplicationController
     #
     # :show may be set to false if you don't want the facet to be drawn in the 
     # facet bar
-    config.add_facet_field solr_name('format', :facetable), :label => 'Format'
-    config.add_facet_field solr_name('date', :facetable), :label =>'Date'
-    config.add_facet_field solr_name('language', :facetable), :label => 'Language', :limit => 10 
-    config.add_facet_field solr_name('creator', :facetable), :label => 'Creator'  
-    config.add_facet_field solr_name('subject', :facetable), :label => 'Subject', :limit => 20 
+    config.add_facet_field solr_name('creator', :facetable), :label => 'Creator',  :limit => 15 
+    config.add_facet_field solr_name('date', :facetable), :label =>'Date', :limit => 15
+    config.add_facet_field solr_name('yale_genre', :facetable), :label => 'Content Type', :limit => 15 
+    config.add_facet_field solr_name('subject_topic', :facetable), :label => 'Topic', :limit => 15
+    config.add_facet_field solr_name('language', :facetable), :label => 'Language', :limit => 15
+    config.add_facet_field solr_name('digital_collection', :facetable), :label => 'Digital Collection', :limit => 15
     # config.add_facet_field solr_name('subject_geographic', :facetable), :label => 'Region' 
-    #config.add_facet_field solr_name('date_depicted', :facetable), :label => 'Era'  
-    config.add_facet_field solr_name('digital_collection', :facetable), :label => 'Digital Collection', :limit => 20 
+    #config.add_facet_field solr_name('date_depicted', :facetable), :label => 'Era'
+    #config.add_facet_field solr_name('format', :facetable), :label => 'Format'  
 
     # Have BL send all facet field names to Solr, which has been the default
     # previously. Simply remove these lines if you'd rather use Solr request
@@ -79,64 +80,62 @@ class CatalogController < ApplicationController
     config.add_index_field 'creator_tsim', :label => 'Creator:' 
     config.add_index_field 'publishedCreated_ssim', :label => 'Published/Created:'
     config.add_index_field 'digital_collection_ssim', :label => 'Digital Collection:'
-    config.add_index_field solr_name('format', :symbol), :label => 'Format:'
     config.add_index_field 'oidpointer_isi', :label => 'oidpointer_isi', :helper_method => :get_oid_pointer
-    #config.add_index_field 'id', :label => 'PID:'
 
     # solr fields to be displayed in the show (single result) view
     #   The ordering of the field names is the order of the display 
-    config.add_show_field 'oid_isi', :label => 'OID:' 
-    config.add_show_field 'id', :label => 'PID:'
-    config.add_show_field 'oidpointer_isi', :label => 'oid pointer:'
-    config.add_show_field 'variant_titles_tsim', :label => 'Variant Titles:'
     config.add_show_field 'creator_tsim', :label => 'Creator:'
-    config.add_show_field 'publishedCreated_ssim', :label => 'Published/Created:'
-    config.add_show_field 'date_depicted_ssim', :label => 'Date Depicted:'
+    config.add_show_field 'isbn_ssim', :label => 'ISBN:'
+    config.add_show_field 'issn_ssim', :label => 'ISSN:'
     config.add_show_field 'edition_ssim', :label => 'Edition:'
+    config.add_show_field 'publishedCreated_ssim', :label => 'Published/Created:'
     config.add_show_field 'physical_description_ssim', :label => 'Physical Description:'
+    config.add_show_field 'date_depicted_ssim', :label => 'Date Depicted:'
     config.add_show_field 'materials_ssim', :label => 'Materials:'
+    config.add_show_field 'related_links_ssm', :label => 'Related Links:'
     config.add_show_field 'notes_tsim', :label => 'Notes:'
-    config.add_show_field 'abstract_tsim', :label => 'Abstract:' 
+    config.add_show_field 'abstract_tsim', :label => 'Abstract:'
+    config.add_show_field 'variant_titles_tsim', :label => 'Variant Titles:' 
     config.add_show_field 'subject_name_tsim', :label => 'Subjects:'
     config.add_show_field 'subject_topic_tsim', :label => 'Subjects:'
     config.add_show_field 'subject_geographic_tsim', :label => 'Subjects:'
     config.add_show_field 'local_subject_tsim', :label => 'Subjects:'
-    config.add_show_field 'event_tsim', :label => 'Subjects:'
-    config.add_show_field 'call_number_ssim', :label => 'Call Number:'
+    config.add_show_field 'event_tsim', :label => 'Events:'
+    config.add_show_field 'period_style_tsim', :label => 'Period/Style:'
+    config.add_show_field 'culture_tsim', :label => 'Culture:'
+    config.add_show_field 'tribe_tsim', :label => 'Tribe:'
     config.add_show_field 'accession_number_ssim', :label => 'Accession Number:'
+    config.add_show_field 'series_tsim', :label => 'Series:'
     config.add_show_field 'box_number_ssm', :label => 'Box number:'
     config.add_show_field 'caption_folder_ssm', :label => 'Folder Name:'
     config.add_show_field 'caption_ssim', :label => 'Caption:'
-    config.add_show_field 'source_creator_tsim', :label => 'Source Creator:'
-    config.add_show_field 'source_title_tsim', :label => 'Source Title:'
-    config.add_show_field 'source_created_tsim', :label => 'Source Created:'
-    config.add_show_field 'source_edition_tsim', :label => 'Source Edition:'
-    config.add_show_field 'source_note_tsim', :label => 'Source Note:'
     config.add_show_field 'language_ssim', :label => 'Language:'
-    config.add_show_field 'period_style_tsim', :label => 'Period/Style:'
-    config.add_show_field 'culture_tsim', :label => 'Culture:'
     config.add_show_field 'scale_ssim', :label => 'Scale:'
     config.add_show_field 'projection_ssim', :label => 'Projection:'
     config.add_show_field 'coordinates_ssim', :label => 'Coordinates:'
     config.add_show_field 'genre_ssim', :label => 'Genre:'
     config.add_show_field 'format_ssim', :label => 'Format:'
-    config.add_show_field 'yale_collection_tsim', :label => 'Yale Collection:'
-    config.add_show_field 'musuem_repository_ssim', :label => 'Museum/Repository:'
     config.add_show_field 'rights_ssm', :label => 'Rights:'
+    config.add_show_field 'access_restrictions_tsim', :label => 'Access Restrictions:'
+    config.add_show_field 'note_citation_tsim', :label => 'Citation:'
+    config.add_show_field 'digital_ssim', :label => 'Digital:'
+    config.add_show_field 'other_dates_ssim', :label => 'Other Dates:'
+    config.add_show_field 'related_exhibit_tsim', :label => 'Related Exhibit or Resource:'
+    config.add_show_field 'source_creator_tsim', :label => 'Source Creator:'
+    config.add_show_field 'source_title_tsim', :label => 'Source Title:'
+    config.add_show_field 'source_created_tsim', :label => 'Source Created:'
+    config.add_show_field 'source_edition_tsim', :label => 'Source Edition:'
+    config.add_show_field 'source_note_tsim', :label => 'Source Note:'
+    config.add_show_field 'call_number_ssim', :label => 'Call Number:'
     config.add_show_field 'orbis_record_ssm', :label => 'Orbis Record:'
     config.add_show_field 'orbis_barcode_ssim', :label => 'Orbis Barcode:'
     config.add_show_field 'orbis_finding_aid_ssm', :label => 'Finding Aid:'
-    config.add_show_field 'related_links_ssm', :label => 'Related Links:'
-    config.add_show_field 'related_exhibit_tsim', :label => 'Related Exhibit or Resource:'
-    config.add_show_field 'note_citation_tsim', :label => 'Citation:'
-    config.add_show_field 'series_tsim', :label => 'Series:'
-    config.add_show_field 'isbn_ssim', :label => 'ISBN:'
-    config.add_show_field 'issn_ssim', :label => 'ISSN:'
-    config.add_show_field 'access_restrictions_tsim', :label => 'Access Restrictions:'
-    config.add_show_field 'digital_ssim', :label => 'Digital:'
-    config.add_show_field 'other_dates_ssim', :label => 'Other Dates:'
-    config.add_show_field 'tribe_tsim', :label => 'Tribe:'
+    config.add_show_field 'yale_collection_tsim', :label => 'Yale Collection:'
     config.add_show_field 'digital_collection_ssim', :label => 'Digital Collection:'
+   config.add_show_field 'musuem_repository_ssim', :label => 'Original Repository:'
+    config.add_show_field 'oid_isi', :label => 'OID:' 
+    config.add_show_field 'id', :label => 'PID:'
+    config.add_show_field 'oidpointer_isi', :label => 'oid pointer:'
     config.add_show_field 'ztotal_isi', :label => 'Number of Pages:'
 
     # "fielded" search configuration. Used by pulldown among other places.
