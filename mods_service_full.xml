@@ -1,14 +1,24 @@
 <mods xmlns:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-4.xsd" xmlns:xsi="http://wwww.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/mods/v3" version="3.4">
   <classification>QE882.C15 C365 2010 (LC)</classification><!--FDID58x-->
   <classification>QE882.C15 C365 2010</classification><!--FDID58x-->
-  <name>
+  <name displayLabel="none">
     <namePart>Goswami, Anjali</namePart><!--FDID69x-->
   </name>
-  <name>  
+  <name displayLabel="Mentioned within document">  
 	<namePart>Friscia, Anthony</namePart><!--FDID69x-->
   </name>
+  <name displayLabel="none">
+        <namePart>Test replace: &amp;amp; &amp;lt; &amp;gt; &amp;apos; &amp;quot;</namePart><!--FDID69x-->
+  </name>
+  <name displayLabel="Mentioned within document">
+        <namePart><![CDATA[some cdata: & < > ' "]]></namePart><!--FDID69x-->
+  </name>
+   <name displayLabel="none">
+        <namePart>some non-cdata: & < > ' "</namePart><!--FDID69x-->                                                                                                                                                                                                                                                                                            
+  </name>
+
   <titleInfo>
-    <title>Carnivoran evolution : new views on phylogeny, form, and function / edited by Anjali Goswami and Anthony Friscia.</title><!--FDID70x-->
+    <title>Carnivoran evolution : new views on phylogeny, form, and function / edited by Anjali Goswami and Anthony Friscia.  James Harris&amp;apos; Declaration</title><!--FDID70x-->
   </titleInfo>
   <titleInfo>
     <title type="alternative">Cambridge studies in morphology and molecules</title><!--FDID71x-->
@@ -20,7 +30,8 @@
     <dateCreated keyDate="yes">c2010.</dateCreated><!--FDID79x-->
 	<dateCreated keyDate="yes" encoding="iso8601">1899-00-00T00:00:00Z</dateCreated>
 	<edition>ORIGININFO_EDITION</edition><!--FDID76ax-->
-	<dateOther>DATE_OTHER</dateOther>
+	<dateOther type="none">DATE_OTHER</dateOther>
+        <dateOther type="Legislative Action">DATE_OTHER_TYPE</dateOther>
   </originInfo>
   <subject>
     <topic>Carnivora--Evolution</topic><!--FDID90x-->
@@ -29,10 +40,14 @@
   </subject>
   <subject>
     <temporal keyDate="yes">SUBJECT_TEMPORAL</temporal><!--FDID80a FDID81ax-->
-	<name>
-	  <namePart>SUBJECT_NAME_PART</namePart><!--FDID88ax-->
+	<name displayLabel="Mentioned within document">
+	  <namePart>SUBJECT_NAME_PART_MENTIONED</namePart><!--FDID88ax-->
 	</name>
-	<geographic>SUBJECT_GEOGRAPHIC</geographic><!--FDID91ax-->
+        <name displayLabel="none">
+          <namePart>SUBJECT_NAME_PART</namePart>
+        </name> 
+	<geographic displayLabel="none">SUBJECT_GEOGRAPHIC</geographic><!--FDID91ax-->
+        <geographic displayLabel="Mentioned within document">SUBJECT GEO MENTIONED</geographic>
 	<geographicCode>SUBJECT_GEOGRAPHIC_CODE</geographicCode><!--FDID92ax-->
 	<cartographics>
 	  <scale>SUBJECT_CARTOGRAPHICS_SCALE</scale><!--FDID95ax-->
@@ -120,7 +135,19 @@
   </recordInfo>
   <abstract>ABSTRACT</abstract><!--FDID87ax-->
   <genre>GENRE</genre><!--FDID98ax-->
-  <typeOfResource>TYPE_OF_RESOURCE</typeOfResource><!--FDID99ax-->  
+  <genre authority="yale" displayLabel="Content Type">YALE CONTENT TYPE</genre><!--FDID288-->
+  <typeOfResource>text</typeOfResource><!--FDID99ax-->
+   <typeOfResource>cartographic</typeOfResource><!--FDID99ax-->
+    <typeOfResource>notated music</typeOfResource><!--FDID99ax-->
+   <typeOfResource>sound recording</typeOfResource><!--FDID99ax-->
+    <typeOfResource>sound recording-musical</typeOfResource><!--FDID99ax-->
+   <typeOfResource>sound recording-nonmusical</typeOfResource><!--FDID99ax-->
+    <typeOfResource>still image</typeOfResource><!--FDID99ax-->
+   <typeOfResource>moving image</typeOfResource><!--FDID99ax-->
+    <typeOfResource>three dimensional object</typeOfResource><!--FDID99ax-->
+   <typeOfResource>software, multimedia</typeOfResource><!--FDID99ax-->
+    <typeOfResource>mixed material</typeOfResource><!--FDID99ax-->
+   <typeOfResource>dataset</typeOfResource><!--FDID99ax-->  
   <accessCondition type="useAndReproduction">ACCESS_CONDITION</accessCondition><!--FDID102-103ax-->
   <accessCondition type="restrictionsOnAccess">ACCESS_RESTRICTIONS</accessCondition><!--FDID180ax-->
 </mods>
