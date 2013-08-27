@@ -9,7 +9,7 @@ namespace :yulhy5 do
     logger.info("Start Time:"+@start.to_s)
 	logger.info("requirement: root of share must be 'ladybird'")
 
-	lbconf = YAML.load_file ('config/ladybird_pamoja_test.yml')
+	lbconf = YAML.load_file ('config/ladybird.yml')
 	lbuser = lbconf.fetch("username").strip
 	lbpw = lbconf.fetch("password").strip
 	lbhost = lbconf.fetch("host").strip

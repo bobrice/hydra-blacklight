@@ -1,19 +1,19 @@
 <mods xmlns:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-4.xsd" xmlns:xsi="http://wwww.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/mods/v3" version="3.4">
   <classification>QE882.C15 C365 2010 (LC)</classification><!--FDID58x-->
   <classification>QE882.C15 C365 2010</classification><!--FDID58x-->
-  <name displayLabel="none">
+  <name displayLabel="Author">
     <namePart>Goswami, Anjali</namePart><!--FDID69x-->
   </name>
   <name displayLabel="Mentioned within document">  
 	<namePart>Friscia, Anthony</namePart><!--FDID69x-->
   </name>
-  <name displayLabel="none">
+  <name displayLabel="Author">
         <namePart>Test replace: &amp;amp; &amp;lt; &amp;gt; &amp;apos; &amp;quot;</namePart><!--FDID69x-->
   </name>
   <name displayLabel="Mentioned within document">
         <namePart><![CDATA[some cdata: & < > ' "]]></namePart><!--FDID69x-->
   </name>
-   <name displayLabel="none">
+   <name displayLabel="Author">
         <namePart>some non-cdata: & < > ' "</namePart><!--FDID69x-->                                                                                                                                                                                                                                                                                            
   </name>
 
