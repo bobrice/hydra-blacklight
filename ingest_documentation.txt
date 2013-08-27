@@ -38,8 +38,9 @@ ingest routine:
   YAML.load_file(config/ladybird.yml)
   for testdb:
   YAML.load_file ('config/ladybird_pamoja_test.yml')
-3) check mount is there:  
-  mountroot = "/home/ermadmix/libshare/"
+3) check mount is there and tempfile (libserver3 example, may be different paths in production):  
+  @mountroot = "/home/ermadmix/libshare/"
+  @tempdir = "/home/ermadmix/"
   check df on server to ingest to (dev,test (libserver7),prod (diego)  
 4) check for eligible oids 
 select a.hpid,a.oid,a.cid,a.pid,b.contentModel,a._oid 
@@ -60,9 +61,9 @@ check data in tables, make sure looks OK
   select * from dbo.hydra_publish_path with hpid > "somenumber"
 
 5)make sure all Collection objects have been made
-  rake yulhy:add_all_collections
+  rake yulhy4:add_all_collections
   or for test instance
-  RAILS_ENV=test rake yulhy:add_all_collections
+  RAILS_ENV=test rake yulhy4:add_all_collections
   
 
 6) run the actual ingest pointing output to a .txt file: 
