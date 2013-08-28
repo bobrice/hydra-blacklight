@@ -3,10 +3,13 @@
 require 'nokogiri'
 require 'open-uri'
 require 'securerandom'
+#require 'casclient'
+#require 'casclient/frameworks/rails/filter'
 class AccessConditionsController < ApplicationController
 
   include Blacklight::Catalog
   
+  #ERJ Cas code
   before_filter CASClient::Frameworks::Rails::Filter , :only => :test_cas
   
   def index 
@@ -59,8 +62,11 @@ class AccessConditionsController < ApplicationController
   end
   def test_cas
 	#render :text => "You're seeing this because you've passed CAS authentication"
-        session["mediakey"] = SecureRandom.urlsafe_base64(10) if session["mediakey"] == nil
-        render :text => session.inspect
+	    #LRR Cas Code
+        redirect_to root_path
+        #session["mediakey"] = SecureRandom.urlsafe_base64(10) if session["mediakey"] == nil
+        #render :text => session.inspect
+        
         #render :text => session["mediakey"]
   end
   def logout

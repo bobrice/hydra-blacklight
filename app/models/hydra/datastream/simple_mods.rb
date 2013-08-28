@@ -172,7 +172,7 @@ module Hydra
              elementVal.each { |element|
                unless attrVal[iter].nil?
                  if attrVal[iter] != "none"
-                   field.push(element + "[" + attrVal[iter] + "]")
+                   field.push(element + "  [" + attrVal[iter] + "]")
                  end
                  iter += 1
                end
@@ -208,6 +208,20 @@ module Hydra
              field
            end
 
+           def whenAttrAuthor(elementVal,attrVal)
+             iter = 0
+             field = Array.new
+             elementVal.each { |element|
+               unless attrVal[iter].nil?
+                 if attrVal[iter] == "Author"
+                   field.push(element)
+                 end
+                 iter += 1
+               end
+             }
+             field
+           end
+
            def unescapeChars(array)
              unescaped = array.map { |s| s.gsub(/&amp;/,'&').gsub(/&lt;/,'<').gsub(/&gt;/,'>').gsub(/&apos;/,'\'').gsub(/&quot;/,'"') }
              unescaped
@@ -228,8 +242,8 @@ module Hydra
 		solr_doc['caption_folder_ssm'] = unescapeChars(mods.related_item.part.detail_folder.caption_folder)
 		solr_doc['source_creator_tsim'] = unescapeChars(mods.related_item_host.r_i_h_name.r_i_h_namePart)
 
-                solr_doc['creator_tsim'] = unescapeChars(whenAttrNone(mods.name.namePart,mods.nameRole))
-                solr_doc['creator_sim'] = unescapeChars([mods.related_item_host.r_i_h_name.r_i_h_namePart,whenAttrNone(mods.name.namePart,mods.nameRole)].flatten)
+                solr_doc['creator_tsim'] = unescapeChars(whenAttrAuthor(mods.name.namePart,mods.nameRole))
+                solr_doc['creator_sim'] = unescapeChars([mods.related_item_host.r_i_h_name.r_i_h_namePart,whenAttrAuthor(mods.name.namePart,mods.nameRole)].flatten)
                 solr_doc['assoc_names_tsim'] = unescapeChars([appendAttr(mods.name.namePart,mods.nameRole),appendAttr(mods.subject.s_name.s_namePart,mods.subject.s_nameRole)].flatten)
                 solr_doc['assoc_names_sim'] = unescapeChars([appendAttr(mods.name.namePart,mods.nameRole),appendAttr(mods.subject.s_name.s_namePart,mods.subject.s_nameRole)].flatten)                 
 

@@ -160,3 +160,11 @@ float: right;
 margin-right: 70px;
 display: block;
 }
+
+.span9 dl {
+padding-top:15px;
+}
+
+.span9 dt {
+padding-top:15px;
+}

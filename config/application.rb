@@ -58,11 +58,15 @@ module DiggitHydra
     # Default SASS Configuration, check out https://github.com/rails/sass-rails for details
     config.assets.compress = !Rails.env.development?
 
-
+    #config.gem 'devise', :version => '~> 1.0.6'
+    #config.gem 'devise_cas_authenticatable'
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+
+    #ERJ Cas code
     config.rubycas.cas_base_url = 'https://securedev.its.yale.edu/cas/login'
+    
     ActionMailer::Base.default(from: "yul.digitalcollections@yale.edu")
   end
 end

@@ -20,7 +20,7 @@ en:
       next: 'Next &raquo;'
 
   blacklight:
-    application_name: 'Blacklight'
+    application_name: 'YUL Digital Collection'
 
     header_links:
       login: 'Login'
@@ -128,7 +128,7 @@ en:
         subject:
           one: 'YUL Digital Collection Search Result'
           other: 'YUL Digital Collection Search Results'
-        message: 'Here are link(s) you saved from your search of the Yale University Library Digital Collection (findit.library.yale.edu/digital). If you have any questions, please contact Ask Yale (askyale@gmail.com).        Message: %{message}'
+        message: 'Here are link(s) you saved from your search of the Yale University Library Digital Collection (findit.library.yale.edu/digital).  If you have any questions about this specific title(s), please contact Ask Yale (askyale@gmail.com) and include the URL in your email.        Message: %{message}'
         url: 'URL: %{url}'
 
       errors:
