@@ -6,7 +6,7 @@
     padding: 0;
     width: 100%;
     z-index: 100;
-    background-color: #F9F9F9;
+    background-color: #F2F2F2;
     -webkit-box-shadow: 0 1px 3px #999;
 
     overflow: hidden;
@@ -22,7 +22,7 @@
     vertical-align: middle;
     border: none;
     cursor: pointer;
-    background-color: #F9F9F9;
+    background-color: #F2F2F2;
     background-image: url(images/BRicons.png);
     background-repeat: no-repeat;
 }
@@ -69,7 +69,7 @@ div#BRnav {
     height: 40px;
     overflow: visible;
     z-index: 100;
-    background-color: #F9F9F9;    
+    background-color: #F2F2F2;    
     
     -webkit-box-shadow: 1px 1px 2px #333;
     /* No shadow for FF, to be consistent with toolbar */
@@ -78,7 +78,7 @@ div#BRnav {
 }
 
 .BRnavCntl {
-    background-color: #F9F9F9;
+    background-color: #F2F2F2;
     position: absolute;
     right: 20px;
     width: 40px;
@@ -87,14 +87,48 @@ div#BRnav {
 }
 
 #RTL {
-    margin-top: 60px;
+    margin-top: 65px;
+    border-radius 0 4px 4px 0;
+    background-color:#000000;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    color: #F9F9F9;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
 
 #LTR {
-    margin-top: 60px;
+    margin-top: 65px;
+    margin-left: 10px;
+    margin-right: 100px;
+    background-color:#000000;
+    border-radius 0 4px 4px 0;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    color: #F9F9F9;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
 
 #YaleButtons {
 
     text-align: center;
+    padding-right: 30px;
+}
+
+.bookreader_span3 {
+margin-left:10px;
+padding-top:5px;
+}
+
+.row {
+width=80%;
+margin-left:0px;
+}
+
+.span3 nav-collapse {
+float: right;
+}
+
+#searchbar {
+width: 40%;
+}
+
+.container {
 }
