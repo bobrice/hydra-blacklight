@@ -2,11 +2,15 @@
 
 <html>
 <head>
-    <title>bookreader demo</title>
+    <title>YUL Digital Collections</title>
     
     <link rel="stylesheet" type="text/css" href="../BookReader/BookReader.css"/>
+    <link href="http://findit.library.yale.edu/assets/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
+    <link href="http://findit.library.yale.edu/assets/application.css?body=1" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://findit.library.yale.edu/assets/blacklight.css?body=1" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://findit.library.yale.edu/assets/yale/yale.css?body=1" media="screen" rel="stylesheet" type="text/css" />
     <!-- Custom CSS overrides -->
-    <link rel="stylesheet" type="text/css" href="BookReaderDemo.css"/>
+    <link rel="stylesheet" type="text/css" href="../BookReader/yale.css"/>
 
     <script type="text/javascript" src="http://www.archive.org/includes/jquery-1.4.2.min.js"></script>
     <script type="text/javascript" src="http://www.archive.org/bookreader/jquery-ui-1.8.5.custom.min.js"></script>
@@ -19,6 +23,74 @@
     <script type="text/javascript" src="../BookReader/BookReader.js"></script>
 </head>
 <body style="background-color: ##939598;">
+
+
+
+
+
+
+ <div id="header-navbar-fixed-top" class="navbar navbar-fixed-top">
+     <div class="navbar-inner">
+            <div class="container">
+              <div class="row">
+                      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                    </a>
+<div class="span3">
+
+            <a href="http://www.library.yale.edu" class="new_brand_yale">Yale</a> <a href="http://www.library.yale.edu" class="new_brand">University Library</a>
+
+                  </div>
+                  <div class="span6 clearfix" id="searchbar">         
+                                      <form accept-charset="UTF-8" action="/" class="search-query-form form-inline clearfix" method="get"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /></div>
+     
+
+      <div class="pull-left">
+        <!-- label for="search_field" class="hide-text">Search in</label>
+        <select class="search_field input-small" id="search_field" name="search_field" title="Targeted search options"><option value="all_fields">All Fields</option>
+<option value="title">Title</option>
+<option value="author">Author</option>
+<option value="subject">Subject</option></select-->
+        <span class="hide-text">for</span>
+      </div>
+       <div class="input-append pull-left">
+        <label for="q" class="hide-text">Search...</label>
+         <input class="search_q q" id="q" name="q" placeholder="Search..." type="text" />
+        <button type="submit" class="btn btn-primary search-btn" id="search">
+          <span class="submit-search-text">Search</span>
+          <i class="icon-search icon-white"></i>
+        </button>
+
+       </div>
+
+</form>
+                  </div>
+
+                  <div class="span3 nav-collapse">
+                         
+
+
+  <div class="util-links-other">
+  <a href="http://findit.library.yale.edu">Digital Collections</a> |
+  <a href="http://ask.library.yale.edu/">Ask Yale Library</a>
+  </div>
+
+                  
+                  </div>
+
+        </div>
+        </div>
+   </div>
+</div>
+
+
+
+
+
+
+
 <div id="result"></div>
 <div id="BookReader">
     Internet Archive BookReader Demo    <br/>
