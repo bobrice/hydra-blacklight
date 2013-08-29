@@ -68,7 +68,6 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.6.2)
-    daemon_controller (1.1.5)
     daemons (1.1.9)
     deprecation (0.0.5)
       activesupport
@@ -131,7 +130,6 @@ GEM
     mediashelf-loggable (0.4.9)
     mime-types (1.23)
     multi_json (1.7.2)
-    mysql2 (0.3.13)
     nokogiri (1.5.9)
     nom-xml (0.5.1)
       activesupport
@@ -145,10 +143,6 @@ GEM
       nokogiri (>= 1.4.2)
       solrizer (~> 3.0.0)
     orm_adapter (0.4.0)
-    passenger (4.0.10)
-      daemon_controller (>= 1.1.0)
-      rack
-      rake (>= 0.8.1)
     polyglot (0.3.3)
     rack (1.4.5)
     rack-cache (1.2)
@@ -254,8 +248,6 @@ DEPENDENCIES
   hydra-head (= 6.0.0)
   jettywrapper
   jquery-rails
-  mysql2
-  passenger
   rails (= 3.2.13)
   rubycas-client-rails
   sass-rails (~> 3.2.3)
