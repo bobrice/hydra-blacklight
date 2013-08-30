@@ -37,8 +37,8 @@ namespace :yulhy5 do
 	logger.info("temp directory" + @tempdir)
 	@blacklight_solr_config = Blacklight.solr_config
 	logger.info("solr host:" + @blacklight_solr_config.inspect)
-	@blacklight_fedora_config = Blacklight.solr_config
-	logger.info("fedora host:" + @blacklight_fedora_config.inspect)
+	#@blacklight_fedora_config = Blacklight.solr_config
+	#logger.info("fedora host:" + @blacklight_fedora_config.inspect)
 	@cnt=0
 	@error_cnt = 0
     processoids()
@@ -87,10 +87,10 @@ namespace :yulhy5 do
           processerror(i,msg)
         end		  
       end
-	  if @cnt > 10000
+	  if @cnt > 0
 	    @@client.close
 	    @@client2.close
-	    logger.info("Count exceeded "+@cnt+" at "+Time.now)
+	    logger.info("Count exceeded "+@cnt+" at "+Time.now.to_s)
 	    abort("stopped at a hard limit to prevent infinite loop")
 	  end	  
       processoids()
@@ -251,7 +251,7 @@ namespace :yulhy5 do
     logger.error("error for oid: #{i["oid"]} errormsg: #{dberror}")
 	logger.error("ERROR:" + errormsg.backtrace.to_s)
 	begin
-	  ehid = @@client2.execute(%Q/insert into dbo.hydra_publish_error (hpid,date,oid,error) values (#{i["hpid"]},GETDATE(),#{i["oid"]},'#{dberror}')/)
+	  ehid = @@client2.execute(%Q/insert into dbo.hydra_publish_error (hpid,date,oid,error) values (#{i["hpid"]},GETDATE(),#{i["oid"]},'grep Error ingest.log')/)
 	  ehid.insert
 	rescue Exception => msg
 	  unless ehid.nil? 
@@ -267,7 +267,7 @@ namespace :yulhy5 do
     @error_cnt += 1
     logger.error("error for oid: #{i["oid"]} errormsg: #{errormsg}")
 	begin
-	  ehid = @@client2.execute(%Q/insert into dbo.hydra_publish_error (hpid,date,oid,error) values (#{i["hpid"]},GETDATE(),#{i["oid"]},'#{errormsg}')/)
+	  ehid = @@client2.execute(%Q/insert into dbo.hydra_publish_error (hpid,date,oid,error) values (#{i["hpid"]},GETDATE(),#{i["oid"]},'grep Error ingest.082913.log')/)
 	  ehid.insert
 	rescue Exception => msg
 	  unless ehid.nil? 
