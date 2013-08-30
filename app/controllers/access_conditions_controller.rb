@@ -8,6 +8,7 @@ require 'securerandom'
 class AccessConditionsController < ApplicationController
 
   include Blacklight::Catalog
+  include Blacklight::Controller
   
   #ERJ Cas code
   before_filter CASClient::Frameworks::Rails::Filter , :only => :test_cas
@@ -61,12 +62,15 @@ class AccessConditionsController < ApplicationController
 	return
   end
   def test_cas
+  	@cas_userr = "undefined"
 	#render :text => "You're seeing this because you've passed CAS authentication"
 	    #LRR Cas Code
-        redirect_to root_path
-        #session["mediakey"] = SecureRandom.urlsafe_base64(10) if session["mediakey"] == nil
+        #redirect_to root_path
+        session["mediakey"] = SecureRandom.urlsafe_base64(10) if session["mediakey"] == nil
         #render :text => session.inspect
-        
+        #current_user = session["cas_user"]
+        @cas_net_id = session["cas_user"]
+        #redirect_to root_path
         #render :text => session["mediakey"]
   end
   def logout

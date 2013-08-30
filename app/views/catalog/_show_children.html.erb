@@ -8,7 +8,7 @@
 
 <% if @docs1 != nil then %>
 
-    <% until (@docs1.length == maxval) || (i >= @docs1.length) %>
+    <% until (i == maxval) || (i >= @docs1.length) %>
 
          <%= link_to image_tag(@url1 + @docs1[i].to_s  + @url2 , :height => '100', :width => '75'), @bookreader + document[:oid_isi].to_s + "#page/" + pagenum.to_s + "/mode/1up" %>
 
