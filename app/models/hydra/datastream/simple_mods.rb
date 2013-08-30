@@ -104,10 +104,16 @@ module Hydra
 		  #t.namePart(:path=>"namePart",:index_as=>[:searchable,:displayable]) 
 		}
 		
-        t.title_info(:path=>"titleInfo") {
-          t.main_title(:path=>"title",:attributes=>{:type=>:none})
-		  t.alt_title(:path=>"title",:attributes=>{:type=>"alternative"})
+        #t.title_info(:path=>"titleInfo") {
+        #  t.main_title(:path=>"title",:attributes=>{:type=>:none})
+	#	  t.alt_title(:path=>"title",:attributes=>{:type=>"alternative"})
+        #}
+        t.title_info(:path=>"titleInfo",:attributes=>{:type=>:none}) {
+          t.main_title(:path=>"title") 
         }
+        t.alt_title_info(:path=>"titleInfo",:attributes=>{:type=>"alternative"}) {
+          t.alt_title(:path=>"title")
+        }       
         t.isbn(:path=>"identifier",:attributes=>{:type=>"isbn"}) 
         #
 		t.issn(:path=>"identifier",:attributes=>{:type=>"issn"})
@@ -242,8 +248,8 @@ module Hydra
 		solr_doc['caption_folder_ssm'] = unescapeChars(mods.related_item.part.detail_folder.caption_folder)
 		solr_doc['source_creator_tsim'] = unescapeChars(mods.related_item_host.r_i_h_name.r_i_h_namePart)
 
-                solr_doc['creator_tsim'] = unescapeChars(whenAttrAuthor(mods.name.namePart,mods.nameRole))
-                solr_doc['creator_sim'] = unescapeChars([mods.related_item_host.r_i_h_name.r_i_h_namePart,whenAttrAuthor(mods.name.namePart,mods.nameRole)].flatten)
+                solr_doc['creator_tsim'] = unescapeChars([whenAttrAuthor(mods.name.namePart,mods.nameRole),whenAttrNone(mods.name.namePart,mods.nameRole)].flatten)
+                solr_doc['creator_sim'] = unescapeChars([mods.related_item_host.r_i_h_name.r_i_h_namePart,whenAttrAuthor(mods.name.namePart,mods.nameRole),whenAttrNone(mods.name.namePart,mods.nameRole)].flatten)
                 solr_doc['assoc_names_tsim'] = unescapeChars([appendAttr(mods.name.namePart,mods.nameRole),appendAttr(mods.subject.s_name.s_namePart,mods.subject.s_nameRole)].flatten)
                 solr_doc['assoc_names_sim'] = unescapeChars([appendAttr(mods.name.namePart,mods.nameRole),appendAttr(mods.subject.s_name.s_namePart,mods.subject.s_nameRole)].flatten)                 
 
@@ -252,7 +258,7 @@ module Hydra
 		solr_doc['source_edition_tsim'] = unescapeChars(mods.related_item_host.r_i_h_originInfo.r_i_h_edition)
 		solr_doc['source_note_tsim'] = unescapeChars(mods.related_item_host.r_i_h_note)
 		solr_doc['title_tsim'] = unescapeChars(mods.title_info.main_title)
-		solr_doc['variant_titles_tsim'] = unescapeChars(mods.title_info.alt_title)
+		solr_doc['variant_titles_tsim'] = unescapeChars(mods.alt_title_info.alt_title)
 		solr_doc['caption_ssim'] = unescapeChars(mods.display_label)
 		solr_doc['edition_ssim'] = unescapeChars(mods.origin_info.o_i_edition)
 		solr_doc['publishedCreated_ssim'] = unescapeChars([mods.origin_info.o_i_place,mods.origin_info.o_i_publisher,mods.origin_info.o_i_dateCreated].flatten)
@@ -277,8 +283,8 @@ module Hydra
                 solr_doc['subject_topic_tsim'] = unescapeChars(mods.subject.topic)
 		solr_doc['subject_topic_sim'] = unescapeChars(mods.subject.topic)
 		
-                solr_doc['subject_geographic_tsim'] = unescapeChars(whenAttrNone(mods.subject.s_geographic,mods.subject.s_geo_nameRole))
-		solr_doc['subject_geographic_sim'] = unescapeChars(whenAttrNone(mods.subject.s_geographic,mods.subject.s_geo_nameRole))
+                solr_doc['subject_geographic_tsim'] = unescapeChars(mods.subject.s_geographic)
+		solr_doc['subject_geographic_sim'] = unescapeChars(mods.subject.s_geographic)
                 solr_doc['subject_assoc_geo_tsim'] = unescapeChars(appendAttr(mods.subject.s_geographic,mods.subject.s_geo_nameRole))
                 solr_doc['subject_assoc_geo_sim'] = unescapeChars(appendAttr(mods.subject.s_geographic,mods.subject.s_geo_nameRole))
 		
