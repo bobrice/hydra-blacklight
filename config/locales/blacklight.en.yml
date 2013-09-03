@@ -128,7 +128,8 @@ en:
         subject:
           one: 'YUL Digital Collection Search Result'
           other: 'YUL Digital Collection Search Results'
-        message: 'Here are link(s) you saved from your search of the Yale University Library Digital Collection (findit.library.yale.edu/digital).  If you have any questions about this specific title(s), please contact Ask Yale (askyale@gmail.com) and include the URL in your email.        Message: %{message}'
+        message: 'Message: %{message}.
+Here are link(s) you saved from your search of the Yale University Library Digital Collection (findit.library.yale.edu/digital).  If you have any questions about this specific title(s), please contact Ask Yale (askyale@gmail.com) and include the URL in your email.'
         url: 'URL: %{url}'
 
       errors:
