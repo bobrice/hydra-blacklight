@@ -159,6 +159,8 @@ display:none;
 float: right;
 margin-right: 70px;
 display: block;
+width: 100px;
+height: 100px;
 }
 
 .frontpage {
@@ -171,4 +173,9 @@ padding-top:15px;
 
 .complexThumbnails {
 text-align: center;
+}
+
+.complexThumbnails img {
+width:75px;
+height:px;
 }
