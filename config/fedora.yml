@@ -1,7 +1,13 @@
 development:
+  #Prod Data
   user: fedoraAdmin
   password: hydra%man!
-  url: http://libserver7.yale.edu:8082/fedora
+  url: http://diego.library.yale.edu:8082/fedora
+  #Development on Libserver7
+  #user: fedoraAdmin
+  #password: hydra%man!
+  #url: http://libserver7.yale.edu:8082/fedora
+  #Development on Libserver3
   #user: fedoraAdmin
   #password: fedoraAdmin
   #url: http://libserver3.yale.edu:8983/fedora

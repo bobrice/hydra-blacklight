@@ -52,9 +52,6 @@ class PaginationController < ApplicationController
         end
       end
     render :json => @docs1[0]
-    #render :json => @solr_response.response
-    #render :json => @solr_response.class
-    #solr_response.docs.empty?
     return
   end
 
@@ -72,11 +69,12 @@ class PaginationController < ApplicationController
 
   def getrailsenv
     if Rails.env.to_s == 'development' then
-      render :text => "http://imageserver.library.yale.edu/libserver7.yale.edu:8082/"
+      #render :text => "http://imageserver.library.yale.edu/libserver7.yale.edu:8082/"
+      render :text => "http://imageserver.library.yale.edu/"
     elsif Rails.env.to_s == 'test' then
       render :text => "http://imageserver.library.yale.edu/libserver7.yale.edu:8082/"
     else
-      render :text => "http://imageserver.library.yale.edu/diego.library.yale.edu:8082/"
+      render :text => "http://imageserver.library.yale.edu/"
     end
   end
 
@@ -99,20 +97,5 @@ class PaginationController < ApplicationController
     render :text => "false";
     return
   end
-
-
-  
-  #def erjtest
-  #  solr_doc_params
-  #end
-
-  #for reference
-  #10590519
-  #pid = "libserver7:3"
-  #datatype = "text"
-  #pid = solr_doc_params 
-    ##{:id=>nil, :qt=>"document"}
-  #@solr_reponse,@document = get_solr_response_for_doc_id(pid)
-  #pid = erjtest
 
 end
