@@ -1,17 +1,13 @@
 <% # header bar for doc items in index view -%>
 <div class="showComplex">
     <% # main title container for doc partial view -%>
-    <!--<%= if (!(@pid_array[0].to_s.eql? '')) then link_to image_tag(@url1 + @pid_array[0].to_s  + @url2 , :height => '256', :width => '256'), @url1 + @pid_array[0].to_s  + @url2 end%>-->
-
     <% pagenum = 1 %>
 
     <%= if (!(@pid_array[0].to_s.eql? '')) then link_to image_tag(@url1 + @pid_array[0].to_s  + @url2 , :height => '256', :width => '256'), @bookreader + document[:oid_isi].to_s  + "#page/" + pagenum.to_s + "/mode/1up" end%>
 
-    <% if (!(@pid_array[0].to_s.eql? '')) then %>
+    <% if @is_pdf.to_s == 'true' then %>
        <li class="btn">
-         <!--<%= if (!(@pid_array[0].to_s.eql? '')) then link_to(:'PDF', @url1 + @pid_array[0].to_s  + @url_pdf) end%>-->
          <%= if (!(document[:id].to_s.eql? '')) then link_to(:'PDF', @url1 + document[:id].to_s + @url_pdf, :target => '_blank') end%>
-         <% #replace the "#" with a route to the PDF. Maybe the CAS route for CAS authentication (must be in quotes) or another url (must be without quotes). TBD -%>
        </li> 
     <% end %>
 

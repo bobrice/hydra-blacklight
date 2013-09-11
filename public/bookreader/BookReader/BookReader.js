@@ -3404,7 +3404,7 @@ BookReader.prototype.initEmbedNavbar = function() {
         +   "</span>"
        // +   "<span><a class='logo' href='" + this.logoURL + "' 'target='_blank' ></a></span>"
         +   "<span id='BRembedreturn'><a href='" + thisLink + "' target='_blank' ></a></span>"
-        +   "<span id='BRembedtrans'><a href='" + this.transUrl + "' target='_blank' ></a></span>"
+       // +   "<span id='BRembedtrans'><a href='" + this.transUrl + "' target='_blank' ></a></span>"
         + '</div>'
     );
     $('#BRembedreturn a').text(this.bookTitle);
@@ -3642,12 +3642,12 @@ BookReader.prototype.initToolbar = function(mode, ui) {
         //+     "<button class='BRicon full'></button>"
         +   "</span>"
        // +   "<span><a class='logo' href='" + this.logoURL + "'></a></span>"
-        +   "<span id='BRtrans'><a></a></span>"
+        //+   "<span id='BRtrans'><a></a></span>"
         +   "<span id='BRreturn'><a></a></span>"
         + "<div id='YaleButtons'>"
         +   "<button id='RTL' name='right_to_left' onclick='br.setrtl()'>Right to Left</button>"
         +   "<button id='LTR' name='left_to_right' onclick='br.setltr()'>Left to Right</button>"
-        +   "<button id='TRAN' name='transcript' onclick='br.gettran()'>Transcript</button>"
+        //+   "<button id='TRAN' name='transcript' onclick='br.gettran()'>Transcript</button>"
         + "</div>"
         +   "<div id='BRnavCntlTop' class='BRnabrbuvCntl'></div>"
         + "</div>"
@@ -3672,7 +3672,7 @@ BookReader.prototype.initToolbar = function(mode, ui) {
     }
 
     $('#BRreturn a').attr('href', this.bookUrl).text(this.bookTitle);
-    $('#BRtrans a').attr('href', this.transUrl).text(this.transTitle);
+    //$('#BRtrans a').attr('href', this.transUrl).text(this.transTitle);
     //$('#BRRTL a').attr('href', this.transUrl).text(this.turnRTL);
     //$('#BRRTL a').attr(attribute, this.setPageProgression(rl)).text(this.turnRTL);
     //$('#BRLTR a').attr('href', this.transUrl).text(this.turnLTR);
@@ -4647,14 +4647,14 @@ BookReader.prototype._getPageURI = function(index, reduce, rotate) {
     //$('#BRtrans').hide();
 
 
-    if (this.gettran() == false)//Or check a variable that will be set in gettran()
-    {
+    //if (this.gettran() == false)//Or check a variable that will be set in gettran()
+    //{
         //document.getElementById("TRAN").disabled=true;
         //or
-        document.getElementById("TRAN").style.visibility = 'hidden';
+    //    document.getElementById("TRAN").style.visibility = 'hidden';
         //or
-        $('#BRtrans').hide();
-    }
+    //    $('#BRtrans').hide();
+    //}
     return this.getPageURI(index, reduce, rotate);
 }
 

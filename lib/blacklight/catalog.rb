@@ -4,6 +4,8 @@ module Blacklight::Catalog
   
   include Blacklight::Configurable
   include Blacklight::SolrHelper
+  require "net/http"
+  require "uri"
   
   SearchHistoryWindow = 12 # how many searches to save in session history
 
@@ -53,19 +55,18 @@ module Blacklight::Catalog
       if !(@url1)
         @netid = "0"
         @session = "0"
+
         if Rails.env.to_s == 'development' then
-          @url1 = "http://imageserver.library.yale.edu/libserver7.yale.edu:8082/"
+          @url1 = "http://imageserver.library.yale.edu/"
         elsif Rails.env.to_s == 'test' then
           @url1 = "http://imageserver.library.yale.edu/libserver7.yale.edu:8082/"
         else
-          @url1 = "http://imageserver.library.yale.edu/diego.library.yale.edu:8082/"
+          @url1 = "http://imageserver.library.yale.edu/"
         end
         
-        @url2 = "/"+@netid+"/"+@session+"/227/111/132/130/500.jpg"
-        @urlzoom = "/"+@netid+"/"+@session+"/227/111/132/130/1000.jpg"
-      end
+        @url2 = "/500.jpg"
 
-      #render :json => @pidholder
+      end
     end
     
     # get single document from the solr index
@@ -79,23 +80,28 @@ module Blacklight::Catalog
       @netid = "0"
       @session = "0"
 
-      pid = params[:id]
-      pid = pid.to_s
+      pid = params[:id].to_s
+     
       if !(@url1)
         
         if Rails.env.to_s == 'development' then
-          @url1 = "http://imageserver.library.yale.edu/libserver7.yale.edu:8082/"
+          @url1 = "http://imageserver.library.yale.edu/"
         elsif Rails.env.to_s == 'test' then
           @url1 = "http://imageserver.library.yale.edu/libserver7.yale.edu:8082/"
         else
-          @url1 = "http://imageserver.library.yale.edu/diego.library.yale.edu:8082/"
+          @url1 = "http://imageserver.library.yale.edu/"
         end
-            
-        @url2 = "/"+@netid+"/"+@session+"/227/111/132/130/500.jpg"
-        @urlzoom = "/"+@netid+"/"+@session+"/227/111/132/130/1000.jpg"
-        @url_pdf = "/"+@netid+"/"+@session+"/227/111/132/130/500.pdf"
-        #render :json => params[:id]
       end
+
+        @datastream = 'http://imageserver.library.yale.edu/' + pid + '/500.pdf?q=2'
+        uri = URI(@datastream)
+        res = Net::HTTP.get_response(uri)
+        @get_string = res.body.to_s
+
+        @is_pdf = !(@get_string.to_s.include?("404") && @get_string.to_s.include?("error") && @get_string.to_s.include?("WebException"))
+
+        @url2 = "/500.jpg"
+        @url_pdf = "/500.pdf"
 
       @docs = get_children_from_parent_pid(pid)
       if @docs != nil
@@ -108,8 +114,8 @@ module Blacklight::Catalog
       end
 
       @oidpointer = get_oidpointer(pid)
+      
       # This is the value of oidpointer when nothing is returned 
-      #render :json => pid 
       if !(@oidpointer.to_s.eql? '[{}]')
         @oidpointer.each do |i|
           i.each do |key, value|

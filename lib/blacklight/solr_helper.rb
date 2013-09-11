@@ -564,7 +564,8 @@ module Blacklight::SolrHelper
 		end
 	end
   end 
-  
+
+  # a solr query method to get the oidpointer_isi from an object given the pid   
   def get_oidpointer(pid)
         query = "id:\"" + pid + "\""
         @solr_response = find(blacklight_config.qt,{:fq => query,:fl => "oidpointer_isi", :rows => 10});
@@ -577,6 +578,7 @@ module Blacklight::SolrHelper
         end
   end
 
+  # a solr query method to get the pid of a child object given the oid_isi (oipointer_isi from above query)
   def get_child_pid(oidpointer)
         query = "oid_isi:" + oidpointer.to_s
         @solr_response = find(blacklight_config.qt,{:fq => query,:fl => "id", :rows => 10});

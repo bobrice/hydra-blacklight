@@ -56,7 +56,6 @@ br.getOID = function() {
     //{"numFound":8,"start":0,"docs":[{"id":"libserver7:3"},{"id":"libserver7:4"},{"id":"libserver7:5"},{"id":"libserver7:6"},{"id":"libserver7:7"},{"id":"libserver7:8"},{"id":"libserver7:9"},{"id":"libserver7:10"}]}
     getPID = function(parentoid,index) {
       var solrq = "/pagination?oid="+parentoid+"&zi="+index
-      //var solrq = "/pagination?oid="+parentoid+"&zi="+(index + 1)
       console.log("SOLRQ:"+solrq);
       var result;
       $.ajax(
@@ -69,14 +68,6 @@ br.getOID = function() {
          { 
             console.log("SUCCESS:"+data.docs[0].id + " numFound: " + data.numFound); 
             result = data.docs[(data.numFound - 1)].id;
-            //if (data.numFound > 1)
-            //{
-             // result = data.docs[1].id;
-            //}
-            //else
-            //{
-             // result = data.docs[0].id;
-            //}
          },
          error: function(xhr,ajaxOptions,thrownError) 
          { 
@@ -101,16 +92,14 @@ br.getPageURI = function(index, reduce, rotate) {
     var leafStr = '000';            
     var imgStr = (index+1).toString();
     var re = new RegExp("0{"+imgStr.length+"}$");
-    //var url = 'http://www.archive.org/download/BookReader/img/page'+leafStr.replace(re, imgStr) + '.jpg';
-    //parentoid = "10590519";
+
     parentoid = br.getOID();
     index = index+1;
     pid = getPID(parentoid,index);
     console.log("pid:"+pid);
     var url1 = br.getrailsenv();
-    //remove later
-    //var url = "http://libserver3.yale.edu:8983/fedora/objects/"+pid+"/datastreams/jpg/content";
-    var url = url1 +pid+"/"+netid+"/"+session+"/227/111/132/130/500.jpg";
+    //var url = url1 +pid+"/"+netid+"/"+session+"/227/111/132/130/500.jpg";
+    var url = url1 +pid + "/1500.jpg";
     return url;
 }
 
@@ -143,14 +132,13 @@ br.getrailsenv = function() {
 }
 
 br.gettitle = function() {
-//return true of false based on results from solr query
+
+    var max_char = 50;
     console.log("In gettitle");
-    //return lr for LTR and rl for RTL
-    //return 'rl';
-    //parentoid = getOIDturn();
     var solrq = "/pagination/title?oid="+this.parentoid
     console.log("SOLRQ:"+solrq);
-    var title = "false";
+    var title = "Can't retrieve title from Blacklight";
+
     $.ajax(
     {
         async: false,
@@ -168,21 +156,49 @@ br.gettitle = function() {
         }
      }
      );
+
       console.log("AJAX: title is: "+title);
+      console.log("Title character length is: " +title.toString().length);
+
+      if  (title.toString().length > max_char)
+      {
+        var title_array = title.toString().split(" ");
+        var new_title = "";
+        var test_string = "";
+
+        //for (i=0; ((i < title_array.length) && (new_title.toString().length < max_char)); i++)
+        for (i=0; i < title_array.length ; i++)
+        {
+
+          test_string = new_title + title_array[i].toString() + " ";
+
+          if ( test_string.toString().length < max_char)
+          {
+            new_title += title_array[i].toString() + " ";
+          }
+          else
+          {
+            break;
+          }
+
+        }
+        
+        new_title = new_title.toString().trim();
+        new_title += "...";
+        title = new_title;
+      }
+
      return title.toString();
-  //OR, maybe set a variable. Then check the value of that variable to determine if 
-  //button should be displayed
 }
 
 br.getparentpid = function() {
-//return true of false based on results from solr query
+
     console.log("In getparentpid");
-    //return lr for LTR and rl for RTL
-    //return 'rl';
-    //parentoid = getOIDturn();
+
     var solrq = "/pagination/getparentpid?oid="+this.parentoid
     console.log("SOLRQ:"+solrq);
     var title = "false";
+
     $.ajax(
     {
         async: false,
@@ -210,16 +226,11 @@ br.getparentpid = function() {
      );
       console.log("AJAX: parent pid is: "+result);
      return result;
-  //OR, maybe set a variable. Then check the value of that variable to determine if 
-  //button should be displayed
 }
 
 br.gettran = function() {
 //return true of false based on results from solr query
     console.log("In gettran");
-    //return lr for LTR and rl for RTL
-    //return 'rl';
-    //parentoid = getOIDturn();
     var solrq = "/pagination/transcript?oid="+this.parentoid
     console.log("SOLRQ:"+solrq);
     var transcript = "false";
@@ -325,7 +336,7 @@ br.imagesBaseURL = '../BookReader/images/';
 br.transTitle = 'Transcript';
 //br.pageturnTitle = "Right to Left Turning";
 br.turnRTL = "Right to Left Turning";
-br.turnLTR = "Left to Right Turning"
+br.turnLTR = "Left to Right Turning";
 br.transUrl = 'http://www.yale.edu';
 
 br.getEmbedCode = function(frameWidth, frameHeight, viewParams) {
