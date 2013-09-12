@@ -70,10 +70,10 @@ padding-top: 8px;
 }
 
 .navbar .brand {
-/* background: none; */
-font-family: 'YaleDesign-SmallCap';
-color: #00346A;
-margin-left:0px;
+background: url("/assets/blacklight/logo.png") no-repeat scroll left top transparent;
+background-width: 240px;
+background-height: 18px;
+width:240px;
 }
 
 html,
