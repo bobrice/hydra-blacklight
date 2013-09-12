@@ -15,6 +15,7 @@ module Hydra
 		t.parentoid(:path=>"parentoid")
 		t.ztotal(:path=>"ztotal")
 		t.oidpointer(:path=>"oidpointer")
+                t.server(:path=>"server")
 			
 	  end
   
@@ -27,6 +28,7 @@ module Hydra
 		solr_doc['parentoid_isi'] = parentoid
 		solr_doc['ztotal_isi'] = ztotal
 		solr_doc['oidpointer_isi'] = oidpointer
+                solr_doc['server_ssi'] = server
         solr_doc
       end	  
     end

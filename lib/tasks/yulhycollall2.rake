@@ -2,7 +2,7 @@
 require Rails.root.join('config/environment.rb')
 namespace :yulhy do
   desc "add all collections from pamoja projects table"
-  task :add_all_collections do
+  task :add_all_collections_with_info do
     lbconf = YAML.load_file ('config/ladybird.yml')
 	lbuser = lbconf.fetch("username").strip
 	lbpw = lbconf.fetch("password").strip
@@ -27,30 +27,44 @@ namespace :yulhy do
 	end
 	#puts "size:" + rows.size.to_s
 	rows.each do |i| 
-	    puts "--------------"
-		exists = get_coll_pid(i[0],i[1])
+	        puts "--------------"
+		exists = get_coll_pid2(i[0],i[1])
 		puts "  cid: #{i[0]}"
 		puts "  pid: #{i[1]}"
 		puts "  label: #{i[2]}"
-		if exists == "true"
-		  puts "  Not ingesting, already exists"
-		elsif exists == "false"
-          puts "  Creating new object"
-		  obj = Collection.new
-		  obj.label = i[2]
-	      obj.cid = i[0]
-          obj.projid = i[1] 
-          obj.title = i[2]
-	      obj.save
-          puts "Created pid: "+ obj.pid
+
+                file = "/home/ermadmix/colltemp.xml"
+                pathHTTP = "http://ladybird.library.yale.edu/xml_contactinformation.aspx?pid=#{i[1]}"
+                puts "  xml:"+pathHTTP
+                open(file,'wb') do |f|
+                  f << open(pathHTTP).read
+                end
+                ff = File.new(file)
+                ng_xml = Nokogiri::XML::Document.parse(IO.read(ff))
+       
+		if exists == "does not exist"
+                  puts "Creating new object..."
+                  obj = Collection.new
+                  obj.label = i[2]
+                  obj.propertyMetadata.ng_xml = ng_xml
+                  #
+                  obj.save
+                  puts "Created pid: " + obj.pid 
+		else
+                  puts "  Already exists, updating for PID "+exists
+                  obj = ActiveFedora::Base.find(exists,:cast=>true)
+                  obj.propertyMetadata.ng_xml = ng_xml
+                  obj.save                 
+                  puts "Updated pid: "+ obj.pid
 		end  
 	end
 	@@client.close
   end
   private
-  def get_coll_pid(cid,pid)
+  def get_coll_pid2(cid,pid)
     exists = ""
     query = "cid_isi:"+cid.to_s+" && projid_isi:"+pid.to_s+" && active_fedora_model_ssim:Collection"
+    puts query
     blacklight_solr_config = Blacklight.solr_config
     #puts query
     #puts blacklight_solr_config
@@ -60,14 +74,15 @@ namespace :yulhy do
     #@solr_response = Blacklight::SolrResponse.new(force_to_utf8(response),{:fq => query,:fl => "id"})
     #puts "R:"+response["response"].inspect
 	if response["response"]["numFound"] == 0
-      #puts "No Collection found for cid:"+cid.to_s+" pid:"+pid.to_s
-	  exists = "false"
+          #puts "No Collection found for cid:"+cid.to_s+" pid:"+pid.to_s
+	  id = "does not exist"
 	else 
 	  #puts "A Collection found for cid:"+cid.to_s+" pid:"+pid.to_s"
-	  exists = "true"
+	  #exists = "true"
+          id = response["response"]["docs"][0]["id"]
 	end
     #puts "S:"+response["response"]["numFound"]
-    #id = response["response"]["docs"][0]["id"]
-    exists
+    id
+    #exists
   end	  
 end

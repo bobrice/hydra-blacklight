@@ -33,7 +33,7 @@ ingest routine:
 1) check that hydra configs are set properly
   config/solr.yml
   config/fedora.yml
-2) check that lib/tasks/yulhy4.rake is set properly
+2) check that lib/tasks/yulhy6.rake is set properly
   for prod db:
   YAML.load_file(config/ladybird.yml)
   for testdb:
@@ -43,15 +43,21 @@ ingest routine:
   @tempdir = "/home/ermadmix/"
   check df on server to ingest to (dev,test (libserver7),prod (diego)  
 4) check for eligible oids 
-select a.hpid,a.oid,a.cid,a.pid,b.contentModel,a._oid 
-from dbo.hydra_publish a,
-dbo.hydra_content_model b 
-where a.dateHydraStart is null 
-and a.dateReady 
-is not null and a._oid=0 
-and a.hcmid is not null
-and a.hcmid=b.hcmid 
-order by a.dateReady
+
+select a.hpid,a.oid,a.cid,a.pid,b.contentModel,a._oid,a.action,a.hydraID  
+         from hydra_publish a, hydra_content_model b 
+	   where a.dateHydraStart is null and a.dateReady is not null and a.priority <> 999 and a.attempts < 3 
+	     and ((a.action='insert' and _oid=0) or (a.action='delete' or a.action='update' or a.action='ichild')) 
+	       and a.hcmid=b.hcmid 
+      order by a.priority, a.attempts 
+        case a.action 
+	    when 'delete' then 'a'  
+	    	 when 'undel' then 'b' 
+		      when 'update' then 'c' 
+        when 'ichild' then 'd' 
+        when 'insert' then 'e' 
+      end,a.dateReady"
+
 
 from this query get list of hpids for later use, most of the time this will be 'hpid > "somenumber"'
 or remove the a._oid=0 from above to get not just ComplexParent and Simple
@@ -61,13 +67,13 @@ check data in tables, make sure looks OK
   select * from dbo.hydra_publish_path with hpid > "somenumber"
 
 5)make sure all Collection objects have been made
-  rake yulhy4:add_all_collections
+  rake yulhy:add_all_collections
   or for test instance
-  RAILS_ENV=test rake yulhy4:add_all_collections
+  RAILS_ENV=test rake yulhy:add_all_collections
   
 
 6) run the actual ingest pointing output to a .txt file: 
-  rake yulhy5:ingest
+  rake yulhy6:ingest
   or for test instance
   RAILS_ENV=test rake yulhy5:ingest
 
@@ -79,8 +85,10 @@ from dbo.hydra_publish a,dbo.hydra_content_model b
 where a.hcmid=b.hcmid and a.hpid > <somenumber>
 
 9) debug if necessary (the hard part)
-a) check the rake output ('output.txt' from step 3)
+a) check the rake output ('log/ingest.log')
+ i) grep error ingest.log
 b) if an exception occurs, check what it is, but most likely it will be an illegible stack trace
+ i) see errors in database - select a.*,b.date from hydra_publish a,hydra_publish_error b where a.hpid=b.hpid order by b.date desc
 c) look for the pid before an error
   ex: in yulhy6d.out libserver7t:713
 d) cross reference with fedora.logs
