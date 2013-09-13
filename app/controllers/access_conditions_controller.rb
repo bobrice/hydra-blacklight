@@ -11,7 +11,7 @@ class AccessConditionsController < ApplicationController
   include Blacklight::Controller
   
   #ERJ Cas code
-  before_filter CASClient::Frameworks::Rails::Filter , :only => :test_cas
+  #before_filter CASClient::Frameworks::Rails::Filter , :only => :test_cas
   
   def index 
 #http://libserver3.yale.edu:3000/auth?oid=10590515&type=jpg150&ip=130.132.80.210

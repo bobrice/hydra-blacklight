@@ -5,7 +5,8 @@ obj = ComplexParent.new
 #file = File.new('/home/ermadmix/10681633_metadata.xml')
 #file = File.new('/home/ermadmix/mods.xml')
 #file = File.new('/home/ermadmix/daymission.xml')
-file = File.new('/home/ermadmix/durandMetadata.xml')
+#file = File.new('/home/ermadmix/durandMetadata.xml')
+file = File.new('/home/ermadmix/10733824_metadata.xml')
 ng_xml = Nokogiri::XML::Document.parse(IO.read(file))
 obj.descMetadata.ng_xml = ng_xml
 

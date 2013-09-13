@@ -19,7 +19,13 @@ class ComplexParent < ActiveFedora::Base
   delegate :parentoid, :to=>"propertyMetadata", :unique=>true
   delegate :ztotal, :to=>"propertyMetadata", :unique=>true
   delegate :oidpointer, :to=>"propertyMetadata", :unique=>true
- 
+  delegate :server, :to=>"propertyMetadata",:unique=>true
+
+  def to_solr(solr_doc=Hash.new)
+    super(solr_doc)
+    solr_doc['state_ssi'] = state
+    solr_doc
+  end 
   #ERJ, has datastream (from::ActiveFedora::DatastreamCollections)  not used, params not propagated to fedora 
   #has_datastream :name => 'tif', :type=>ActiveFedora::Datastream,:mimeType=>"image/tiff", :controlGroup=>'M',:checksumType=>'MD5'
   #has_datastream :name => 'jpg', :type=>ActiveFedora::Datastream,:mimeType=>"image/jpg", :controlGroup=>'M',:checksumType=>'MD5'
