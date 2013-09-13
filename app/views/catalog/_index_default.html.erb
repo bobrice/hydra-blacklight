@@ -11,6 +11,6 @@
 
 </dl>
 <div class="yale_thumbnail">
-<%= if (!(@url1.nil?) && !(document[:id].to_s.eql? '')) then (if document[:active_fedora_model_ssim].to_s.eql? '["ComplexParent"]' then (if (!(@oid_pointer.nil?) && (!(document[:ztotal_isi].nil?))) then image_tag @url1 + @pid + @url2 , :height => '170', :width => '100' end) else image_tag @url1 +  document[:id].to_s + @url2, :height => '170', :width => '100' end) end %>
+<%= if (!(@url1.nil?) && !(document[:id].to_s.eql? '')) then (if document[:active_fedora_model_ssim].to_s.eql? '["ComplexParent"]' then (if (!(@oid_pointer.nil?) && (!(document[:ztotal_isi].nil?))) then link_to image_tag(@url1 + @pid + @url2 , :height => '170', :width => '100'), @bookreader + document[:oid_isi].to_s  + "#page/1/mode/1up" end) else image_tag @url1 +  document[:id].to_s + @url2, :height => '170', :width => '100' end) end %>
 </div>
 <div style="clear:both;"></div>
