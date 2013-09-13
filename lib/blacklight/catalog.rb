@@ -33,8 +33,7 @@ module Blacklight::Catalog
 
     # get search results from the solr index
     def index
-      
-      @pidholder
+      @bookreader = "/bookreader/BookReaderDemo/index.html?oid="
 
       extra_head_content << view_context.auto_discovery_link_tag(:rss, url_for(params.merge(:format => 'rss')), :title => t('blacklight.search.rss_feed') )
       extra_head_content << view_context.auto_discovery_link_tag(:atom, url_for(params.merge(:format => 'atom')), :title => t('blacklight.search.atom_feed') )
@@ -126,7 +125,6 @@ module Blacklight::Catalog
         @child_pid = get_child_pid(@oidpointer_array[0])
         #[{"id":"changeme:162"}]
         if @child_pid != nil
-          #render :json => @child_pid
           @child_pid.each do |j|
             j.each do |key1, value1|
               @pid_array.push value1
