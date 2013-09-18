@@ -553,6 +553,115 @@ module Blacklight::SolrHelper
   end
   
   # a solr query method to find the children objects of a given parent pid 
+  def get_parent_from_children(pid)
+        query = "id:\"" + pid + "\""
+        @solr_response = find(blacklight_config.qt,{:fq => query,:fl => "is_member_of_ssim", :rows => 1});
+        if !(@solr_response.response.empty?)
+        json_response = @solr_response.response
+          @numFound = json_response['numFound']
+          if @numFound > 0
+            @docs = json_response['docs']
+          end
+        end
+  end 
+
+  def get_location(pid)
+    query = "id:\"" + pid + "\""
+    @solr_response = find(blacklight_config.qt,{:fq => query,:fl => "location_ssi", :rows => 1});
+    if !(@solr_response.response.empty?)
+      json_response = @solr_response.response
+      @numFound = json_response['numFound']
+      if @numFound > 0
+        @docs = json_response['docs']
+      end
+    end
+  end 
+
+  def get_line1(pid)
+    query = "id:\"" + pid + "\""
+    @solr_response = find(blacklight_config.qt,{:fq => query,:fl => "line1_ssi", :rows => 1});
+    if !(@solr_response.response.empty?)
+      json_response = @solr_response.response
+      @numFound = json_response['numFound']
+      if @numFound > 0
+        @docs = json_response['docs']
+      end
+    end
+  end 
+
+  def get_line2(pid)
+    query = "id:\"" + pid + "\""
+    @solr_response = find(blacklight_config.qt,{:fq => query,:fl => "line2_ssi", :rows => 1});
+    if !(@solr_response.response.empty?)
+      json_response = @solr_response.response
+      @numFound = json_response['numFound']
+      if @numFound > 0
+        @docs = json_response['docs']
+      end
+    end
+  end 
+
+  def get_city(pid)
+    query = "id:\"" + pid + "\""
+    @solr_response = find(blacklight_config.qt,{:fq => query,:fl => "city_ssi", :rows => 1});
+    if !(@solr_response.response.empty?)
+      json_response = @solr_response.response
+      @numFound = json_response['numFound']
+      if @numFound > 0
+        @docs = json_response['docs']
+      end
+    end
+  end 
+
+  def get_state(pid)
+    query = "id:\"" + pid + "\""
+    @solr_response = find(blacklight_config.qt,{:fq => query,:fl => "state_ssi", :rows => 1});
+    if !(@solr_response.response.empty?)
+      json_response = @solr_response.response
+      @numFound = json_response['numFound']
+      if @numFound > 0
+        @docs = json_response['docs']
+      end
+    end
+  end 
+
+  def get_zip(pid)
+    query = "id:\"" + pid + "\""
+    @solr_response = find(blacklight_config.qt,{:fq => query,:fl => "zip_ssi", :rows => 1});
+    if !(@solr_response.response.empty?)
+      json_response = @solr_response.response
+      @numFound = json_response['numFound']
+      if @numFound > 0
+        @docs = json_response['docs']
+      end
+    end
+  end 
+
+  def get_phone(pid)
+    query = "id:\"" + pid + "\""
+    @solr_response = find(blacklight_config.qt,{:fq => query,:fl => "phone_ssi", :rows => 1});
+    if !(@solr_response.response.empty?)
+      json_response = @solr_response.response
+      @numFound = json_response['numFound']
+      if @numFound > 0
+        @docs = json_response['docs']
+      end
+    end
+  end 
+
+    def get_email(pid)
+    query = "id:\"" + pid + "\""
+    @solr_response = find(blacklight_config.qt,{:fq => query,:fl => "email_ssi", :rows => 1});
+    if !(@solr_response.response.empty?)
+      json_response = @solr_response.response
+      @numFound = json_response['numFound']
+      if @numFound > 0
+        @docs = json_response['docs']
+      end
+    end
+  end 
+
+
   def get_children_from_parent_pid(pid)
         query = "is_member_of_ssim:\"info\:fedora\/" + pid + "\""
         @solr_response = find(blacklight_config.qt,{:fq => query,:fl => "id", :sort =>"zindex_isi asc", :rows => 1000000});
@@ -560,8 +669,8 @@ module Blacklight::SolrHelper
 		json_response = @solr_response.response
                 @numFound = json_response['numFound']
                 if @numFound > 0
-			@docs = json_response['docs']
-		end
+			             @docs = json_response['docs']
+		            end
 	end
   end 
 

@@ -6,6 +6,17 @@
 
 <%= if my_document[:active_fedora_model_ssim].to_s.eql? '["ComplexParent"]' then render :partial => 'show_complex_object', :locals => {:document => @document} else render :partial => 'show_simple_object' , :locals => {:document => @document} end %>
 
+<% if @is_contact_info == 'true' %>
+	<b><%= "For more information about this resource, contact:" %></b><br/>
+	<%= @location %><br/>
+	<%= @line1%><br/>
+	<%= if !(@line2.empty?) then @line2 end%><br/>
+	<%= if !(@city.empty?) && !(@state.empty?) && !(@zip.empty?) then @city + ", " + @state + " " + @zip end%><br/>
+	<%= if !(@phone.empty?) then @phone end%><br/>
+	<!--<%= if !(@contact_email.empty?) then link_to (@contact_email), @ask_yale end%>-->
+	<%= if !(@contact_email.empty?) then @contact_email end%><br/>
+<% end %>
+
 <% unless @document.more_like_this.empty? %>
 <div class="well" id="sidebar-mlt">
   <ul class="nav nav-list">

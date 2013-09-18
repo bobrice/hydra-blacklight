@@ -76,8 +76,22 @@ module Blacklight::Catalog
       @docs1 = Array.new
       @oidpointer_array = Array.new
       @pid_array = Array.new
+      #@collection_pid = Array.new
+      @collection = Array.new
+      @contact_info = Array.new
+      @pidval = Array.new
+      @location = ""
+      @line1 = ""
+      @line2 = ""
+      @city = ""
+      @state = ""
+      @zip = ""
+      @phone = ""
+      @contact_email = ""
+      @is_contact_info
       @netid = "0"
       @session = "0"
+      @collection_pid
 
       pid = params[:id].to_s
      
@@ -101,9 +115,122 @@ module Blacklight::Catalog
 
         @url2 = "/500.jpg"
         @url_pdf = "/500.pdf"
+        @ask_yale = "http://ask.library.yale.edu/"
+
+
+      @collection = get_parent_from_children(pid)
+      if (!(@collection.empty?))
+        @collection.each do |i|
+          i.each do |key,value|
+            @collection_pid = value
+           end
+        end
+        if (!(@collection_pid.empty?))
+          @pidval = @collection_pid[0].to_s.sub('info:fedora/', '')
+          #render :json => @pidval
+        end
+      end
+
+      #If no collection pid was returned, do not query solr for the contact information
+      if !(@pidval.empty?)
+        @contact_info = get_location(@pidval)
+        if (!(@contact_info.empty?))
+          @contact_info.each do |i|
+            i.each do |key,value|
+              @location = value
+            end
+          end
+          #render :json => @location.class
+          @contact_info = ''
+        end
+
+        @contact_info = get_line1(@pidval)
+        if (!(@contact_info.empty?))
+          @contact_info.each do |i|
+            i.each do |key,value|
+              @line1 = value
+            end
+          end
+          #render :json => @line1
+          @contact_info = ''
+        end
+
+        @contact_info = get_line2(@pidval)
+        if (!(@contact_info.empty?))
+          @contact_info.each do |i|
+            i.each do |key,value|
+              @line2 = value
+            end
+          end
+          #render :json => @line2
+          @contact_info = ''
+        end
+
+        @contact_info = get_city(@pidval)
+        if (!(@contact_info.empty?))
+          @contact_info.each do |i|
+            i.each do |key,value|
+              @city = value
+            end
+          end
+          #render :json => @city
+          @contact_info = ''
+        end
+
+        @contact_info = get_state(@pidval)
+        if (!(@contact_info.empty?))
+          @contact_info.each do |i|
+            i.each do |key,value|
+              @state = value
+            end
+          end
+          #render :json => @state
+          @contact_info = ''
+        end
+
+        @contact_info = get_zip(@pidval)
+        if (!(@contact_info.empty?))
+          @contact_info.each do |i|
+            i.each do |key,value|
+              @zip = value
+            end
+          end
+          #render :json => @zip
+          @contact_info = ''
+        end
+
+        @contact_info = get_phone(@pidval)
+        if (!(@contact_info.empty?))
+          @contact_info.each do |i|
+            i.each do |key,value|
+              @phone = value
+            end
+          end
+          #render :json => @phone
+          @contact_info = ''
+        end
+
+        @contact_info = get_email(@pidval)
+        if (!(@contact_info.empty?))
+          @contact_info.each do |i|
+            i.each do |key,value|
+              @contact_email = value
+            end
+          end
+          #render :json => @contact_email
+          @contact_info = ''
+        end
+
+        if (@location.empty? && @line1.empty? && @line2.empty? && @city.empty? && @state.empty? && @phone.empty? && @contact_email.empty?) 
+          @is_contact_info = 'false'
+        else
+          @is_contact_info = 'true'
+        end
+
+      end
 
       @docs = get_children_from_parent_pid(pid)
-      if @docs != nil
+      if (!(@docs.empty?))
         @docs.each do |i|
           @h1 = Hash[*i.flatten]
           @h1.each do |key,value|
@@ -115,7 +242,7 @@ module Blacklight::Catalog
       @oidpointer = get_oidpointer(pid)
       
       # This is the value of oidpointer when nothing is returned 
-      if !(@oidpointer.to_s.eql? '[{}]')
+      if (!(@oidpointer.empty?))
         @oidpointer.each do |i|
           i.each do |key, value|
             @oidpointer_array.push value
@@ -124,7 +251,7 @@ module Blacklight::Catalog
              
         @child_pid = get_child_pid(@oidpointer_array[0])
         #[{"id":"changeme:162"}]
-        if @child_pid != nil
+        if (!(@child_pid.empty?))
           @child_pid.each do |j|
             j.each do |key1, value1|
               @pid_array.push value1
