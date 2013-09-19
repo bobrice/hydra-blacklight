@@ -74,9 +74,10 @@ module Blacklight::Catalog
 
       @bookreader = "/bookreader/BookReaderDemo/index.html?oid="
       @docs1 = Array.new
+      @oidpointer = ""
       @oidpointer_array = Array.new
+      @child_pid = ""
       @pid_array = Array.new
-      #@collection_pid = Array.new
       @collection = Array.new
       @contact_info = Array.new
       @pidval = Array.new
@@ -106,35 +107,36 @@ module Blacklight::Catalog
         end
       end
 
-        @datastream = 'http://imageserver.library.yale.edu/' + pid + '/500.pdf?q=2'
-        uri = URI(@datastream)
-        res = Net::HTTP.get_response(uri)
-        @get_string = res.body.to_s
+      @datastream = 'http://imageserver.library.yale.edu/' + pid + '/500.pdf?q=2'
+      uri = URI(@datastream)
+      res = Net::HTTP.get_response(uri)
+      @get_string = res.body.to_s
 
-        @is_pdf = !(@get_string.to_s.include?("404") && @get_string.to_s.include?("error") && @get_string.to_s.include?("WebException"))
+      @is_pdf = !(@get_string.to_s.include?("404") && @get_string.to_s.include?("error") && @get_string.to_s.include?("WebException"))
 
-        @url2 = "/500.jpg"
-        @url_pdf = "/500.pdf"
-        @ask_yale = "http://ask.library.yale.edu/"
+      @url2 = "/500.jpg"
+      @url_pdf = "/500.pdf"
+      @ask_yale = "http://ask.library.yale.edu/"
 
 
       @collection = get_parent_from_children(pid)
-      if (!(@collection.empty?))
+      if @collection.present?
         @collection.each do |i|
           i.each do |key,value|
             @collection_pid = value
            end
         end
-        if (!(@collection_pid.empty?))
+        
+        if @collection_pid.present?
           @pidval = @collection_pid[0].to_s.sub('info:fedora/', '')
           #render :json => @pidval
         end
       end
 
       #If no collection pid was returned, do not query solr for the contact information
-      if !(@pidval.empty?)
+      if @pidval.present?
         @contact_info = get_location(@pidval)
-        if (!(@contact_info.empty?))
+        if @contact_info.present?
           @contact_info.each do |i|
             i.each do |key,value|
               @location = value
@@ -145,7 +147,7 @@ module Blacklight::Catalog
         end
 
         @contact_info = get_line1(@pidval)
-        if (!(@contact_info.empty?))
+        if @contact_info.present?
           @contact_info.each do |i|
             i.each do |key,value|
               @line1 = value
@@ -156,7 +158,7 @@ module Blacklight::Catalog
         end
 
         @contact_info = get_line2(@pidval)
-        if (!(@contact_info.empty?))
+        if @contact_info.present?
           @contact_info.each do |i|
             i.each do |key,value|
               @line2 = value
@@ -167,7 +169,7 @@ module Blacklight::Catalog
         end
 
         @contact_info = get_city(@pidval)
-        if (!(@contact_info.empty?))
+        if @contact_info.present?
           @contact_info.each do |i|
             i.each do |key,value|
               @city = value
@@ -178,7 +180,7 @@ module Blacklight::Catalog
         end
 
         @contact_info = get_state(@pidval)
-        if (!(@contact_info.empty?))
+        if @contact_info.present?
           @contact_info.each do |i|
             i.each do |key,value|
               @state = value
@@ -189,7 +191,7 @@ module Blacklight::Catalog
         end
 
         @contact_info = get_zip(@pidval)
-        if (!(@contact_info.empty?))
+        if @contact_info.present?
           @contact_info.each do |i|
             i.each do |key,value|
               @zip = value
@@ -200,7 +202,7 @@ module Blacklight::Catalog
         end
 
         @contact_info = get_phone(@pidval)
-        if (!(@contact_info.empty?))
+        if @contact_info.present?
           @contact_info.each do |i|
             i.each do |key,value|
               @phone = value
@@ -211,7 +213,7 @@ module Blacklight::Catalog
         end
 
         @contact_info = get_email(@pidval)
-        if (!(@contact_info.empty?))
+        if @contact_info.present?
           @contact_info.each do |i|
             i.each do |key,value|
               @contact_email = value
@@ -221,7 +223,7 @@ module Blacklight::Catalog
           @contact_info = ''
         end
 
-        if (@location.empty? && @line1.empty? && @line2.empty? && @city.empty? && @state.empty? && @phone.empty? && @contact_email.empty?) 
+        if (@location.blank? && @line1.blank? && @line2.blank? && @city.blank? && @state.blank? && @phone.blank? && @contact_email.blank?) 
           @is_contact_info = 'false'
         else
           @is_contact_info = 'true'
@@ -230,7 +232,7 @@ module Blacklight::Catalog
       end
 
       @docs = get_children_from_parent_pid(pid)
-      if (!(@docs.empty?))
+      if @docs.present?
         @docs.each do |i|
           @h1 = Hash[*i.flatten]
           @h1.each do |key,value|
@@ -242,7 +244,7 @@ module Blacklight::Catalog
       @oidpointer = get_oidpointer(pid)
       
       # This is the value of oidpointer when nothing is returned 
-      if (!(@oidpointer.empty?))
+      if @oidpointer.present?
         @oidpointer.each do |i|
           i.each do |key, value|
             @oidpointer_array.push value
@@ -251,7 +253,7 @@ module Blacklight::Catalog
              
         @child_pid = get_child_pid(@oidpointer_array[0])
         #[{"id":"changeme:162"}]
-        if (!(@child_pid.empty?))
+        if @child_pid.present?
           @child_pid.each do |j|
             j.each do |key1, value1|
               @pid_array.push value1
