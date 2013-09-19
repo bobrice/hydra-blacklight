@@ -8,9 +8,9 @@
 <div class="btn-group" style="padding-top:20px;">
     <% if @is_pdf.to_s == 'true' then %>
 
-	<button class="btn">
+	<li class="btn">
          <%= if (!(document[:id].to_s.eql? '')) then link_to(:'PDF', @url1 + document[:id].to_s + @url_pdf, :target => '_blank') end%>
-	</button>
+	</li>
     <% end %>
 </div>
 
