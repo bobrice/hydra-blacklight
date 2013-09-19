@@ -179,3 +179,17 @@ text-align: center;
 width:75px;
 height:px;
 }
+
+#contactInfo {
+clear:both;
+border: 1px solid #E3E3E3;
+border-radius: 4px 4px 4px 4px;
+margin-top: 20px;
+padding-top: 10px;
+padding-bottom:10px;
+padding-left:15px;
+}
+
+.address {
+padding: 5px;
+}
