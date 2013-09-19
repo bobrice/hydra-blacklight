@@ -6,12 +6,14 @@
     <%= if (!(@pid_array[0].to_s.eql? '')) then link_to image_tag(@url1 + @pid_array[0].to_s  + @url2 , :height => '256', :width => '256'), @bookreader + document[:oid_isi].to_s  + "#page/" + pagenum.to_s + "/mode/1up" end%>
 
 <div class="btn-group" style="padding-top:20px;">
+	<ul>
     <% if @is_pdf.to_s == 'true' then %>
 
-	<button class="btn">
+	<li class="btn">
          <%= if (!(document[:id].to_s.eql? '')) then link_to(:'PDF', @url1 + document[:id].to_s + @url_pdf, :target => '_blank') end%>
-	</button>
+	</li>
     <% end %>
+</ul>
 </div>
 
 </div>

@@ -661,6 +661,17 @@ module Blacklight::SolrHelper
     end
   end 
 
+    def get_url(pid)
+    query = "id:\"" + pid + "\""
+    @solr_response = find(blacklight_config.qt,{:fq => query,:fl => "url_ssi", :rows => 1});
+    if !(@solr_response.response.empty?)
+      json_response = @solr_response.response
+      @numFound = json_response['numFound']
+      if @numFound > 0
+        @docs = json_response['docs']
+      end
+    end
+  end
 
   def get_children_from_parent_pid(pid)
         query = "is_member_of_ssim:\"info\:fedora\/" + pid + "\""
