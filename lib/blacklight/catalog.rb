@@ -89,6 +89,7 @@ module Blacklight::Catalog
       @zip = ""
       @phone = ""
       @contact_email = ""
+      @contact_url = ""
       @is_contact_info
       @netid = "0"
       @session = "0"
@@ -107,7 +108,7 @@ module Blacklight::Catalog
         end
       end
 
-      @datastream = 'http://imageserver.library.yale.edu/' + pid + '/500.pdf?q=2'
+      @datastream = 'http://imageserver.library.yale.edu/' + pid + '/500.pdf'
       uri = URI(@datastream)
       res = Net::HTTP.get_response(uri)
       @get_string = res.body.to_s
@@ -126,7 +127,7 @@ module Blacklight::Catalog
             @collection_pid = value
            end
         end
-        
+
         if @collection_pid.present?
           @pidval = @collection_pid[0].to_s.sub('info:fedora/', '')
           #render :json => @pidval
@@ -223,7 +224,19 @@ module Blacklight::Catalog
           @contact_info = ''
         end
 
-        if (@location.blank? && @line1.blank? && @line2.blank? && @city.blank? && @state.blank? && @phone.blank? && @contact_email.blank?) 
+        @contact_info = get_url(@pidval)
+        if @contact_info.present?
+          @contact_info.each do |i|
+            i.each do |key,value|
+              @contact_url = value
+            end
+          end
+          #render :json => @contact_email
+          @contact_info = ''
+        end
+
+
+        if (@location.blank? && @line1.blank? && @line2.blank? && @city.blank? && @state.blank? && @phone.blank? && @contact_email.blank? && @contact_url.blank?) 
           @is_contact_info = 'false'
         else
           @is_contact_info = 'true'

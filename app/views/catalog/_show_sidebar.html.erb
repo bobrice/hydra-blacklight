@@ -8,38 +8,38 @@
 
 <% if @is_contact_info == 'true' %>
 <div id="contactInfo">
-<b><%= "For more information about this resource, contact:" %></b><br/>
-<p class="address">
+	<b><%= "For more information about this resource, contact:" %></b><br/>
+	<p class="address">
 
-<% if @location.present? %>
-<%= @location %><br/>
-<% end %>
+    <% if @location.present? %>
+    	<%= @location %><br/>
+    <% end %>
 
-<% if @line1.present? %>
-<%= @line1%><br/>
-<% end %>
+	<% if @line1.present? %>
+	    <%= @line1%><br/>
+	<% end %>
 
-<% if @line2.present? %>
-<%= @line2 %> <br/>
-<% end %>
+	<% if @line2.present? %> 
+		<%= @line2 %> <br/> 
+	<% end %>
 
-<% if (@city.present? && @state.present? && @zip.present?) %>
-<%= @city + ", " + @state + " " + @zip %> <br/>
-<% end %>
+	<% if (@city.present? && @state.present? && @zip.present?) %> 
+		<%= @city + ", " + @state + " " + @zip %> <br/> 
+	<% end %>
+	
+	<% if @phone.present? %>
+	    <%= @phone %><br/>
+	<% end %>
 
-<% if @phone.present? %>
-<%= @phone %><br/>
-<% end %>
+	<% if @contact_email.present? %>
+	    <%= @contact_email %><br/>
+	<% end %>
 
-<% if @contact_email.present? %>
-<%= @contact_email %><br/>
-<% end %>
+	<% if @contact_url.present? %>
+	    <%= @contact_url %><br/>
+	<% end %>
 
-<% if @contact_url.present? %>
-<%= @contact_url %><br/>
-<% end %>
-
-</p>
+	</p>
 </div>
 <% end %>
 
