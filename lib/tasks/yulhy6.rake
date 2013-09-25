@@ -739,7 +739,7 @@ namespace :yulhy6 do
 	  #deleteParentAndChildren(i) #decided not to do this rollback
 	  #cleanup database
 	  logger.error(%Q/resetting hydra_publish hydraID,dateHydraStart and dateHydra end for #{i["_oid"]} and changing action to echild/) 
-	  update = @@client.execute(%Q/update hydra_publish set hydraID='',dateHydraStart = null,dateHydraEnd = null,attempts=0,action='echild' where hpid = #{i["hpid"]}/)
+	  update = @@client.execute(%Q/update hydra_publish set hydraID='',dateHydraStart = null,dateHydraEnd = null,action='echild' where hpid = #{i["hpid"]}/)
 	  #logger.info(%Q/DEBUG update hydra_publish set hydraID='',dateHydraStart = null,dateHydraEnd = null where (oid = #{i["_oid"]} or _oid = #{i["_oid"]}) and action='insert'/)
 	  update.do
 	  unless result.nil? 
