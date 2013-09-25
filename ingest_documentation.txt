@@ -38,6 +38,9 @@ ingest routine:
   YAML.load_file(config/ladybird.yml)
   for testdb:
   YAML.load_file ('config/ladybird_pamoja_test.yml')
+2a) check that loop stopper and end of processoids() is at a sufficiently high number to ingest everything
+  if @cnt == 10000000
+    ... 
 3) check mount is there and tempfile (libserver3 example, may be different paths in production):  
   @mountroot = "/home/ermadmix/libshare/"
   @tempdir = "/home/ermadmix/"
@@ -49,14 +52,14 @@ select a.hpid,a.oid,a.cid,a.pid,b.contentModel,a._oid,a.action,a.hydraID
 	   where a.dateHydraStart is null and a.dateReady is not null and a.priority <> 999 and a.attempts < 3 
 	     and ((a.action='insert' and _oid=0) or (a.action='delete' or a.action='update' or a.action='ichild')) 
 	       and a.hcmid=b.hcmid 
-      order by a.priority, a.attempts 
+      order by a.priority, a.attempts, 
         case a.action 
 	    when 'delete' then 'a'  
 	    	 when 'undel' then 'b' 
 		      when 'update' then 'c' 
         when 'ichild' then 'd' 
         when 'insert' then 'e' 
-      end,a.dateReady"
+      end,a.dateReady
 
 
 from this query get list of hpids for later use, most of the time this will be 'hpid > "somenumber"'
@@ -67,9 +70,9 @@ check data in tables, make sure looks OK
   select * from dbo.hydra_publish_path with hpid > "somenumber"
 
 5)make sure all Collection objects have been made
-  rake yulhy:add_all_collections
+  rake yulhy:add_all_collections_with_info
   or for test instance
-  RAILS_ENV=test rake yulhy:add_all_collections
+  RAILS_ENV=test rake yulhy:add_all_collections_with_info
   
 
 6) run the actual ingest pointing output to a .txt file: 

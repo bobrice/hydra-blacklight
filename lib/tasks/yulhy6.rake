@@ -46,7 +46,7 @@ namespace :yulhy6 do
 	@server = region.fetch("url")
 	logger.info("fedora host: "+@server)
 	
-	@email_list = ["eric.james@yale.edu","lakeisha.robinson@yale.edu","michael.friscia@yale.edu","kalee.sprague@yale.edu"]
+	@email_list = ["eric.james@yale.edu","lakeisha.robinson@yale.edu","michael.friscia@yale.edu","kalee.sprague@yale.edu","robert.rice@yale.edu"]
     @subject = "Ingest Started"
 	@message = "Ingest Started at #{@start}"
 	mail = ActionMailer::Base.mail(to: @email_list,subject: @subject,message: @message)
@@ -88,7 +88,7 @@ namespace :yulhy6 do
     end	
 	result = @@client.execute("select a.hpid,a.oid,a.cid,a.pid,b.contentModel,a._oid,a.action,a.hydraID,a.zindex "+ 
 	  "from hydra_publish a, hydra_content_model b "+
-	  "where a.dateHydraStart is null and a.dateReady is not null and a.priority <> 999 and a.attempts < 3 "+
+	  "where a.dateHydraStart is null and a.dateReady is not null and a.priority <> 999 and a.attempts < 3 " +
 	  "and (server is null or server='#{@server}') "+
 	  "and ((a.action='insert' and _oid=0) or (a.action='delete' or a.action='update' or a.action='ichild' or a.action='undel')) "+ 
 	  "and a.hcmid=b.hcmid "+
@@ -130,7 +130,7 @@ namespace :yulhy6 do
           processerror(i,msg,"")
         end		  
       end
-	  if @cnt == 20 #for testing
+	  if @cnt == 10000000 #for testing
 	    @@client.close
 	    @@client2.close
 	    logger.info("Count exceeded "+@cnt.to_s+" at "+Time.now.to_s)
@@ -603,7 +603,7 @@ namespace :yulhy6 do
 	    #update = @@client.execute(%Q/update dbo.hydra_publish set dateHydraStart=GETDATE() where hpid=#{j["hpid"]}/)
         #update.do
           error = process_child(j,ppid)
-	      break if error=="error"		
+	      #break if error=="error"		
 	    #update = @@client.execute(%Q/update dbo.hydra_publish set dateHydraEnd=GETDATE() where hpid=#{j["hpid"]}/)
 	    #update.do
 	  rescue Exception => msg
@@ -736,17 +736,17 @@ namespace :yulhy6 do
         obj.delete
       end
 	  #cleanup remaining objects associated with the oid from fedora and solr
-	  deleteParentAndChildren(i)
+	  #deleteParentAndChildren(i) #decided not to do this rollback
 	  #cleanup database
-	  logger.error(%Q/resetting hydra_publish hydraID,dateHydraStart and dateHydra end for #{["_oid"]}/) 
-	  update = @@client.execute(%Q/update hydra_publish set hydraID='',dateHydraStart = null,dateHydraEnd = null where (oid = #{i["_oid"]} or _oid = #{i["_oid"]}) and action='insert'/)
+	  logger.error(%Q/resetting hydra_publish hydraID,dateHydraStart and dateHydra end for #{i["_oid"]} and changing action to echild/) 
+	  update = @@client.execute(%Q/update hydra_publish set hydraID='',dateHydraStart = null,dateHydraEnd = null,attempts=0,action='echild' where hpid = #{i["hpid"]}/)
 	  #logger.info(%Q/DEBUG update hydra_publish set hydraID='',dateHydraStart = null,dateHydraEnd = null where (oid = #{i["_oid"]} or _oid = #{i["_oid"]}) and action='insert'/)
 	  update.do
 	  unless result.nil? 
 		result.cancel
 	  end
       processerror(i,msg,obj.pid)
-	  return "error"
+	  #return "error"
     end
 	logger.info("PID #{obj.pid} sucessfully created for #{i["oid"]}")	
 	update = @@client.execute(%Q/update dbo.hydra_publish set hydraID='#{obj.pid}',dateHydraEnd=GETDATE() where hpid=#{i["hpid"]}/)
