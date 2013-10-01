@@ -1,0 +1,66 @@
+setting up collection objects:
+RAILS_ENV=production rake yulhy:add_all_collections_with_info
+
+This:
+1)  Queries the project table for each pid - "select cid,pid,label from dbo.project order by pid"
+2)  grabs the xml using the pid from http://ladybird.library.yale.edu/xml_contactinformation.aspx?pid=#{i[1]}"
+3)  ingests the xml and indexes it in solr, either creating a new object first time, or modifying an existing collection object
+
+Run this again whenever the ladybird contact infomation changes to push these changes into hydra.
+
+Query to see how to use the collection information indexed:
+http://diego.library.yale.edu:8083/solr/collection1/select?q=active_fedora_model_ssim%3A%22Collection%22&wt=xml&indent=true
+
+ingest:
+RAILS_ENV=production rake yulhy6:ingest
+
+1) changes to logger
+  a) adding timestamps to log lines
+  b) implementing a rolling appender - max size 200mb, rolling 10 at a time
+2) hydra_publish table queue query:
+select a.hpid,a.oid,a.cid,a.pid,b.contentModel,a._oid,a.action,a.hydraID,a.zindex  
+	  from hydra_publish a, hydra_content_model b 
+	  where a.dateHydraStart is null and a.dateReady is not null and a.priority <> 999 and a.attempts < 3 
+	  and (server is null or server=current server) 
+	  and ((a.action='insert' and _oid=0) or (a.action='delete' or a.action='update' or a.action='ichild' or a.action='undel'))  
+	  and a.hcmid=b.hcmid 
+      order by a.priority, a.attempts, 
+	  case a.action 
+	    when 'delete' then 'a'  
+		when 'undel' then 'b' 
+		when 'update' then 'c' 
+        when 'ichild' then 'd' 
+        when 'insert' then 'e' 
+      end,a.dateReady
+Priority is set to "20" as default, "999" means skip.  Ingest will make 3 attempts to ingest a certain object before giving up.  Order is self explanatory, you can trump anything by setting priority, it will process first attempts before 2nd and 3rd attempts, and deal with actions in the order of delete, undelete,update,ichild, and insert, otherwise it will go in date order.
+3)  In case of exceptions there is code to roll back the fedora/solr object and reset the hydraID and dateHydraStart and dateHydraEnd in hydra_publish.  If a child fails the whole parent is rolled back to avoid incomplete works.  When it spins through all first attempts it then goes back and tries a 2nd and 3rd time.
+4) Actions:
+"delete" - this does a "soft delete" setting the state of the fedora PID's state and solr state_ssi field to "D". Blacklight should filter and only show objects with a state = "A"
+"undel" - this is the reverse of "delete", basically bringing objects back from the dead.
+The key information for "delete" and "undel" is the hydraID field in the hydra_publish table.
+"update" - this uses the hydraID in hydra publish and has the potential to change the zindex or modify or add datastreams as they are found for this object in the hydra_publish_path table.
+"ichild" - This uses the _oid column to figure out the parent and adds a child to an existing parent, with datastreams as referenced in the hydra_publish_path table, the ztotal of the parent is incremented for each ichild added. 
+"insert" - the is the same-o same-o insert functionality, adding a ComplexParent or Simple object, and in the case of ComplexParent then iterating to add all its ComplexChildren.
+5) Emails go out: 
+  a) ingest start
+  b) ingest end
+  c) suspension - this is when ingest is halted for 2 hours due to too many error (<20 per 1000), basically to buy time to fix, or let a transient outage run it's course
+6) When running 24/7 what should happen is an endless supply of rows in the hydra_publish table.  But if necessary we can invoke a shell script that runs this ingest, and when it's done sleeps for a while, then starts up again just to keep it going rather than manually restarting it the next day.  
+7) The hydra publish table and solr index now track the fedora server the objects were ingested to. This could potentially be used to have multiple ingests go on simultaneously to different fedoras, (while still having a single solr), to speed up the fedora ingest bottleneck which is many times slower than the solr part.  Blacklight could then resolve object by the PID and server as indexed in solr.  
+
+-bash-4.1$ git add app/models/complex_child.rb
+-bash-4.1$ git add app/models/complex_parent.rb
+-bash-4.1$ git add app/models/hydra/datastream/coll_properties.rb
+-bash-4.1$ git add app/models/hydra/datastream/properties.rb 
+-bash-4.1$ git add app/models/simple.rb
+-bash-4.1$ git add ingest_documentation.txt
+-bash-4.1$ git add lib/tasks/yulhycollall.rake
+-bash-4.1$ git add modsingest2.rb
+-bash-4.1$ git add lib/tasks/yulhy6.rake
+-bash-4.1$ git add lib/tasks/yulhycollall2.rake
+
+TODO mon sept 23rd:
+change attempts back to 3
+commit yulhy6 with loggerinfo typo, and resetting attempts=0 in processchild
+--remove full rollback
+--email alerts?

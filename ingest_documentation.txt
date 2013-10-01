@@ -41,10 +41,10 @@ ingest routine:
 2a) check that loop stopper and end of processoids() is at a sufficiently high number to ingest everything
   if @cnt == 10000000
     ... 
-3) check mount is there and tempfile (libserver3 example, may be different paths in production):  
+b) check mount is there and tempfile (libserver3 example, may be different paths in production):  
   @mountroot = "/home/ermadmix/libshare/"
   @tempdir = "/home/ermadmix/"
-  check df on server to ingest to (dev,test (libserver7),prod (diego)  
+3) diskfree -   check df on server to ingest to (dev,test (libserver7),prod (diego)  
 4) check for eligible oids 
 
 select a.hpid,a.oid,a.cid,a.pid,b.contentModel,a._oid,a.action,a.hydraID  
@@ -61,24 +61,38 @@ select a.hpid,a.oid,a.cid,a.pid,b.contentModel,a._oid,a.action,a.hydraID
         when 'insert' then 'e' 
       end,a.dateReady
 
-
-from this query get list of hpids for later use, most of the time this will be 'hpid > "somenumber"'
-or remove the a._oid=0 from above to get not just ComplexParent and Simple
+tweak this for more pointed queries
+1) get all columns - "select a.*,b.contentModel..."
+2) just get children remove _oid and add hcmid "... and ((a.action='insert') or (a.action='delete' or a.action='update' or a.action='ichild')) and hcmid=3"
+3)or check ranges of obejct via hpidmost of the time this will be 'hpid > "somenumber"'
 
 check data in tables, make sure looks OK
-  select * from dbo.hydra_publish with hpid > "somenumber"
-  select * from dbo.hydra_publish_path with hpid > "somenumber"
+  select * from dbo.hydra_publish where hpid > somenumber
+  select * from dbo.hydra_publish_path where hpid > somenumber
+  or
+  select * from dbo.hydra_publish where dateReady > '2013-09-24' (gets everything published after a certain day)
 
-5)make sure all Collection objects have been made
+
+5)  adding collection objects (1 time only) or propagating ladybird changes to hydra dev/test/prods: 
   rake yulhy:add_all_collections_with_info
-  or for test instance
   RAILS_ENV=test rake yulhy:add_all_collections_with_info
+  RAILS_ENV=production rake yulhy:add_all_collections_with_info
   
+5.5) If working in batches you may want to start with fresh logs by renaming diggit-hydra/log, otherwise will roll 10 at a time naturally every 100MB 
 
-6) run the actual ingest pointing output to a .txt file: 
-  rake yulhy6:ingest
-  or for test instance
-  RAILS_ENV=test rake yulhy5:ingest
+6) run the actual ingest: 
+  rake yulhy6:ingest &
+  RAILS_ENV=test rake yulhy6:ingest &
+  RAILS_ENV=production rake yulhy6:ingest &
+
+6a) most likely there will be limited batches that will be handled in a script that runs to completion, but if you want to keep it going constantly, run the script:
+  while true
+  do 
+    RAILS_ENV=production rake yulhy6:ingest ^
+    sleep 1m
+  done 
+
+6b) WARNING - too many error 20 per 1000 objects will stop the script to prevent error overflow, and give to to assess and restart 
 
 7) check logs (diggit-hydra/log/ingest.log) file and sderr for successful ingests, failures, and possible errors
 
@@ -89,7 +103,9 @@ where a.hcmid=b.hcmid and a.hpid > <somenumber>
 
 9) debug if necessary (the hard part)
 a) check the rake output ('log/ingest.log')
- i) grep error ingest.log
+ i) grep error ingest.log 
+ ii) note the broken pipe exception are transient and may clear up in a second pass
+
 b) if an exception occurs, check what it is, but most likely it will be an illegible stack trace
  i) see errors in database - select a.*,b.date from hydra_publish a,hydra_publish_error b where a.hpid=b.hpid order by b.date desc
 c) look for the pid before an error
