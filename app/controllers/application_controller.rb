@@ -7,13 +7,5 @@ class ApplicationController < ActionController::Base
   layout 'blacklight'
 
   protect_from_forgery
-
-  before_filter :current_user
-  def current_user
-    if session[:cas_user]
-        return User.find_or_create_by_netid(session[:cas_user])
-    end
-  end
-  helper_method :current_user
-  
 end
+

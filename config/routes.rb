@@ -1,9 +1,8 @@
 DiggitHydra::Application.routes.draw do
   root :to => "catalog#index"
 
-  match 'login', :to => 'cas#login', :as => 'new_user_session'
-  match 'logout', :to => 'cas#logout', :as => 'destroy_user_session'
-  match 'account', :to => 'catalog#index', :as => 'edit_user_registration'
+  match 'users/auth/:provider/callback' => 'services#login'
+  #match 'users/signout', :controller => 'services', :action => 'caslogout'
 
   match '/pagination', :controller => 'pagination', :action => 'index'
   match '/pagination/numofpages', :controller => 'pagination', :action => 'numofpages'
@@ -25,7 +24,7 @@ DiggitHydra::Application.routes.draw do
   Blacklight.add_routes(self)
   HydraHead.add_routes(self)
 
-  #devise_for :users
+  devise_for :users
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

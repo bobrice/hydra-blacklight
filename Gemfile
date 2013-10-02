@@ -5,9 +5,8 @@ gem 'rails', '3.2.13'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-#gem 'mysql2'
-#gem 'passenger'
-gem 'sqlite3'
+gem 'mysql2'
+gem 'passenger'
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -45,8 +44,11 @@ gem 'blacklight'
 gem 'hydra-head', '6.0.0'
 gem 'jettywrapper'
 gem "unicode", :platforms => [:mri_18, :mri_19]
+gem "devise"
+gem "devise-guests", "~> 0.3"
 gem "bootstrap-sass"
 gem "blacklight_google_analytics"
 
-gem "rubycas-client"
-
+#gem "rubycas-client"
+gem "net-ldap"
+gem "omniauth-cas"
