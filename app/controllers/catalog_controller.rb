@@ -19,7 +19,8 @@ class CatalogController < ApplicationController
     config.default_solr_params = { 
       :qt => 'search',
       :rows => 10,
-      :fq => 'active_fedora_model_ssim:ComplexParent || active_fedora_model_ssim:Simple'
+      #:fq => 'active_fedora_model_ssim:ComplexParent || active_fedora_model_ssim:Simple'
+      :fq => '(active_fedora_model_ssim:ComplexParent || active_fedora_model_ssim:Simple) && state_ssi:A'
     }
 
 
