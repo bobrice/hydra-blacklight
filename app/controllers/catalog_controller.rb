@@ -20,7 +20,7 @@ class CatalogController < ApplicationController
       :qt => 'search',
       :rows => 10,
       #:fq => 'active_fedora_model_ssim:ComplexParent || active_fedora_model_ssim:Simple'
-      :fq => '(active_fedora_model_ssim:ComplexParent || active_fedora_model_ssim:Simple) && state_ssi:A'
+      :fq => '(active_fedora_model_ssi:ComplexParent || active_fedora_model_ssi:Simple) && object_state_ssi:A'
     }
 
 
@@ -116,6 +116,7 @@ class CatalogController < ApplicationController
     config.add_show_field 'coordinates_ssim', :label => 'Coordinates:'
     config.add_show_field 'genre_ssim', :label => 'Genre:'
     config.add_show_field 'format_ssim', :label => 'Format:'
+    config.add_show_field 'yale_genre_ssim', :label => 'Content Type:'
     config.add_show_field 'rights_ssm', :label => 'Rights:'
     config.add_show_field 'access_restrictions_tsim', :label => 'Access Restrictions:'
     config.add_show_field 'note_citation_tsim', :label => 'Citation:'
