@@ -63,9 +63,6 @@ module DiggitHydra
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
-
-    #ERJ Cas code
-    #config.rubycas.cas_base_url = 'https://securedev.its.yale.edu/cas/login'
     
     ActionMailer::Base.default(from: "yul.digitalcollections@yale.edu")
     
