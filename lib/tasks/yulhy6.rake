@@ -46,6 +46,29 @@ namespace :yulhy6 do
 	@server = region.fetch("url")
 	logger.info("fedora host: "+@server)
 	
+	result = @@client.execute("select a.hpid,a.oid,a.cid,a.pid,b.contentModel,a._oid,a.action,a.hydraID,a.zindex "+ 
+	  "from hydra_publish a, hydra_content_model b "+
+	  "where a.dateHydraStart is null and a.dateReady is not null and a.priority <> 999 and a.attempts < 3 " +
+	  "and (server is null or server='#{@server}') "+
+	  "and ((a.action='insert' and _oid=0) or (a.action='delete' or a.action='update' or a.action='ichild' or a.action='undel')) "+ 
+	  "and a.hcmid=b.hcmid "+
+      "order by a.priority, a.attempts, "+
+	  "case a.action "+
+	    "when 'delete' then 'a' "+ 
+		"when 'undel' then 'b' "+
+		"when 'update' then 'c' "+
+        "when 'ichild' then 'd' "+
+        "when 'insert' then 'e' "+
+      "end,a.dateReady")
+    result.fields.to_s
+	logger.info("rows:"+result.affected_rows.to_s)
+	if result.affected_rows == 0
+	  result.cancel
+      @@client.close
+	  @@client2.close
+	  abort("no rows to process upfront");
+	end
+	
 	@email_list = ["eric.james@yale.edu","lakeisha.robinson@yale.edu","michael.friscia@yale.edu","kalee.sprague@yale.edu","robert.rice@yale.edu"]
     @subject = "Ingest Started"
 	@message = "Ingest Started at #{@start}"
@@ -67,8 +90,8 @@ namespace :yulhy6 do
   end
 
   def processoids()
-    if @error_cnt > 20
-	  logger.info("More than 20 errors per 1000, stopping for an 2 hours.")
+    if @error_cnt > 100
+	  logger.info("More than 100 errors per 1000, stopping for 1 hour.")
 	  puts("More than 20 errors per 1000, stopping for 2 hours.")
 	  
 	  #email notification
@@ -77,8 +100,8 @@ namespace :yulhy6 do
 	  @message = "Ingest Suspended for 2 hours to do errors at #{susTime}"
 	  mail = ActionMailer::Base.mail(to: @email_list,subject: @subject,message: @message)
 	  mail.deliver
-	  
-	  sleep(2.hours)
+	  @error_cnt = 0
+	  sleep(1.hours)
 	end	   
 	@cnt += 1
 	logger.info("queue counter:"+@cnt.to_s)

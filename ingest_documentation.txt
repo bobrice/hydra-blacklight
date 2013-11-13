@@ -47,18 +47,19 @@ b) check mount is there and tempfile (libserver3 example, may be different paths
 3) diskfree -   check df on server to ingest to (dev,test (libserver7),prod (diego)  
 4) check for eligible oids 
 
-select a.hpid,a.oid,a.cid,a.pid,b.contentModel,a._oid,a.action,a.hydraID  
-         from hydra_publish a, hydra_content_model b 
-	   where a.dateHydraStart is null and a.dateReady is not null and a.priority <> 999 and a.attempts < 3 
-	     and ((a.action='insert' and _oid=0) or (a.action='delete' or a.action='update' or a.action='ichild')) 
-	       and a.hcmid=b.hcmid 
-      order by a.priority, a.attempts, 
-        case a.action 
-	    when 'delete' then 'a'  
-	    	 when 'undel' then 'b' 
-		      when 'update' then 'c' 
+select a.hpid,a.oid,a.cid,a.pid,b.contentModel,a._oid,a.action,a.hydraID,a.zindex
+         from hydra_publish a, hydra_content_model b
+         where a.dateHydraStart is null and a.dateReady is not null and a.priority <> 999 and a.attempts < 3
+         and (server is null or server='#{@server}')
+         and ((a.action='insert' and _oid=0) or (a.action='delete' or a.action='update' or a.action='ichild' or a.action='undel'))
+         and a.hcmid=b.hcmid
+      order by a.priority, a.attempts,
+         case a.action 
+         when 'delete' then 'a' 
+                when 'undel' then 'b' 
+                when 'update' then 'c' 
         when 'ichild' then 'd' 
-        when 'insert' then 'e' 
+        when 'insert' then 'e'
       end,a.dateReady
 
 tweak this for more pointed queries
@@ -84,6 +85,10 @@ check data in tables, make sure looks OK
   rake yulhy6:ingest &
   RAILS_ENV=test rake yulhy6:ingest &
   RAILS_ENV=production rake yulhy6:ingest &
+
+6.5) or 24/7 ingest:
+  change sleep time and RAILS_ENV in nonstop.sh and run:
+  ./nonstop.sh & 
 
 6a) most likely there will be limited batches that will be handled in a script that runs to completion, but if you want to keep it going constantly, run the script:
   while true

@@ -15,7 +15,7 @@ module Hydra
                 t.location1(:path=>"location")
         t.address(:path=>"address") {
           t.line1(:path=>"line1")
-          t.line2.(:path=>"line2")
+          t.line2(:path=>"line2")
           t.city(:path=>"city")
           t.state(:path=>"state")
           t.zip(:path=>"zip")
