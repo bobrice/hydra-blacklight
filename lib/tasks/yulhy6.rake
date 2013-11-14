@@ -68,7 +68,7 @@ namespace :yulhy6 do
 	  @@client2.close
 	  abort("no rows to process upfront");
 	end
-	
+	result.cancel
 	@email_list = ["eric.james@yale.edu","lakeisha.robinson@yale.edu","michael.friscia@yale.edu","kalee.sprague@yale.edu","robert.rice@yale.edu"]
     @subject = "Ingest Started"
 	@message = "Ingest Started at #{@start}"
