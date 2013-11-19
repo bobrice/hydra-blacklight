@@ -42,6 +42,7 @@ class CatalogController < ApplicationController
     # solr fields that will be treated as facets by the blacklight application
     #   The ordering of the field names is the order of the display
     #
+    #
     # Setting a limit will trigger Blacklight's 'more' facet values link.
     # * If left unset, then all facet values returned by solr will be displayed.
     # * If set to an integer, then "f.somefield.facet.limit" will be added to
@@ -107,8 +108,8 @@ class CatalogController < ApplicationController
     config.add_show_field 'tribe_tsim', :label => 'Tribe:'
     config.add_show_field 'accession_number_ssim', :label => 'Accession Number:'
     config.add_show_field 'series_tsim', :label => 'Series:'
-    config.add_show_field 'box_number_ssm', :label => 'Box number:'
-    config.add_show_field 'caption_folder_ssm', :label => 'Folder Name:'
+    config.add_show_field 'box_number_ssm', :label => 'Box:'
+    config.add_show_field 'caption_folder_ssm', :label => 'Folder:'
     config.add_show_field 'caption_ssim', :label => 'Caption:'
     config.add_show_field 'language_ssim', :label => 'Language:'
     config.add_show_field 'scale_ssim', :label => 'Scale:'
