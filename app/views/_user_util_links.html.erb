@@ -3,7 +3,8 @@
     <% if current_user %>
       <%= link_to t('blacklight.header_links.logout'), destroy_user_session_path %> <%= "[#{ link_to current_user, edit_user_registration_path }]".html_safe unless current_user.to_s.blank? %>
     <% else %>
-      <%= link_to t('blacklight.header_links.login'), new_user_session_path %> | <%= link_to 'Yale CAS Login', '/users/auth/cas' %>
+      <!--<%= link_to t('blacklight.header_links.login'), new_user_session_path %> | <%= link_to 'Yale CAS Login', '/users/auth/cas' %> -->
+      <%= link_to 'Yale Login', '/users/auth/cas' %>
     <% end %>
    </div>
 <% end %>
@@ -13,7 +14,7 @@
     <%= link_to 'Bookmarks', bookmarks_path %>  |
   <% end %>
   <% if has_user_authentication_provider? and current_user %>
-    <%= link_to 'Saved', saved_searches_path %> |
+    <!--<%= link_to 'Saved', saved_searches_path %> | -->
   <% end %>
   <!--<%= link_to t('blacklight.header_links.search_history'), search_history_path %> |-->
   <a href="http://ask.library.yale.edu/" target="_blank">Ask Yale Library</a>
