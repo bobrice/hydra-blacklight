@@ -74,7 +74,6 @@ namespace :yulhy7 do
 	#main processing loop
 	@cnt=0
 	@error_cnt = 0
-	@abort_var = false
 	while rows > 0
 	  logger.info("Inside Loop to process rows. Number of rows to process in hydra publish table:"+rows.to_s)
 	  result = @@client.execute(queue_query)
