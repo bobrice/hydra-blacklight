@@ -33,11 +33,17 @@ namespace :yulhy7 do
       abort("TASK ABORTED: client2 could not connect to db")
     end
 
-	#directory where ladybird filesystem is mounted
-	@mountroot = "/home/ermadmix/libshare/"
+	# directory where ladybird filesystem is mounted
+	# dev 
+	# @mountroot = "/home/ermadmix/libshare/"
+	# test and production
+	@mountroot = "/usr/local/libshare/"
 	logger.info("batch mounted as: " + @mountroot)
-	#directory for temp filesytem operations
-	@tempdir = "/home/ermadmix/"
+	# directory for temp filesytem operations
+	# dev
+	# @tempdir = "/home/ermadmix/"
+	# test and prod
+	@tempdir = "/home/blacklight/"
 	logger.info("temp directory: " + @tempdir)
 	#output of region (development,test, or production)
 	logger.info("Region: " + Rails.env)
@@ -74,6 +80,7 @@ namespace :yulhy7 do
 	@cnt=0
 	@error_cnt = 0
 	while rows > 0
+	  logger.info("INSIDE OF THE WHILE LOOP!!!. number of rows to process in hydra publish table:"+rows.to_s)
 	  result = @@client.execute(queue_query)
       result.fields.to_s 
 	  rows = result.affected_rows
@@ -130,7 +137,8 @@ namespace :yulhy7 do
 	   logger.info("resetting runaway stopper")
        @error_cnt = 0
     end	
-	if @cnt == 10000000 #set this number to something small for testing
+	#if @cnt == 10000000 #set this number to something small for testing
+	if @cnt == 2
 	  @@client.close
 	  @@client2.close
 	  logger.info("Count exceeded "+@cnt.to_s+" at "+Time.now.to_s)
