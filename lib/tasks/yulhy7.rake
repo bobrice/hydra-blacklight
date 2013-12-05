@@ -11,7 +11,7 @@ namespace :yulhy7 do
 	logger.info("requirement: root of share must be 'ladybird'")
 
 	#configuration of ladybird sqlserver database
-	lbconf = YAML.load_file ('config/ladybird_pamoja_test.yml')
+	lbconf = YAML.load_file ('config/ladybird_test.yml')
 	lbuser = lbconf.fetch("username").strip
 	lbpw = lbconf.fetch("password").strip
 	lbhost = lbconf.fetch("host").strip
@@ -33,16 +33,8 @@ namespace :yulhy7 do
       abort("TASK ABORTED: client2 could not connect to db")
     end
 
-	# directory where ladybird filesystem is mounted
-	# dev 
-	# @mountroot = "/home/ermadmix/libshare/"
-	# test and production
 	@mountroot = "/usr/local/libshare/"
 	logger.info("batch mounted as: " + @mountroot)
-	# directory for temp filesytem operations
-	# dev
-	# @tempdir = "/home/ermadmix/"
-	# test and prod
 	@tempdir = "/home/blacklight/"
 	logger.info("temp directory: " + @tempdir)
 	#output of region (development,test, or production)
@@ -58,8 +50,11 @@ namespace :yulhy7 do
 	
 	#check if any rows to process
 	result = @@client.execute(queue_query)
-    result.fields.to_s
+ 
+    logger.info(queue_query)
+    result.each
 	rows = result.affected_rows
+	result.fields.to_s
 	logger.info("number of rows to process in hydra publish table:"+rows.to_s)
 	if rows == 0
 	  result.cancel
@@ -70,7 +65,7 @@ namespace :yulhy7 do
 	result.cancel
 	
 	#if script reaches here, there ARE rows to process, send email that ingest has started
-	@email_list = ["eric.james@yale.edu","lakeisha.robinson@yale.edu","michael.friscia@yale.edu","kalee.sprague@yale.edu","robert.rice@yale.edu"]
+	@email_list = ["eric.james@yale.edu","lakeisha.robinson@yale.edu","michael.friscia@yale.edu","kalee.sprague@yale.edu","robert.rice@yale.edu", "gail.barnett@yale.edu", "stefano.disorbo@yale.edu"]
     @subject = "Ingest Started"
 	@message = "Ingest Started at #{@start}"
 	mail = ActionMailer::Base.mail(to: @email_list,subject: @subject,message: @message)
@@ -79,27 +74,41 @@ namespace :yulhy7 do
 	#main processing loop
 	@cnt=0
 	@error_cnt = 0
+	@abort_var = false
 	while rows > 0
-	  logger.info("INSIDE OF THE WHILE LOOP!!!. number of rows to process in hydra publish table:"+rows.to_s)
+	  logger.info("Inside Loop to process rows. Number of rows to process in hydra publish table:"+rows.to_s)
 	  result = @@client.execute(queue_query)
       result.fields.to_s 
-	  rows = result.affected_rows
-	  logger.info("rows to process before:"+rows.to_s)
+
 	  #get first result row, put rowinto in array, and send to procesqueue()
 	  resultArr = Array.new	
       result.each(:first=>true) do |i|
         resultArr.push(i)  
       end
+
+      rows = result.affected_rows
+	  logger.info("rows to process before:"+rows.to_s)
+	  logger.info("size of resultArr: " + resultArr.size.to_s)
+
 	  result.cancel
+
 	  resultArr.each do |i|
+	  	counter_check
         begin
-		  counter_check
           processqueue(i)
         rescue Exception => msg
           processerror(i,msg,"")
         end
-      end
-	  rows -= 1
+
+        # Production: set @cnt to an infinitely high value. Dev and Test: set @cnt low as needed for testing purposes
+        if @cnt == 10000000
+	      @@client.close
+	      @@client2.close
+	      logger.info("Count exceeded "+@cnt.to_s+" at "+Time.now.to_s)
+	      abort("Forced abort at @cnt limit")	  
+        end
+	    rows -= 1
+	  end
 	end
 	
 	#if script reaches here there are no more rows to process, close connections, send email,and abort 
@@ -120,6 +129,7 @@ namespace :yulhy7 do
   def counter_check
     #code to pause ingest if too many errors occur, tweak error_cnt and sleep time as appropriate
 	logger.info("counter_check count:"+@cnt.to_s)
+
     if @error_cnt > 100
 	  logger.info("More than 100 errors per 1000, stopping for 1 hour(s).")
 	  puts("More than 100 errors per 1000, stopping for 1 hour(s).")
@@ -133,17 +143,11 @@ namespace :yulhy7 do
 	  @error_cnt = 0
 	  sleep(1.hours)
 	end	   
+
     if @cnt%1000==0
 	   logger.info("resetting runaway stopper")
        @error_cnt = 0
     end	
-	#if @cnt == 10000000 #set this number to something small for testing
-	if @cnt == 2
-	  @@client.close
-	  @@client2.close
-	  logger.info("Count exceeded "+@cnt.to_s+" at "+Time.now.to_s)
-	  abort("stopped at a hard limit to prevent infinite loop")	  
-    end
   end
   
   def processqueue(i)
