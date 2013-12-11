@@ -135,7 +135,7 @@ class CatalogController < ApplicationController
     config.add_show_field 'orbis_finding_aid_ssm', :label => 'Finding Aid:'
     config.add_show_field 'yale_collection_tsim', :label => 'Yale Collection:'
     config.add_show_field 'digital_collection_ssim', :label => 'Digital Collection:'
-   config.add_show_field 'musuem_repository_ssim', :label => 'Original Repository:'
+    config.add_show_field 'musuem_repository_ssim', :label => 'Original Repository:'
     config.add_show_field 'oid_isi', :label => 'OID:' 
     config.add_show_field 'id', :label => 'PID:'
     config.add_show_field 'oidpointer_isi', :label => 'oid pointer:'
@@ -166,7 +166,7 @@ class CatalogController < ApplicationController
     # case for a BL "search field", which is really a dismax aggregate
     # of Solr search fields. 
     
-    #config.add_search_field('title') do |field|
+    config.add_search_field('title') do |field|
       # solr_parameters hash are sent to Solr as ordinary url query params. 
     #  field.solr_parameters = { :'spellcheck.dictionary' => 'title' }
 
@@ -175,32 +175,33 @@ class CatalogController < ApplicationController
       # Solr parameter de-referencing like $title_qf.
       # See: http://wiki.apache.org/solr/LocalParams
 
-      #field.solr_local_parameters = { 
-      #  :qf => '$title_qf',
-      #  :pf => '$title_pf'
-      #}
-    #end
-    
-    #config.add_search_field('author') do |field|
+      field.solr_local_parameters = { 
+        :qf => '$title_qf',
+        :pf => '$title_pf'
+      }
+    end
 
-    #  field.solr_parameters = { :'spellcheck.dictionary' => 'author' }
-    #  field.solr_local_parameters = { 
-    #    :qf => '$author_qf',
-    #    :pf => '$author_pf'
-    #  }
-    #end
     
+    config.add_search_field('author') do |field|
+
+      #field.solr_parameters = { :'spellcheck.dictionary' => 'author' }
+      field.solr_local_parameters = { 
+        :qf => '$author_qf',
+        :pf => '$author_pf'
+      }
+    end
+
     # Specifying a :qt only to show it's possible, and so our internal automated
     # tests can test it. In this case it's the same as 
     # config[:default_solr_parameters][:qt], so isn't actually neccesary. 
-    #config.add_search_field('subject') do |field|
+    config.add_search_field('subject') do |field|
     #  field.solr_parameters = { :'spellcheck.dictionary' => 'subject' }
     #  field.qt = 'search'
-    #  field.solr_local_parameters = { 
-    #    :qf => '$subject_qf',
-    #    :pf => '$subject_pf'
-    #  }
-    #end
+      field.solr_local_parameters = { 
+        :qf => '$subject_qf',
+        :pf => '$subject_pf'
+      }
+    end
 
     # "sort results by" select (pulldown)
     # label in pulldown is followed by the name of the SOLR field to sort by and
