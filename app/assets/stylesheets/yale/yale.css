@@ -178,6 +178,10 @@ height: 170px;
 padding-top:15px;
 }
 
+.frontpage {
+margin-top:-4px;
+}
+
 .complexThumbnails {
 text-align: center;
 }
