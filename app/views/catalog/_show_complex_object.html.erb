@@ -3,7 +3,7 @@
     <% # main title container for doc partial view -%>
     <% pagenum = 1 %>
 
-    <%= if (!(@pid_array[0].to_s.eql? '')) then link_to image_tag(@url1 + @pid_array[0].to_s  + @url2 , :height => '256', :width => '256'), @bookreader + document[:oid_isi].to_s  + "#page/" + pagenum.to_s + "/mode/1up" end%>
+    <%= if (!(@pid_array[0].to_s.eql? '')) then link_to image_tag(@url1 + @pid_array[0].to_s  + @url2 , :height => '256', :width => '256'), @bookreader + document[:oid_isi].to_s  + "#page/" + pagenum.to_s + "/mode/1up", :target => '_blank' end%>
 
 <div class="btn-group" style="padding-top:20px;">
     <% if @is_pdf.to_s == 'true' then %>
