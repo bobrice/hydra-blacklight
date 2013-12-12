@@ -554,7 +554,7 @@ module Blacklight::SolrHelper
   
   # a solr query method to find the children objects of a given parent pid 
   def get_parent_from_children(pid)
-        query = "id:\"" + pid + "\""
+        query = "id:\"" + pid + "\" && state_ssi:A"
         @solr_response = find(blacklight_config.qt,{:fq => query,:fl => "is_member_of_ssim", :rows => 1});
         if !(@solr_response.response.empty?)
         json_response = @solr_response.response
@@ -674,7 +674,7 @@ module Blacklight::SolrHelper
   end
 
   def get_children_from_parent_pid(pid)
-        query = "is_member_of_ssim:\"info\:fedora\/" + pid + "\""
+        query = "is_member_of_ssim:\"info\:fedora\/" + pid + "\" && state_ssi:A"
         @solr_response = find(blacklight_config.qt,{:fq => query,:fl => "id", :sort =>"zindex_isi asc", :rows => 1000000});
 	if !(@solr_response.response.empty?)
 		json_response = @solr_response.response
@@ -687,7 +687,7 @@ module Blacklight::SolrHelper
 
   # a solr query method to get the oidpointer_isi from an object given the pid   
   def get_oidpointer(pid)
-        query = "id:\"" + pid + "\""
+        query = "id:\"" + pid + "\" && state_ssi:A"
         @solr_response = find(blacklight_config.qt,{:fq => query,:fl => "oidpointer_isi", :rows => 10});
         if !(@solr_response.response.empty?)
                 json_response = @solr_response.response
@@ -700,7 +700,7 @@ module Blacklight::SolrHelper
 
   # a solr query method to get the pid of a child object given the oid_isi (oipointer_isi from above query)
   def get_child_pid(oidpointer)
-        query = "oid_isi:" + oidpointer.to_s
+        query = "oid_isi:" + oidpointer.to_s + " && state_ssi:A"
         @solr_response = find(blacklight_config.qt,{:fq => query,:fl => "id", :rows => 10});
         if !(@solr_response.response.empty?)
                 json_response = @solr_response.response

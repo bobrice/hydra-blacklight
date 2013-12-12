@@ -1,0 +1,5 @@
+When the solrconfig.xml file is changed, move the file to the following location:
+
+/usr/local/solr/collection1/conf/
+
+Then Solr must be restarted to reflect your changes.
