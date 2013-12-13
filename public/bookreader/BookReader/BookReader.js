@@ -3671,7 +3671,8 @@ BookReader.prototype.initToolbar = function(mode, ui) {
        $('#BRtoolbarbuttons .share').hide();
     }
 
-    $('#BRreturn a').attr('href', this.bookUrl).text(this.bookTitle);
+    //$('#BRreturn a').attr('href', this.bookUrl).text(this.bookTitle);
+    $('#BRreturn a').text(this.bookTitle);
     //$('#BRtrans a').attr('href', this.transUrl).text(this.transTitle);
     //$('#BRRTL a').attr('href', this.transUrl).text(this.turnRTL);
     //$('#BRRTL a').attr(attribute, this.setPageProgression(rl)).text(this.turnRTL);
@@ -3714,7 +3715,8 @@ BookReader.prototype.initToolbar = function(mode, ui) {
     $('<div style="display: none;"></div>').append(this.blankShareDiv()).append(this.blankInfoDiv()).appendTo($('body'));
 
 
-    $('#BRinfo .BRfloatTitle a').attr( {'href': this.bookUrl} ).text(this.bookTitle).addClass('title');
+    //$('#BRinfo .BRfloatTitle a').attr( {'href': this.bookUrl} ).text(this.bookTitle).addClass('title');
+    $('#BRinfo .BRfloatTitle a').text(this.bookTitle).addClass('title');
 
     // These functions can be overridden
     this.buildInfoDiv($('#BRinfo'));
@@ -5213,7 +5215,8 @@ BookReader.prototype.buildShareDiv = function(jShareDiv)
 // Should be overridden
 BookReader.prototype.buildInfoDiv = function(jInfoDiv) 
 {
-    jInfoDiv.find('.BRfloatTitle a').attr({'href': this.bookUrl, 'alt': this.bookTitle}).text(this.bookTitle);
+    //jInfoDiv.find('.BRfloatTitle a').attr({'href': this.bookUrl, 'alt': this.bookTitle}).text(this.bookTitle);
+    $('#BRinfo .BRfloatTitle a').text(this.bookTitle).addClass('title');
 }
 
 BookReader.prototype.setPageProgression = function(turndirection) 
