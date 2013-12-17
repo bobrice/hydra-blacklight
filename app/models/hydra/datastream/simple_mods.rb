@@ -60,6 +60,7 @@ module Hydra
 		  t.o_i_dateCreatedIso(:path=>"dateCreated",:attributes=>{:keyDate=>"yes",:encoding=>"iso8601"})
                   t.o_i_dateOtherType(:path=>"dateOther/@type")
 		  t.o_i_dateOther(:path=>"dateOther")
+		  t.o_i_copyrightDate(:path=>"copyrightDate")
 		}
 		t.physicalDescription(:path=>"physicalDescription"){
 		  t.p_s_note(:path=>"note")
@@ -80,6 +81,7 @@ module Hydra
 		t.note_citation(:path=>"note",:attributes=>{:displayLabel=>"Citation"})
 		#
 		t.note_digital(:path=>"note",:attributes=>{:displayLabel=>"Digital"})
+		t.note_purpose(:path=>"note",:attributes=>{:type=>"purpose",:displayLabel=>"Purpose"})
 				
 		t.abstract(:path=>"abstract")
                 t.genre(:path=>"genre",:attributes=>{:authority=>:none,:displayLabel=>:none})
@@ -329,6 +331,8 @@ module Hydra
                 
                 solr_doc['creator_sort_ssi'] = unescapeCharsStr(mods.name.namePart[0]) unless mods.name.namePart[0].nil?
                 solr_doc['title_sort_ssi'] = unescapeCharsStr(mods.title_info.main_title[0]) unless mods.title_info.main_title[0].nil?
+		solr_doc['copyright_tsim'] = unescapeChars(mods.origin_info.o_i_copyrightDate)
+		solr_doc['purpose_tsim'] = unescapeChars(mods.note_purpose)
         solr_doc
       end	  
     end
