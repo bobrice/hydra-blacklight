@@ -193,7 +193,16 @@
     </lst>
   </searchComponent>
   
-  <requestHandler name="/replication" class="solr.ReplicationHandler" startup="lazy" /> 
+  <!-- 8/13/13 - BR: Added replication stanze -->
+<requestHandler name="/replication" class="solr.ReplicationHandler" >
+    <lst name="slave">
+        <str name="masterUrl">http://diego.library.yale.edu:8083/solr/collection1</str>
+        <str name="pollInterval">00:00:20</str>
+        <str name="compression">internal</str>
+        <str name="httpConnTimeout">5000</str>
+        <str name="httpReadTimeout">10000</str>
+     </lst>
+</requestHandler>
   
   <requestDispatcher handleSelect="true" >
     <requestParsers enableRemoteStreaming="true" multipartUploadLimitInKB="2048" />
