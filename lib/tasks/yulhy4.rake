@@ -28,9 +28,9 @@ namespace :yulhy4 do
       abort("TASK ABORTED: client2 could not connect to db")
     end
 
-	@mountroot = "/home/ermadmix/libshare/"
+	@mountroot = "/usr/local/libshare/"
 	puts "batch mounted as " + @mountroot
-	@tempdir = "/home/ermadmix/"
+	@tempdir = "/tmp/"
 	puts "temp directory" + @tempdir
 	@blacklight_solr_config = Blacklight.solr_config
 	puts "solr host:" + @blacklight_solr_config.inspect

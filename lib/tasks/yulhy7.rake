@@ -11,7 +11,7 @@ namespace :yulhy7 do
 	logger.info("requirement: root of share must be 'ladybird'")
 
 	#configuration of ladybird sqlserver database
-	lbconf = YAML.load_file ('config/ladybird_test.yml')
+	lbconf = YAML.load_file ('config/ladybird.yml')
 	lbuser = lbconf.fetch("username").strip
 	lbpw = lbconf.fetch("password").strip
 	lbhost = lbconf.fetch("host").strip

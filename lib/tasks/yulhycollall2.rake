@@ -33,7 +33,7 @@ namespace :yulhy do
 		puts "  pid: #{i[1]}"
 		puts "  label: #{i[2]}"
 
-                file = "/home/ermadmix/colltemp.xml"
+                file = "/home/blacklight/colltemp.xml"
                 pathHTTP = "http://ladybird.library.yale.edu/xml_contactinformation.aspx?pid=#{i[1]}"
                 puts "  xml:"+pathHTTP
                 open(file,'wb') do |f|
