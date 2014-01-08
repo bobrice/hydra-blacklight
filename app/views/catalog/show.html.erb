@@ -15,7 +15,13 @@
     
 
       <% # bookmark/folder functions -%>
+      <% my_document = @document %>
+      <% if (my_document[:state_ssi].to_s.eql? 'A') then %> 
         <%= render_document_heading(:h1).html_safe %>
+      <% else  %>
+        <%= "This content is no longer available." %>
+      <% end %>
+
       <div class="document">
           <%= render_document_partial @document, :show %>
       </div>
