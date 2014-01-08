@@ -52,3 +52,6 @@ gem "blacklight_google_analytics"
 #gem "rubycas-client"
 gem "net-ldap"
 gem "omniauth-cas"
+
+#ERJ 1/8/14
+gem "pdf-reader"

@@ -1,0 +1,66 @@
+#set database (development, test, or production)
+#database development
+username_d: pamojaHydra
+password_d: hydra#335
+host_d: blues.library.yale.edu
+database_d: pamoja_hydra
+
+#database test
+username_t: pamojaWriter
+password_t: QPl478(^%
+host_t: blues.library.yale.edu
+database_t: dev_pamoja
+
+#database production
+username_p: pamojaWriter
+password_p: QPl478(^%
+host_p: blues.library.yale.edu
+database_p: pamoja
+
+#path where ladybird storage is mounted w/ trailing forward slash, requirement: root of share must be 'Ladybird'
+mountroot: /home/ermadmix/libshare/
+#mountroot: /usr/local/libshare/
+
+#tempdirectory w/ trailing forward slash - for transient disk IO
+tempdir: /home/ermadmix/tempdir/
+#tempdir: /home/blacklight/
+
+#email_list - people to receive ingest processing notifications
+email_list:
+  - eric.james@yale.edu
+#  - lakeisha.robinson@yale.edu
+#  - michael.friscia@yale.edu
+#  - kalee.sprague@yale.edu
+#  - robert.rice@yale.edu
+#  - gail.barnett@yale.edu
+#  - stefano.disorbo@yale.edu
+#max of number of rows to process (for putting limits when testing)
+stop_count: 1000000 
+
+#max number of errors to allow per 1000
+error_max: 100
+
+#error sleep time - number of hours to sleep when max number of errors per 1000 happens 
+error_sleep_time: 1
+
+#compute checksum of content files
+checksums_enabled: true
+
+#name of this server
+ingest_server: libserver3.yale.edu
+
+#implemented content models - coding required to extend functionality
+#models (app/models)
+#  Simple
+#  ComplexParent
+#  ComplexChild
+#metadata datastreams (app/models/hydra/datastream) as defined in above models
+#  descMetadata
+#  accessMetadata
+#  rightsMetadata
+#properties
+
+#database schema dependencies
+#  hydra_publish
+#  hydra_publish_path
+#  hydra_publish_error

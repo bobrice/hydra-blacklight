@@ -1,0 +1,24 @@
+ingest_enhancements_01/08/14
+
+for documentation see:
+  ingest_documentation_v2.txt
+
+features:
+1) new script -  lib/tasks/yulhy8.rake. run by using:  
+  rake yulhy8:ingest
+
+2) all the configuration for yulhy8 in:
+  config/ingest.yml (new)
+  config/solr.yml (as before)
+  config/fedora.yml (as (before)
+
+3) actions:
+  action='delete' - changes state='I'
+  action='undel' changes back to state='A'
+  action='purge' removes pid from fedora/solr
+4) duplicates:
+  if oid already ingested and has a hydraID and another duplicate oid is put back in the hydra_publish table with action='insert','ichild',or 'echild' this row isn't ingested and action is changed to action='duplic'
+5) echild:
+    if an error occurs in a child object of action='insert' the action becomes action='echild', so a correction can be made if necessary
+6) the hydra_publish table now tracks ingest_server, for tracking if multiple ingest scripts are running simultaneously on different servers
+7) the queue_query, the SQL statement reading the hydra_publish table as a queue has been updated to accomodate all this
