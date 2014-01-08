@@ -22,3 +22,14 @@ features:
     if an error occurs in a child object of action='insert' the action becomes action='echild', so a correction can be made if necessary
 6) the hydra_publish table now tracks ingest_server, for tracking if multiple ingest scripts are running simultaneously on different servers
 7) the queue_query, the SQL statement reading the hydra_publish table as a queue has been updated to accomodate all this
+8) proof of concept models for PDF full text indexing
+
+new and modified files:
+Gemfile - added gem "pdf-reader"
+test_full_text.rb - for testing POC of full text
+app/models/pdf_object.rb - for testing POC of full text
+app/models/hydra/datastream/pdf_datastream.rb - for future use as PDF full text datastream 
+lib/tasks/yulhy8.rake - new ingest script
+config/ingest.yml - new ingest script config file
+ingest_documentation_v2.txt - new ingest documentation
+ingest_enhancements_010814.txt - this document
