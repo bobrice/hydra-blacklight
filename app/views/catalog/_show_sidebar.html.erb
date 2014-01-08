@@ -4,10 +4,11 @@
 
 <% my_document = @document %>
 
-<%= if my_document[:active_fedora_model_ssim].to_s.eql? '["ComplexParent"]' then render :partial => 'show_complex_object', :locals => {:document => @document} else render :partial => 'show_simple_object' , :locals => {:document => @document} end %>
+<% if (my_document[:state_ssi].to_s.eql? 'A') then %> 
+  <%= if my_document[:active_fedora_model_ssim].to_s.eql? '["ComplexParent"]' then render :partial => 'show_complex_object', :locals => {:document => @document} else render :partial => 'show_simple_object' , :locals => {:document => @document} end %>
 
-<% if @is_contact_info == 'true' %>
-<div id="contactInfo">
+  <% if @is_contact_info == 'true' %>
+  <div id="contactInfo">
 	<b><%= "For more information about this resource, contact:" %></b><br/>
 	<p class="address">
 
@@ -40,14 +41,15 @@
 	<% end %>
 
 	</p>
-</div>
-<% end %>
+  </div>
+  <% end %>
 
-<% unless @document.more_like_this.empty? %>
-<div class="well" id="sidebar-mlt">
-  <ul class="nav nav-list">
-  <li class="nav-header">More Like This</li>
-    <%= render :collection => @document.more_like_this, :partial => 'show_more_like_this', :as => :document %>
-  </ul>
-</div><!--/well -->
+  <% unless @document.more_like_this.empty? %>
+  <div class="well" id="sidebar-mlt">
+    <ul class="nav nav-list">
+    <li class="nav-header">More Like This</li>
+      <%= render :collection => @document.more_like_this, :partial => 'show_more_like_this', :as => :document %>
+    </ul>
+  </div><!--/well -->
+  <% end %>
 <% end %>
