@@ -182,7 +182,7 @@ class CatalogController < ApplicationController
     end
 
     
-    config.add_search_field('author') do |field|
+    config.add_search_field('creator') do |field|
 
       #field.solr_parameters = { :'spellcheck.dictionary' => 'author' }
       field.solr_local_parameters = { 
@@ -194,7 +194,7 @@ class CatalogController < ApplicationController
     # Specifying a :qt only to show it's possible, and so our internal automated
     # tests can test it. In this case it's the same as 
     # config[:default_solr_parameters][:qt], so isn't actually neccesary. 
-    config.add_search_field('subject') do |field|
+    config.add_search_field('topic') do |field|
     #  field.solr_parameters = { :'spellcheck.dictionary' => 'subject' }
     #  field.qt = 'search'
       field.solr_local_parameters = { 
@@ -208,7 +208,8 @@ class CatalogController < ApplicationController
     # whether the sort is ascending or descending (it must be asc or desc
     # except in the relevancy case).
     config.add_sort_field 'score desc, date_dtsi desc, sort_ssi asc', :label => 'relevance'
-    config.add_sort_field 'date_dtsi desc, sort_ssi asc', :label => 'date'
+    config.add_sort_field 'date_dtsi asc, sort_ssi asc', :label => 'date'
+    config.add_sort_field 'date_dtsi desc, sort_ssi asc', :label => 'date descending'
     config.add_sort_field 'sort_ssi asc, date_dtsi desc', :label => 'title'
     config.add_sort_field 'creator_sort_ssi asc, sort_ssi asc', :label => 'creator'
  
