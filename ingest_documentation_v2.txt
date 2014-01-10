@@ -1,0 +1,128 @@
+hydra ingest notes for yulhy:8 (ERJ 01/08/14)
+
+-----------
+For ingest testing:
+1)use sample oids in database pamoja_hydra:
+  select * from hydra_publish where hpid in (257980,257592,257593,257594,257595,257596,2766277)
+2) modify these rows as necessary for testing different 'action'
+  2a) for inactivating all rows:
+    select * from hydra_publish where priority <> 999  
+  2b) for resetting a row (change 'action' as necessary):
+    update hydra_publish set         hydraID='',dateHydraStart=null,dateHydraEnd=null,dateAudit=null,attempts=0,priority=20,server=null,ingestServer=null,action='ichild' where hpid =       257980
+  2c) hpid's to use:
+    insert-257980,257592,257593
+    update,delete,undel-257593
+    ichild,echild-257594
+    purge-257595
+  2d) causing an error for testing, change in the different action methods:
+    valid,message = validate_checksums(path,md5,type)
+      instead of
+    valid,message = validate_checksums(realpath,md5,type)
+-----------
+-----------
+things to verify before running ingest:
+1) check that hydra configs are set properly
+  config/solr.yml
+  config/fedora.yml
+  config/ingest.yml
+2) check ladybird storage directory and temp directory actually exist (as configured in ingest.yml (see (1)))
+  @mountroot = "usr/local/libshare"
+  @tempdir = "/home/blacklight"
+3) you may want to clear logs:
+  mv log/ingest.log log/ingest.log.bkup1
+4) you may want to check for eligible oids - (run content of queue_query method in SQL Management Studio):
+  select a.hpid,a.oid,a.cid,a.pid,b.contentModel,a._oid,a.action,a.hydraID,a.zindex
+    from hydra_publish a, hydra_content_model b
+    where a.dateHydraStart is null and a.dateReady is not null and a.priority <> 999 and a.attempts < 3
+    and (server is null or server='#{@server}')
+    and ((a.action='insert' and _oid=0)
+    or (a.action='purge' or a.action='delete' or a.action='update' or a.action='ichild' or a.action='undel' or a.action='echild'))
+    and a.hcmid=b.hcmid
+    order by a.priority, a.attempts,
+    case a.action
+      when 'purge' then 'a'
+      when 'delete' then 'b'
+      when 'undel' then 'c'
+      when 'update' then 'd'
+      when 'ichild' then 'e'
+      when 'insert' then 'f'
+      when 'echild' then 'g'
+    end,a.dateReady
+5) check collection objects have been created (only need to do once, or if there is a update in ladybird)
+  5a) check config is set properly
+    config/ladybird.yml - production (pamoja)
+    config/ladybird_test.yml - test (dev_pamoja)
+    config/ladybird_pamoja_test -development (pamoja_hydra)
+  5b) run rake task:
+    rake yulhy:add_all_collections_with_info2
+    RAILS_ENV=test rake yulhy:add_all_collections_with_info
+    RAILS_ENV=production rake yulhy:add_all_collections_with_info
+-----------
+run the action ingest:
+  rake yulhy8:ingest &
+  RAILS_ENV=test rake yulhy8:ingest &
+  RAILS_ENV=production rake yulhy8:ingest &
+or 24/7 (change sleep time and RAILS_ENV in nonstop.sh) and run:
+  ./nonstop.sh &
+-----------
+monitoring ingest:
+1) some other useful queries:
+ a)  you may want to take the hpids from (3) and run a SQL to monitor ingest:
+  select * from hydra_publish where hpid = <hpids from (3)>
+ b)  you may want to look at ComplexChild rows per ComplexParent by using the oid from ComplexParent rows as an _oid:
+  select * from hydra_publish where _oid = <oid from (3) for hcmid=2>
+ c) getting oids in a date range:
+  select * from dbo.hydra_publish where dateReady > '2013-09-24'
+2) WARNING - too many error 20 per 1000 objects will stop the script to prevent error overflow, and give to to assess and restart
+
+3) check logs (diggit-hydra/log/ingest.log) file and sderr for successful ingests, failures, and possible errors
+
+4) check database using hpids from step 1 and report
+select a.hpid, b.contentmodel,a.pid,a.oid,a._oid,a.zindex,a.hydraID
+from dbo.hydra_publish a,dbo.hydra_content_model b
+where a.hcmid=b.hcmid and a.hpid > <somenumber>
+
+5) debug if necessary (the hard part)
+a) check the rake output ('log/ingest.log')
+ i) grep error ingest.log
+ ii) note the broken pipe exception are transient and may clear up in a second pass
+
+b) if an exception occurs, check what it is, but most likely it will be an illegible stack trace
+ i) see errors in database - select a.*,b.date from hydra_publish a,hydra_publish_error b where a.hpid=b.hpid order by b.date desc
+c) look for the pid before an error
+  ex: in yulhy6d.out libserver7t:713
+d) cross reference with fedora.logs
+
+[ermadmix@libserver7 logs]$ pwd
+/usr/local/fedora/server/logs
+[ermadmix@libserver7 logs]$ ls -la
+total 114216
+drwxrwxrwx+ 2 fedora fedora 4096 Jul 3 14:42 .
+drwxrwxrwx+ 4 fedora fedora 42 Jul 2 10:23 ..
+-rw-rw-rw-. 1 fedora fedora 11938904 Jul 17 14:10 fedora.log
+-rw-rw-rw-. 1 fedora fedora 20998765 Jul 3 14:42 fedora.log.1
+-rw-rw-rw-. 1 fedora fedora 20974982 Jul 3 12:51 fedora.log.2
+-rw-rw-rw-. 1 fedora fedora 20994435 Jul 3 12:13 fedora.log.3
+-rw-rw-rw-. 1 fedora fedora 21015846 Jul 3 11:44 fedora.log.4
+-rw-rw-r--. 1 fedora fedora 20996434 Jul 3 11:18 fedora.log.5
+[ermadmix@libserver7 logs]$ grep "libserver7t:713" .
+[ermadmix@libserver7 logs]$ grep -n "libserver7t:713" ./*
+
+use line number to find exception of next pid (libserver7t:714):
+[ermadmix@libserver7 logs]$ more +64888 fedora.log.5
+
+e) do same as (d) with catalina.out of fedora (if necessary)
+  usr/local/fedora/tomcat/logs
+  
+f) do same as (d) and (e) with catalina.out of solr (if necessary)
+  /usr/local/solr_tomcat/logs
+
+6) delete any garbage objects
+  rake yulhy:delete_fedora[namespace,start,end]
+  
+  ie for changeme:1 to changeme:5
+  rake yulhy:delete_fedora[changeme,1,5]
+  
+  or for test instance for libserver7t:1 to libserver7t:5
+  RAILS_ENV=test rake yulhy:delete_fedora[libserver7t,1,5]
+ 
