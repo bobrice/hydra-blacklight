@@ -16,7 +16,7 @@ module ApplicationHelper
 
         @pid = ""
 
-        query = "oid_isi:"+ @oid_pointer
+        query = "oid_isi:"+ @oid_pointer + " && state_ssi:A"
         @solr_response = find(blacklight_config.qt,{:fq => query,:fl =>"id", :rows => 1});
 
         @pid_arr = @solr_response.response['docs']

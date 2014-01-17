@@ -38,8 +38,8 @@ br.getOID = function() {
    url: solrq,
    success: function(data)
          {
-            //console.log("SUCCESS:"+data.docs[0].ztotal_isi);
-            result = data.docs[0].ztotal_isi; 
+            //console.log("NUMFOUND:  " + data);
+            result = data;
          },
    error: function(xhr,ajaxOptions,thrownError) 
          { 
@@ -67,7 +67,8 @@ br.getOID = function() {
          success: function(data) 
          { 
             //console.log("SUCCESS:"+data.docs[0].id + " numFound: " + data.numFound); 
-            result = data.docs[(data.numFound - 1)].id;
+            //result = data.docs[(data.numFound - 1)].id;
+            result = data.docs[0].id;
          },
          error: function(xhr,ajaxOptions,thrownError) 
          { 
