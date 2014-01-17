@@ -28,7 +28,7 @@ br.getOID = function() {
 // using a different URL structure
     getZTotal = function(oid) {
       var solrq = "/pagination/numofpages?oid="+oid
-      //console.log("solrZTotalQ:"+solrq);
+      console.log("solrZTotalQ:"+solrq);
       var result;
       $.ajax(
       {
@@ -39,7 +39,9 @@ br.getOID = function() {
    success: function(data)
          {
             //console.log("SUCCESS:"+data.docs[0].ztotal_isi);
-            result = data.docs[0].ztotal_isi; 
+            //result = data.docs[0].ztotal_isi; 
+            console.log("NUMFOUND:  " + data);
+            result = data;
          },
    error: function(xhr,ajaxOptions,thrownError) 
          { 
@@ -47,7 +49,7 @@ br.getOID = function() {
          }
        }
       );
-      //console.log("AJAX:"+result);
+      console.log("AJAX:"+result);
       return result;
     }
 
@@ -56,7 +58,7 @@ br.getOID = function() {
     //{"numFound":8,"start":0,"docs":[{"id":"libserver7:3"},{"id":"libserver7:4"},{"id":"libserver7:5"},{"id":"libserver7:6"},{"id":"libserver7:7"},{"id":"libserver7:8"},{"id":"libserver7:9"},{"id":"libserver7:10"}]}
     getPID = function(parentoid,index) {
       var solrq = "/pagination?oid="+parentoid+"&zi="+index
-      //console.log("SOLRQ:"+solrq);
+      console.log("SOLRQ:"+solrq);
       var result;
       $.ajax(
       {
@@ -66,8 +68,9 @@ br.getOID = function() {
          url: solrq,
          success: function(data) 
          { 
-            //console.log("SUCCESS:"+data.docs[0].id + " numFound: " + data.numFound); 
-            result = data.docs[(data.numFound - 1)].id;
+            console.log("SUCCESS:"+data.docs[0].id + " numFound: " + data.numFound); 
+            //result = data.docs[(data.numFound - 1)].id;
+            result = data.docs[0].id;
          },
          error: function(xhr,ajaxOptions,thrownError) 
          { 
@@ -75,7 +78,7 @@ br.getOID = function() {
          }
       }
       );
-      //console.log("AJAX:"+result);
+      console.log("GOT THE PID AJAX:"+result);
       return result;
     }
 br.getPageURI = function(index, reduce, rotate) {
@@ -86,8 +89,8 @@ br.getPageURI = function(index, reduce, rotate) {
 
     var netid = "0";
     var session = "0";
-    //console.log("index:"+index);
-    //console.log("OID_PARAM:"+br.getOID());
+    console.log("index:"+index);
+    console.log("OID_PARAM:"+br.getOID());
     //Don't think the next three lines are needed
     var leafStr = '000';            
     var imgStr = (index+1).toString();
@@ -96,7 +99,7 @@ br.getPageURI = function(index, reduce, rotate) {
     parentoid = br.getOID();
     index = index+1;
     pid = getPID(parentoid,index);
-    //console.log("pid:"+pid);
+    console.log("pid:"+pid);
     var url1 = br.getrailsenv();
     //var url = url1 +pid+"/"+netid+"/"+session+"/227/111/132/130/500.jpg";
     var url = url1 +pid + "/1500.jpg";
@@ -105,10 +108,10 @@ br.getPageURI = function(index, reduce, rotate) {
 
 br.getrailsenv = function() {
     //Return the correct URL based on the environment in Rails
-    //console.log("In getRailsEnv");
+    console.log("In getRailsEnv");
 
     var railsurl = "/pagination/getrailsenv?oid="+this.parentoid
-    //console.log("RAILS URL:"+railsurl);
+    console.log("RAILS URL:"+railsurl);
     var railsenv = "production";
     $.ajax(
     {
@@ -118,7 +121,7 @@ br.getrailsenv = function() {
         url: railsurl,
         success: function(data) 
         { 
-           //console.log("SUCCESS:"+ data); 
+           console.log("SUCCESS:"+ data); 
            railsenv = data;
         },
         error: function(xhr,ajaxOptions,thrownError) 
@@ -127,16 +130,16 @@ br.getrailsenv = function() {
         }
      }
      );
-      //console.log("AJAX: railsenv is: "+railsenv);
+      console.log("AJAX: railsenv is: "+railsenv);
      return railsenv.toString();
 }
 
 br.gettitle = function() {
 
     var max_char = 50;
-    //console.log("In gettitle");
+    console.log("In gettitle");
     var solrq = "/pagination/title?oid="+this.parentoid
-    //console.log("SOLRQ:"+solrq);
+    console.log("SOLRQ:"+solrq);
     var title = "Can't retrieve title from Blacklight";
 
     $.ajax(
@@ -147,7 +150,7 @@ br.gettitle = function() {
         url: solrq,
         success: function(data) 
         { 
-           //console.log("SUCCESS:"+ data); 
+           console.log("SUCCESS:"+ data); 
            title = data;
         },
         error: function(xhr,ajaxOptions,thrownError) 
@@ -157,8 +160,8 @@ br.gettitle = function() {
      }
      );
 
-      //console.log("AJAX: title is: "+title);
-      //console.log("Title character length is: " +title.toString().length);
+      console.log("AJAX: title is: "+title);
+      console.log("Title character length is: " +title.toString().length);
 
       if  (title.toString().length > max_char)
       {
@@ -193,12 +196,11 @@ br.gettitle = function() {
 
 br.getparentpid = function() {
 
-    //console.log("In getparentpid");
+    console.log("In getparentpid");
 
     var solrq = "/pagination/getparentpid?oid="+this.parentoid
-    //console.log("SOLRQ:"+solrq);
+    console.log("SOLRQ:"+solrq);
     var title = "false";
-    var result;
 
     $.ajax(
     {
@@ -208,7 +210,7 @@ br.getparentpid = function() {
         url: solrq,
         success: function(data) 
         { 
-           //console.log("SUCCESS:"+ data.docs[0].id + " numFound: " + data.numFound); 
+           console.log("SUCCESS:"+ data.docs[0].id + " numFound: " + data.numFound); 
 
            if (data.numFound > 1)
             {
@@ -225,15 +227,15 @@ br.getparentpid = function() {
         }
      }
      );
-      //console.log("AJAX: parent pid is: "+result);
+      console.log("AJAX: parent pid is: "+result);
      return result;
 }
 
 br.gettran = function() {
 //return true of false based on results from solr query
-    //console.log("In gettran");
+    console.log("In gettran");
     var solrq = "/pagination/transcript?oid="+this.parentoid
-    //console.log("SOLRQ:"+solrq);
+    console.log("SOLRQ:"+solrq);
     var transcript = "false";
     $.ajax(
     {
@@ -243,7 +245,7 @@ br.gettran = function() {
         url: solrq,
         success: function(data) 
         { 
-           //console.log("SUCCESS:"+ data); 
+           console.log("SUCCESS:"+ data); 
            transcript = data;
         },
         error: function(xhr,ajaxOptions,thrownError) 
@@ -252,7 +254,7 @@ br.gettran = function() {
         }
      }
      );
-      //console.log("AJAX: transcript is: "+transcript);
+      console.log("AJAX: transcript is: "+transcript);
      return transcript;;
   //OR, maybe set a variable. Then check the value of that variable to determine if 
   //button should be displayed
@@ -307,14 +309,14 @@ br.getPageNum = function(index) {
 
 br.setrtl = function() {
     turndir = 'rl'
-    //console.log("in set rtl with turndir=" + turndir);
+    console.log("in set rtl with turndir=" + turndir);
     this.setPageProgression(turndir);
 }
 
 br.setltr = function()
 {
     turndir = 'lr'
-    //console.log("in set ltr with turndir=" + turndir);
+    console.log("in set ltr with turndir=" + turndir);
     this.setPageProgression(turndir);
 }
 

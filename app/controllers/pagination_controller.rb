@@ -5,12 +5,20 @@ class PaginationController < ApplicationController
   def index
     oid = params[:oid]
     zi = params[:zi]
+
     if oid==nil || zi==nil
       render :text => "missing parameters"
       return
     end  
-    query = "parentoid_isi:"+oid+" && zindex_isi:"+zi
-    @solr_response = find(blacklight_config.qt,{:fq => query,:fl => "id"});
+
+    element = (zi.to_i - 1)
+    #So, I got the parent. How do I know that the zindex returned pid is active?
+    #Need to add to response: :sort =>"zindex_isi asc", :start =>zi, :rows =>1
+    #Need to add to query: state_ssi:A
+    #Take away zindex_isi (dont need). Plug query in solr to test
+    #query = "parentoid_isi:"+oid+" && zindex_isi:"+zi
+    query = "parentoid_isi:"+oid+" && state_ssi:A"
+    @solr_response = find(blacklight_config.qt,{:fq => query,:fl => "id", :start => element.to_s, :sort => "zindex_isi asc", :rows => 1});
     render :json => @solr_response.response
     return
   end
@@ -21,9 +29,12 @@ class PaginationController < ApplicationController
       render :text => "missing parameter"
       return
     end
-    query = "oid_isi:"+oid
+    #query = "oid_isi:"+oid+ " && state_ssi:A"
+    query = "parentoid_isi:"+oid+" && state_ssi:A"
     @solr_response = find(blacklight_config.qt,{:fq => query,:fl =>"ztotal_isi"});
-    render :json => @solr_response.response
+    json_response = @solr_response.response
+    @numFound = json_response['numFound']
+    render :json => @numFound.to_s
     return
   end
 
