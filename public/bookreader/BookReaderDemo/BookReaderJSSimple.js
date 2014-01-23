@@ -167,6 +167,12 @@ br.gettitle = function() {
         var new_title = "";
         var test_string = "";
 
+        if(typeof String.prototype.trim !== 'function') {
+          String.prototype.trim = function() {
+          return this.replace(/^\s+|\s+$/g, ''); 
+          }
+        }
+
         //for (i=0; ((i < title_array.length) && (new_title.toString().length < max_char)); i++)
         for (i=0; i < title_array.length ; i++)
         {

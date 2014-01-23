@@ -30,6 +30,16 @@ module ApplicationHelper
 
     end
 
+    def get_num_pages args
+        @oid = args[:document][args[:field]].to_s
+
+        query = "parentoid_isi:"+@oid+" && state_ssi:A"
+        @solr_response = find(blacklight_config.qt,{:fq => query,:fl =>"ztotal_isi"});
+        @numFound = @solr_response.response['numFound']
+        @num_page = @numFound.to_s
+        @oid
+    end
+
     def find(*args)
         path = blacklight_config.solr_path
         response = blacklight_solr.get(path, :params=> args[1])

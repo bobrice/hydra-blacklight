@@ -28,8 +28,7 @@ class CatalogController < ApplicationController
    #   :qt => 'search',
    #   :rows => 10,
    # }
-
-
+    before_filter :set_oid
     # solr field configuration for search results/index views
     config.index.show_link = 'title_tsim'
     config.index.record_tsim_type = 'has_model_ssim'
@@ -43,6 +42,10 @@ class CatalogController < ApplicationController
     #   The ordering of the field names is the order of the display
     #
     #
+    def set_oid
+        @oid = config.solr_name('oid_isi')
+    end
+  
     # Setting a limit will trigger Blacklight's 'more' facet values link.
     # * If left unset, then all facet values returned by solr will be displayed.
     # * If set to an integer, then "f.somefield.facet.limit" will be added to
@@ -137,10 +140,11 @@ class CatalogController < ApplicationController
     config.add_show_field 'yale_collection_tsim', :label => 'Yale Collection:'
     config.add_show_field 'digital_collection_ssim', :label => 'Digital Collection:'
     config.add_show_field 'musuem_repository_ssim', :label => 'Original Repository:'
-    config.add_show_field 'oid_isi', :label => 'OID:' 
+    config.add_show_field 'oid_isi', :label => 'OID:', :helper_method => :get_num_pages
     config.add_show_field 'id', :label => 'PID:'
     config.add_show_field 'oidpointer_isi', :label => 'oid pointer:'
-    config.add_show_field 'ztotal_isi', :label => 'Number of Pages:'
+    #config.add_show_field :label => 'Number of Pages:', :helper_method => :get_num_pages
+    #config.add_show_field 'ztotal_isi', :label => 'Number of Pages:'
 
     # "fielded" search configuration. Used by pulldown among other places.
     # For supported keys in hash, see rdoc for Blacklight::SearchFields
