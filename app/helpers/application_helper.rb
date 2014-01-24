@@ -16,7 +16,7 @@ module ApplicationHelper
 
         @pid = ""
 
-        query = "oid_isi:"+ @oid_pointer
+        query = "oid_isi:"+ @oid_pointer + " && state_ssi:A"
         @solr_response = find(blacklight_config.qt,{:fq => query,:fl =>"id", :rows => 1});
 
         @pid_arr = @solr_response.response['docs']
@@ -28,6 +28,16 @@ module ApplicationHelper
         end
         @pid
 
+    end
+
+    def get_num_pages args
+        @oid = args[:document][args[:field]].to_s
+
+        query = "parentoid_isi:"+@oid+" && state_ssi:A"
+        @solr_response = find(blacklight_config.qt,{:fq => query,:fl =>"ztotal_isi"});
+        @numFound = @solr_response.response['numFound']
+        @num_page = @numFound.to_s
+        @oid
     end
 
     def find(*args)

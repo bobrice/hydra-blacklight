@@ -6,6 +6,7 @@
 
 <% if (my_document[:state_ssi].to_s.eql? 'A') then %> 
   <%= if my_document[:active_fedora_model_ssim].to_s.eql? '["ComplexParent"]' then render :partial => 'show_complex_object', :locals => {:document => @document} else render :partial => 'show_simple_object' , :locals => {:document => @document} end %>
+<% end %>
 
   <% if @is_contact_info == 'true' %>
   <div id="contactInfo">
@@ -44,6 +45,7 @@
   </div>
   <% end %>
 
+<% if (my_document[:state_ssi].to_s.eql? 'A') then %> 
   <% unless @document.more_like_this.empty? %>
   <div class="well" id="sidebar-mlt">
     <ul class="nav nav-list">
